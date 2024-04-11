@@ -17,7 +17,7 @@ class LibraryRepository extends ILibraryRepository {
   Future<Either<Failure, List<ImageCategory>>> getAllCategories() async {
     try {
       final result = await _dataSource.getAllCategories();
-      return Right(result);
+      return Right(result.whereType<ImageCategory>().toList());
     } catch (e, trace) {
       return Left(Failure.from(e, trace));
     }
@@ -27,7 +27,7 @@ class LibraryRepository extends ILibraryRepository {
   Future<Either<Failure, List<SvgImage>>> getAllImages() async {
     try {
       final result = await _dataSource.getAllImages();
-      return Right(result);
+      return Right(result.whereType<SvgImage>().toList());
     } catch (e, trace) {
       return Left(Failure.from(e, trace));
     }

@@ -1,9 +1,21 @@
 part of 'app_cubit.dart';
 
-abstract class AppState {}
+abstract class AppState extends Equatable {}
 
-class AppSplash extends AppState {}
+class AppSplash extends AppState {
+  AppSplash({this.isLoading = false});
+  final bool isLoading;
 
-class AppMenu extends AppState {}
+  @override
+  List<Object?> get props => [isLoading];
+}
 
-class AppGame extends AppState {}
+class AppMenu extends AppState {
+  @override
+  List<Object?> get props => [];
+}
+
+class AppGame extends AppState {
+  @override
+  List<Object?> get props => [];
+}

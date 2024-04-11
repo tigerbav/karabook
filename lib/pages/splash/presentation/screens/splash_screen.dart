@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/app/presentation/logic/app_cubit.dart';
+import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:lottie/lottie.dart';
 
@@ -55,6 +56,25 @@ class _SplashScreenState extends State<SplashScreen>
                     ..forward().whenComplete(context.read<AppCubit>().setMenu),
                 ),
               ),
+              SizedBox(height: 8.sp),
+              BlocBuilder<AppCubit, AppState>(
+                buildWhen: (p, c) => c is AppSplash && c.isLoading,
+                builder: (context, state) {
+                  final isLoading = state is AppSplash && state.isLoading;
+
+                  return Center(
+                    child: SizedBox(
+                      width: 24.sp,
+                      height: 24.sp,
+                      child: isLoading
+                          ? CircularProgressIndicator(
+                              color: AppColors.shared.pink,
+                            )
+                          : null,
+                    ),
+                  );
+                },
+              )
             ],
           ),
         ],

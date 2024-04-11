@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:karabookapp/common/app_colors.dart';
-import 'package:karabookapp/common/app_resources.dart';
+import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_styles.dart';
-import 'package:karabookapp/pages/portfolio/data/models/achievements.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 @RoutePage()
@@ -13,138 +11,8 @@ class AchievementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Achievements> achievementsLocalData = <Achievements>[
-      const Achievements(
-          icon: AppResources.silver,
-          title: "SILVER STAR",
-          counter: 5,
-          subTitle: "PICTURES DONE",
-          category: "PICTURES DONE",
-          progress: 0.0,
-          current: 0),
-      const Achievements(
-          icon: AppResources.gold,
-          title: "GOLDEN STAR",
-          counter: 10,
-          current: 0,
-          subTitle: "PICTURES DONE",
-          category: "PICTURES DONE",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.platinum,
-          title: "PLATINUM STAR",
-          counter: 15,
-          current: 0,
-          subTitle: "PICTURES DONE",
-          category: "PICTURES DONE",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.diamond,
-          title: "DIAMOND STAR",
-          counter: 20,
-          current: 0,
-          subTitle: "PICTURES DONE",
-          category: "PICTURES DONE",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.food,
-          title: "FOOD FAN",
-          counter: 5,
-          current: 0,
-          subTitle: "PICS IN FOOD",
-          category: "FOOD",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.nature,
-          title: "NATURE LOVER",
-          counter: 5,
-          current: 0,
-          subTitle: "PICS IN NATURE",
-          category: "NATURE",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.people,
-          title: "GREAT PERSONALITY",
-          counter: 5,
-          current: 0,
-          subTitle: "IN PEOPLE",
-          category: "PEOPLE",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.fauna,
-          title: "FAUNA ADMIRER ",
-          counter: 5,
-          current: 0,
-          subTitle: "IN ANIMALS & BIRDS",
-          category: "ANIMALS & BIRDS",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.mandala,
-          title: "RELAX LOVER",
-          counter: 5,
-          current: 0,
-          subTitle: "IN MANDALAS",
-          category: "MANDALAS",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.transport,
-          title: "SPEED LOVER",
-          counter: 5,
-          current: 0,
-          subTitle: "IN CARS & TRANSPORT",
-          category: "CARS & TRANSPORT",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.fantasy,
-          title: "INSPIRE OTHERS",
-          counter: 5,
-          current: 0,
-          subTitle: "IN FANTASY",
-          category: "FANTASY",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.design,
-          title: "CREATOR",
-          counter: 5,
-          current: 0,
-          subTitle: "IN DESIGN",
-          category: "DESIGN",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.flowers,
-          title: "REAL BEAUTY",
-          counter: 5,
-          current: 0,
-          subTitle: "IN FLOWERS",
-          category: "FLOWERS",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.butterfly,
-          title: "AMAZING CREATIONS LOVER",
-          counter: 5,
-          current: 0,
-          subTitle: "IN BUTTERFLIES",
-          category: "BUTTERFLIES",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.cities,
-          title: "EXPLORER",
-          counter: 5,
-          current: 0,
-          subTitle: "IN CITIES",
-          category: "CITIES",
-          progress: 0.0),
-      const Achievements(
-          icon: AppResources.vip,
-          title: "YOU ARE SIMPLY THE BEST",
-          counter: 5,
-          current: 0,
-          subTitle: "IN VIP",
-          category: "VIP",
-          progress: 0.0),
-    ];
     return ListView.builder(
-        itemCount: achievementsLocalData.length,
+        itemCount: C.achievementsLocalData.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 16, left: 20, right: 20),
@@ -185,7 +53,7 @@ class AchievementScreen extends StatelessWidget {
                                     bottom: 8, top: 8, left: 18),
                                 child: Container(
                                   child: SvgPicture.asset(
-                                    achievementsLocalData[index].icon,
+                                    C.achievementsLocalData[index].icon,
                                   ),
                                   height: 72,
                                   width: 72,
@@ -199,8 +67,7 @@ class AchievementScreen extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 16),
                                     child: Text(
-                                      achievementsLocalData[index]
-                                          .title
+                                      C.achievementsLocalData[index].title
                                           .toUpperCase(),
                                       style: AppStyles.shared.packTitles,
                                     ),
@@ -209,7 +76,7 @@ class AchievementScreen extends StatelessWidget {
                                     padding: const EdgeInsets.only(
                                         left: 16, bottom: 2, top: 2),
                                     child: Text(
-                                      "${achievementsLocalData[index].counter}  ${achievementsLocalData[index].subTitle.toUpperCase()}",
+                                      "${C.achievementsLocalData[index].counter}  ${C.achievementsLocalData[index].subTitle.toUpperCase()}",
                                       style: AppStyles.shared.toast,
                                     ),
                                   ),
@@ -226,7 +93,8 @@ class AchievementScreen extends StatelessWidget {
                                           animation: true,
                                           animationDuration: 1500,
                                           lineHeight: 2,
-                                          percent: achievementsLocalData[index]
+                                          percent: C
+                                              .achievementsLocalData[index]
                                               .progress,
                                           backgroundColor:
                                               Color.fromRGBO(255, 214, 253, 1),

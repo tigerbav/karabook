@@ -12,5 +12,6 @@ abstract class  LocaleKeys {
   static const soon = 'soon';
   static const in_progress = 'in_progress';
   static const completed = 'completed';
+  static const loading = 'loading';
 
 }

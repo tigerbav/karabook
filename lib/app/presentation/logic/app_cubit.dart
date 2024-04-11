@@ -1,5 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karabookapp/services/network/api_provider.dart';
 
 part 'app_state.dart';
 
@@ -13,10 +15,19 @@ class AppCubit extends Cubit<AppState> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    //TODO: call all API methods
   }
 
-  void setMenu() {
+  Future<void> setMenu() async {
+    emit(AppSplash(isLoading: true));
+    try {
+      await ApiProvider.shared.getAllSvgImage();
+      await ApiProvider.shared.getAllImageCategory();
+      // await ApiProvider.shared.getAllPacks();
+      // await ApiProvider.shared.createAchievementsProgress();
+    } catch (e) {
+      print(e);
+    }
+
     emit(AppMenu());
   }
 }

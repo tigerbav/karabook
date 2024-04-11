@@ -1,6 +1,13 @@
 part of 'library_cubit.dart';
 
-enum LibraryStatus { initial, idle, success, failure, loading }
+enum LibraryStatus {
+  initial,
+  idle,
+  success,
+  failure,
+  loadingCategories,
+  loadingImages,
+}
 
 class LibraryState extends Equatable {
   const LibraryState({
@@ -21,8 +28,29 @@ class LibraryState extends Equatable {
   List<ImageCategory> get categories => _categories;
   List<SvgImage> get images => _images;
 
-  bool get isLoading => status == LibraryStatus.loading;
+  bool get isLoadingCategories => status == LibraryStatus.loadingCategories;
+  bool get isLoadingImages => status == LibraryStatus.loadingImages;
   bool get isFailure => status == LibraryStatus.failure;
+
+  List<SvgImage>? get imagesByCategory {
+    if (currCategory == null) return null;
+
+    return _images.where((e) => e.imageCategory == currCategory?.name).toList();
+  }
+
+  List<ImageCategory> categoriesWithImages([List<SvgImage>? images]) {
+    final filteredCategories = <ImageCategory>[];
+
+    for (final category in _categories) {
+      final image = (images ?? _images).firstWhereOrNull(
+        (e) => e.imageCategory == category.name,
+      );
+
+      if (image != null) filteredCategories.add(category);
+    }
+
+    return filteredCategories;
+  }
 
   LibraryState copyWith({
     required LibraryStatus status,

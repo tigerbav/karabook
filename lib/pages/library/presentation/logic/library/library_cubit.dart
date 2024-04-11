@@ -15,41 +15,59 @@ class LibraryCubit extends Cubit<LibraryState> {
           categories: [],
           images: [],
         )) {
-    _loadCategories();
-    _loadImages();
+    refresh(isRefresh: false);
   }
 
   final LibraryRepository _repository;
 
-  Future<void> _loadCategories() async {
-    emit(state.copyWith(status: LibraryStatus.loading));
+  Future<void> _loadCategories([bool isRefresh = false]) async {
+    if (isRefresh == false) {
+      emit(state.copyWith(status: LibraryStatus.loadingCategories));
+    }
+
     final result = await _repository.getAllCategories();
     result.fold(
       (l) => emit(state.copyWith(
         status: LibraryStatus.failure,
         errorMessage: l.errorMessage,
       )),
-      (r) => emit(state.copyWith(
-        status: LibraryStatus.success,
-        categories: r,
-        currCategory: r.firstOrNull,
-      )),
+      (r) {
+        if (r.length == state._categories.length) return;
+
+        emit(state.copyWith(
+          status: LibraryStatus.success,
+          categories: r,
+        ));
+      },
     );
   }
 
-  Future<void> _loadImages() async {
-    emit(state.copyWith(status: LibraryStatus.loading));
+  Future<void> _loadImages([bool isRefresh = false]) async {
+    if (isRefresh == false) {
+      emit(state.copyWith(status: LibraryStatus.loadingImages));
+    }
+
     final result = await _repository.getAllImages();
     result.fold(
       (l) => emit(state.copyWith(
         status: LibraryStatus.failure,
         errorMessage: l.errorMessage,
       )),
-      (r) => emit(state.copyWith(
-        status: LibraryStatus.success,
-        images: r,
-      )),
+      (r) {
+        if (r.length == state._images.length) return;
+
+        emit(state.copyWith(
+          status: LibraryStatus.success,
+          images: r,
+          currCategory: state.categoriesWithImages(r).firstOrNull,
+        ));
+      },
     );
+  }
+
+  Future<void> refresh({required bool isRefresh}) async {
+    _loadCategories(isRefresh);
+    _loadImages(isRefresh);
   }
 
   void setCurrentCategory(int id) {

@@ -15,6 +15,22 @@ class Pack extends Equatable {
   final String packDescription;
   final String packsIdentifier;
 
+  factory Pack.fromJson(Map<String, dynamic> json) => Pack(
+        id: json["id"],
+        packName: json["packName"],
+        packIcon: json["packIcon"],
+        packDescription: json["packDescription"],
+        packsIdentifier: json["packsIdentifier"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "packName": packName,
+        "packIcon": packIcon,
+        "packDescription": packDescription,
+        "packsIdentifier": packsIdentifier,
+      };
+
   @override
   List<Object?> get props => [
         id,

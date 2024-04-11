@@ -25,7 +25,8 @@ class CodegenLoader extends AssetLoader{
   "comics": "Comics",
   "soon": "Soon...",
   "in_progress": "In progress",
-  "completed": "Completed"
+  "completed": "Completed",
+  "loading": "Loading"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": en_US};
 }

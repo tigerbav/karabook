@@ -39,6 +39,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LibraryScreen(),
       );
     },
+    LoadingRoute.name: (routeData) {
+      final args = routeData.argsAs<LoadingRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LoadingScreen(
+          svgString: args.svgString,
+          id: args.id,
+          key: args.key,
+        ),
+      );
+    },
     PortfolioRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -49,6 +60,20 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const SplashScreen(),
+      );
+    },
+    SvgViewRoute.name: (routeData) {
+      final args = routeData.argsAs<SvgViewRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SvgViewScreen(
+          painterProgressModel: args.painterProgressModel,
+          svgShapes: args.svgShapes,
+          svgLines: args.svgLines,
+          sortedShapes: args.sortedShapes,
+          fittedSvgSize: args.fittedSvgSize,
+          key: args.key,
+        ),
       );
     },
     TabBarRoute.name: (routeData) {
@@ -128,6 +153,49 @@ class LibraryRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [LoadingScreen]
+class LoadingRoute extends PageRouteInfo<LoadingRouteArgs> {
+  LoadingRoute({
+    required String svgString,
+    required int id,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LoadingRoute.name,
+          args: LoadingRouteArgs(
+            svgString: svgString,
+            id: id,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'LoadingRoute';
+
+  static const PageInfo<LoadingRouteArgs> page =
+      PageInfo<LoadingRouteArgs>(name);
+}
+
+class LoadingRouteArgs {
+  const LoadingRouteArgs({
+    required this.svgString,
+    required this.id,
+    this.key,
+  });
+
+  final String svgString;
+
+  final int id;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'LoadingRouteArgs{svgString: $svgString, id: $id, key: $key}';
+  }
+}
+
+/// generated route for
 /// [PortfolioScreen]
 class PortfolioRoute extends PageRouteInfo<void> {
   const PortfolioRoute({List<PageRouteInfo>? children})
@@ -153,6 +221,64 @@ class SplashRoute extends PageRouteInfo<void> {
   static const String name = 'SplashRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SvgViewScreen]
+class SvgViewRoute extends PageRouteInfo<SvgViewRouteArgs> {
+  SvgViewRoute({
+    required PainterProgressModel painterProgressModel,
+    required List<SvgShapeModel> svgShapes,
+    required List<SvgLineModel> svgLines,
+    required Map<Color, List<SvgShapeModel>> sortedShapes,
+    required FittedSizes fittedSvgSize,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SvgViewRoute.name,
+          args: SvgViewRouteArgs(
+            painterProgressModel: painterProgressModel,
+            svgShapes: svgShapes,
+            svgLines: svgLines,
+            sortedShapes: sortedShapes,
+            fittedSvgSize: fittedSvgSize,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SvgViewRoute';
+
+  static const PageInfo<SvgViewRouteArgs> page =
+      PageInfo<SvgViewRouteArgs>(name);
+}
+
+class SvgViewRouteArgs {
+  const SvgViewRouteArgs({
+    required this.painterProgressModel,
+    required this.svgShapes,
+    required this.svgLines,
+    required this.sortedShapes,
+    required this.fittedSvgSize,
+    this.key,
+  });
+
+  final PainterProgressModel painterProgressModel;
+
+  final List<SvgShapeModel> svgShapes;
+
+  final List<SvgLineModel> svgLines;
+
+  final Map<Color, List<SvgShapeModel>> sortedShapes;
+
+  final FittedSizes fittedSvgSize;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'SvgViewRouteArgs{painterProgressModel: $painterProgressModel, svgShapes: $svgShapes, svgLines: $svgLines, sortedShapes: $sortedShapes, fittedSvgSize: $fittedSvgSize, key: $key}';
+  }
 }
 
 /// generated route for

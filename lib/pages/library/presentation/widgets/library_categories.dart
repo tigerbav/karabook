@@ -30,11 +30,11 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
       height: 24.sp,
       child: BlocBuilder<LibraryCubit, LibraryState>(
         buildWhen: (p, c) =>
-            p.categories != c.categories ||
-            p.isLoading != c.isLoading ||
+            p.categoriesWithImages != c.categoriesWithImages ||
+            p.isLoadingCategories != c.isLoadingCategories ||
             p.currCategory != c.currCategory,
         builder: (context, state) {
-          if (state.isLoading) {
+          if (state.isLoadingCategories) {
             return Center(
               child: SizedBox(
                 width: 24.sp,
@@ -43,7 +43,7 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
             );
           }
 
-          final categories = state.categories;
+          final categories = state.categoriesWithImages();
 
           if (categories.isEmpty) {
             return Text(
@@ -84,7 +84,8 @@ class _Item extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.read<LibraryCubit>().setCurrentCategory(category.id),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 16.sp),
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(horizontal: 16.sp),
         decoration: isSelected
             ? BoxDecoration(
                 color: AppColors.shared.purple,

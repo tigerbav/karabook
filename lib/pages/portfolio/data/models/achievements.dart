@@ -18,6 +18,26 @@ class Achievements extends Equatable {
   final String category;
   final double progress;
 
+  factory Achievements.fromJson(Map<String, dynamic> json) => Achievements(
+        icon: json["icon"],
+        title: json["title"],
+        counter: json["counter"],
+        current: json["current"],
+        subTitle: json["subTitle"],
+        category: json["category"],
+        progress: json["progress"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "icon": icon,
+        "title": title,
+        "counter": counter,
+        "current": current,
+        "subTitle": subTitle,
+        "category": category,
+        "progress": progress,
+      };
+
   @override
   List<Object?> get props => [
         icon,
