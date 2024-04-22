@@ -13,5 +13,7 @@ abstract class  LocaleKeys {
   static const in_progress = 'in_progress';
   static const completed = 'completed';
   static const loading = 'loading';
+  static const no_progress_pictures = 'no_progress_pictures';
+  static const any_finished_paintings = 'any_finished_paintings';
 
 }

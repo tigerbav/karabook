@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/common/models/pack.dart';
+import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/events/domain/repositories/events_repository.dart';
 
 part 'comics_state.dart';
@@ -9,7 +10,7 @@ class ComicsCubit extends Cubit<ComicsState> {
   ComicsCubit(this._repository)
       : super(const ComicsState(
           status: ComicsStatus.initial,
-          packs: [],
+          images: [],
         )) {
     _loadImages();
   }
@@ -27,7 +28,7 @@ class ComicsCubit extends Cubit<ComicsState> {
       )),
       (r) => emit(state.copyWith(
         status: ComicsStatus.success,
-        packs: r,
+        images: r,
       )),
     );
   }

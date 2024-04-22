@@ -6,24 +6,39 @@ class ComicsState extends Equatable {
   const ComicsState({
     required this.status,
     this.errorMessage,
-    required List<Pack> packs,
-  }) : _packs = packs;
+    required List<SvgImage> images,
+  }) : _images = images;
 
   final ComicsStatus status;
   final String? errorMessage;
-  final List<Pack> _packs;
+  final List<SvgImage> _images;
 
-  List<Pack> get packs => _packs;
+  bool get isLoading => status == ComicsStatus.loading;
+  bool get isFailure => status == ComicsStatus.failure;
+
+  List<SvgImage> get images => _images;
+
+  List<List<SvgImage>> get comicsPack {
+    final map = <String, List<SvgImage>>{};
+    for (final image in _images) {
+      final key = image.subcategories;
+      if (map.containsKey(image.subcategories) == false) map[key] = [];
+
+      map[key]?.add(image);
+    }
+
+    return map.values.toList();
+  }
 
   ComicsState copyWith({
     required ComicsStatus status,
     String? errorMessage,
-    List<Pack>? packs,
+    List<SvgImage>? images,
   }) {
     return ComicsState(
       status: status,
       errorMessage: errorMessage ?? this.errorMessage,
-      packs: packs ?? _packs,
+      images: images ?? _images,
     );
   }
 
@@ -31,6 +46,6 @@ class ComicsState extends Equatable {
   List<Object?> get props => [
         status,
         errorMessage,
-        _packs,
+        _images,
       ];
 }

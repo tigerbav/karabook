@@ -1,12 +1,12 @@
 import 'package:karabookapp/common/app_resources.dart';
-import 'package:karabookapp/pages/portfolio/data/models/achievements.dart';
+import 'package:karabookapp/pages/portfolio/data/models/achievement.dart';
 
 class C {
   static const vip = 'Vip';
   static const gift = 'Gift';
 
-  static final achievementsLocalData = <Achievements>[
-    const Achievements(
+  static final achievementsLocalData = <Achievement>[
+    const Achievement(
       icon: AppResources.silver,
       title: "SILVER STAR",
       counter: 5,
@@ -15,7 +15,7 @@ class C {
       progress: 0.0,
       current: 0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.gold,
       title: "GOLDEN STAR",
       counter: 10,
@@ -24,7 +24,7 @@ class C {
       category: "PICTURES DONE",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.platinum,
       title: "PLATINUM STAR",
       counter: 15,
@@ -33,7 +33,7 @@ class C {
       category: "PICTURES DONE",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.diamond,
       title: "DIAMOND STAR",
       counter: 20,
@@ -42,7 +42,7 @@ class C {
       category: "PICTURES DONE",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.food,
       title: "FOOD FAN",
       counter: 5,
@@ -51,7 +51,7 @@ class C {
       category: "FOOD",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.nature,
       title: "NATURE LOVER",
       counter: 5,
@@ -60,7 +60,7 @@ class C {
       category: "NATURE",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.people,
       title: "GREAT PERSONALITY",
       counter: 5,
@@ -69,7 +69,7 @@ class C {
       category: "PEOPLE",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.fauna,
       title: "FAUNA ADMIRER ",
       counter: 5,
@@ -78,7 +78,7 @@ class C {
       category: "ANIMALS & BIRDS",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.mandala,
       title: "RELAX LOVER",
       counter: 5,
@@ -87,7 +87,7 @@ class C {
       category: "MANDALAS",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.transport,
       title: "SPEED LOVER",
       counter: 5,
@@ -96,7 +96,7 @@ class C {
       category: "CARS & TRANSPORT",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.fantasy,
       title: "INSPIRE OTHERS",
       counter: 5,
@@ -105,7 +105,7 @@ class C {
       category: "FANTASY",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.design,
       title: "CREATOR",
       counter: 5,
@@ -114,7 +114,7 @@ class C {
       category: "DESIGN",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.flowers,
       title: "REAL BEAUTY",
       counter: 5,
@@ -123,7 +123,7 @@ class C {
       category: "FLOWERS",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.butterfly,
       title: "AMAZING CREATIONS LOVER",
       counter: 5,
@@ -132,7 +132,7 @@ class C {
       category: "BUTTERFLIES",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.cities,
       title: "EXPLORER",
       counter: 5,
@@ -141,7 +141,7 @@ class C {
       category: "CITIES",
       progress: 0.0,
     ),
-    const Achievements(
+    const Achievement(
       icon: AppResources.vip,
       title: "YOU ARE SIMPLY THE BEST",
       counter: 5,

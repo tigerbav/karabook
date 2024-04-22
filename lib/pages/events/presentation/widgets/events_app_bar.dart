@@ -21,7 +21,7 @@ class EventsAppBar extends AppBar {
                   LocaleKeys.daily.tr(),
                   style: AppStyles.shared.h1,
                 ),
-                SvgPicture.asset(AppResources.notification),
+                // SvgPicture.asset(AppResources.notification),
               ],
             ),
           ),

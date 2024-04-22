@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:karabookapp/common/models/pack.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/library/data/models/image_category.dart';
-import 'package:karabookapp/pages/portfolio/data/models/achievements.dart';
+import 'package:karabookapp/pages/portfolio/data/models/achievement.dart';
 import 'package:karabookapp/services/core/models/db_models/painter_progress_model.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -92,7 +92,7 @@ class DBProvider {
     return res;
   }
 
-  createAchievementsProgress(Achievements achievements) async {
+  createAchievementsProgress(Achievement achievements) async {
     final db = await database;
     int? count = Sqflite.firstIntValue(
         await db!.rawQuery('SELECT COUNT(*) FROM AchievementsProgress'));
@@ -140,12 +140,12 @@ class DBProvider {
     return res;
   }
 
-  Future<List<Achievements>> getAchievementsList() async {
+  Future<List<Achievement>> getAchievementsList() async {
     final db = await database;
     final res = await db!.rawQuery("SELECT * FROM AchievementsProgress");
 
-    List<Achievements> list =
-        res.isNotEmpty ? res.map((c) => Achievements.fromJson(c)).toList() : [];
+    List<Achievement> list =
+        res.isNotEmpty ? res.map((c) => Achievement.fromJson(c)).toList() : [];
 
     return list;
   }

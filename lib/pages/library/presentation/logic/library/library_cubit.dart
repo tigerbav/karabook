@@ -15,15 +15,14 @@ class LibraryCubit extends Cubit<LibraryState> {
           categories: [],
           images: [],
         )) {
-    refresh(isRefresh: false);
+    _loadCategories();
+    _loadImages();
   }
 
   final LibraryRepository _repository;
 
-  Future<void> _loadCategories([bool isRefresh = false]) async {
-    if (isRefresh == false) {
-      emit(state.copyWith(status: LibraryStatus.loadingCategories));
-    }
+  Future<void> _loadCategories() async {
+    emit(state.copyWith(status: LibraryStatus.loadingCategories));
 
     final result = await _repository.getAllCategories();
     result.fold(
@@ -42,10 +41,8 @@ class LibraryCubit extends Cubit<LibraryState> {
     );
   }
 
-  Future<void> _loadImages([bool isRefresh = false]) async {
-    if (isRefresh == false) {
-      emit(state.copyWith(status: LibraryStatus.loadingImages));
-    }
+  Future<void> _loadImages() async {
+    emit(state.copyWith(status: LibraryStatus.loadingImages));
 
     final result = await _repository.getAllImages();
     result.fold(
@@ -63,11 +60,6 @@ class LibraryCubit extends Cubit<LibraryState> {
         ));
       },
     );
-  }
-
-  Future<void> refresh({required bool isRefresh}) async {
-    _loadCategories(isRefresh);
-    _loadImages(isRefresh);
   }
 
   void setCurrentCategory(int id) {

@@ -4,13 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
+import 'package:karabookapp/common/widgets/images_grid_item.dart';
 import 'package:karabookapp/services/navigation/app_router.dart';
 
 class ImagesGrid extends StatefulWidget {
-  const ImagesGrid({
-    super.key,
-    required this.images,
-  });
+  const ImagesGrid(this.images, {super.key});
 
   final List<SvgImage> images;
 
@@ -30,7 +28,7 @@ class _ImagesGridState extends State<ImagesGrid> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: EdgeInsets.all(20.sp),
+      padding: EdgeInsets.all(20.sp).copyWith(top: 0),
       shrinkWrap: true,
       controller: _controller,
       itemCount: widget.images.length,
@@ -39,37 +37,7 @@ class _ImagesGridState extends State<ImagesGrid> {
         mainAxisSpacing: 16.sp,
         crossAxisSpacing: 16.sp,
       ),
-      itemBuilder: (context, index) => _Item(image: widget.images[index]),
-    );
-  }
-}
-
-class _Item extends StatelessWidget {
-  const _Item({required this.image});
-  final SvgImage image;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        context.router.push(LoadingRoute(
-          svgString: image.imageParts,
-          id: image.id,
-        ));
-      },
-      child: Container(
-        padding: EdgeInsets.all(8.sp),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(16.sp)),
-          border: Border.all(color: AppColors.shared.grey),
-        ),
-        child: image.screenProgress != null
-            ? Image(
-                image: MemoryImage(image.screenProgress!),
-                fit: BoxFit.cover,
-              )
-            : SvgPicture.string(image.svgOnlyStroke),
-      ),
+      itemBuilder: (_, index) => ImagesGridItem(widget.images[index]),
     );
   }
 }

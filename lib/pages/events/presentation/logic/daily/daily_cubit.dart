@@ -51,13 +51,13 @@ class DailyCubit extends Cubit<DailyState> {
     );
   }
 
-  void decreaseOpacity() {
-    if (state.isGotGift == false) {
-      final formatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      _prefs.setString(C.gift, formatted);
+  bool decreaseOpacity() {
+    if (state.isGotGift == true) return true;
+    final formatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    _prefs.setString(C.gift, formatted);
 
-      emit(state.copyWith(status: DailyStatus.idle, opacity: 0));
-    }
+    emit(state.copyWith(status: DailyStatus.idle, opacity: 0));
+    return false;
   }
 
   void increaseOpacity() {

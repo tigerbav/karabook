@@ -2,6 +2,7 @@ class AppResources {
   static const _pathToIcons = 'assets/icons';
   static const _pathToImages = 'assets/images';
   static const _pathToLottie = 'assets/lottie';
+  static const _pathToAchievement = 'assets/icons/achievements';
 
   // tabs
   static const library = '$_pathToLottie/library_lottie.json';
@@ -30,20 +31,20 @@ class AppResources {
   static const unlock = '$_pathToIcons/unlock.svg';
 
   //achievement
-  static const butterfly = '$_pathToIcons/butterfly.svg';
-  static const cities = '$_pathToIcons/cities.svg';
-  static const design = '$_pathToIcons/design.svg';
-  static const diamond = '$_pathToIcons/diamond.svg';
-  static const fantasy = '$_pathToIcons/fantasy.svg';
-  static const fauna = '$_pathToIcons/fauna.svg';
-  static const flowers = '$_pathToIcons/flowers.svg';
-  static const food = '$_pathToIcons/food.svg';
-  static const gold = '$_pathToIcons/gold.svg';
-  static const mandala = '$_pathToIcons/mandala.svg';
-  static const nature = '$_pathToIcons/nature.svg';
-  static const people = '$_pathToIcons/people.svg';
-  static const platinum = '$_pathToIcons/platinum.svg';
-  static const silver = '$_pathToIcons/silver.svg';
-  static const transport = '$_pathToIcons/transport.svg';
-  static const vip = '$_pathToIcons/vip.svg';
+  static const butterfly = '$_pathToAchievement/butterfly.svg';
+  static const cities = '$_pathToAchievement/cities.svg';
+  static const design = '$_pathToAchievement/design.svg';
+  static const diamond = '$_pathToAchievement/diamond.svg';
+  static const fantasy = '$_pathToAchievement/fantasy.svg';
+  static const fauna = '$_pathToAchievement/fauna.svg';
+  static const flowers = '$_pathToAchievement/flowers.svg';
+  static const food = '$_pathToAchievement/food.svg';
+  static const gold = '$_pathToAchievement/gold.svg';
+  static const mandala = '$_pathToAchievement/mandala.svg';
+  static const nature = '$_pathToAchievement/nature.svg';
+  static const people = '$_pathToAchievement/people.svg';
+  static const platinum = '$_pathToAchievement/platinum.svg';
+  static const silver = '$_pathToAchievement/silver.svg';
+  static const transport = '$_pathToAchievement/transport.svg';
+  static const vip = '$_pathToAchievement/vip.svg';
 }

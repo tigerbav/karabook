@@ -7,7 +7,6 @@ import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/utils/utils.dart';
-import 'package:karabookapp/common/widgets/app_refresh_indicator.dart';
 import 'package:karabookapp/common/widgets/images_grid.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/library/presentation/logic/library/library_cubit.dart';
@@ -25,54 +24,48 @@ class LibraryScreen extends StatelessWidget {
       listener: (context, state) {
         if (state.isFailure) Utils.showToast(context, state.errorMessage);
       },
-      child: AppRefreshIndicator(
-        onRefresh: () => context.read<LibraryCubit>().refresh(isRefresh: true),
-        child: SafeArea(
-          child: ListView(
-            children: [
-              const LibraryBanner(),
-              SizedBox(height: 20.sp),
-              const LibraryCategories(),
-              BlocBuilder<LibraryCubit, LibraryState>(
-                buildWhen: (p, c) =>
-                    p.imagesByCategory != c.imagesByCategory ||
-                    p.isLoadingImages != c.isLoadingImages ||
-                    p.currCategory != c.currCategory,
-                builder: (context, state) {
-                  if (state.isLoadingImages) {
-                    return Center(
-                      child: SizedBox(
-                        width: 24.sp,
-                        child: CircularProgressIndicator(
-                          color: AppColors.shared.pink,
-                        ),
-                      ),
-                    );
-                  }
+      child: ListView(
+        children: [
+          const LibraryBanner(),
+          SizedBox(height: 20.sp),
+          const LibraryCategories(),
+          SizedBox(height: 20.sp),
+          BlocBuilder<LibraryCubit, LibraryState>(
+            buildWhen: (p, c) =>
+                p.imagesByCategory != c.imagesByCategory ||
+                p.isLoadingImages != c.isLoadingImages ||
+                p.currCategory != c.currCategory,
+            builder: (context, state) {
+              if (state.isLoadingImages) {
+                return Center(
+                  child: SizedBox(
+                    width: 24.sp,
+                    child: CircularProgressIndicator(
+                      color: AppColors.shared.pink,
+                    ),
+                  ),
+                );
+              }
 
-                  if (state.currCategory?.name == C.vip) {
-                    return const VipListView();
-                  }
+              if (state.currCategory?.name == C.vip) return const VipListView();
 
-                  final images = state.imagesByCategory;
+              final images = state.imagesByCategory;
 
-                  if (images == null || images.isEmpty) {
-                    return Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.only(top: 100.sp),
-                      child: Text(
-                        LocaleKeys.no_images.tr(),
-                        style: AppStyles.shared.h1,
-                      ),
-                    );
-                  }
+              if (images == null || images.isEmpty) {
+                return Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 100.sp),
+                  child: Text(
+                    LocaleKeys.no_images.tr(),
+                    style: AppStyles.shared.h1,
+                  ),
+                );
+              }
 
-                  return ImagesGrid(images: images);
-                },
-              ),
-            ],
+              return ImagesGrid(images);
+            },
           ),
-        ),
+        ],
       ),
     );
   }

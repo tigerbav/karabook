@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/common/app_styles.dart';
-import 'package:karabookapp/common/models/pack.dart';
+import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/events/presentation/logic/comics/comics_cubit.dart';
 import 'package:karabookapp/pages/events/presentation/widgets/comics_list_item.dart';
 
@@ -26,15 +26,15 @@ class _ComicsListState extends State<ComicsList> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ComicsCubit, ComicsState>(
-      buildWhen: (p, c) => p.packs != c.packs,
+      buildWhen: (p, c) => p.comicsPack != c.comicsPack,
       builder: (context, state) {
         return ListView.separated(
           shrinkWrap: true,
-          itemCount: state.packs.length,
+          itemCount: state.comicsPack.length,
           controller: _controller,
           physics: const NeverScrollableScrollPhysics(),
           separatorBuilder: (_, __) => SizedBox(height: 20.sp),
-          itemBuilder: (context, index) => _Item(state.packs[index]),
+          itemBuilder: (context, index) => _Item(state.comicsPack[index]),
         );
       },
     );
@@ -42,8 +42,8 @@ class _ComicsListState extends State<ComicsList> {
 }
 
 class _Item extends StatefulWidget {
-  const _Item(this.pack);
-  final Pack pack;
+  const _Item(this.imagePack);
+  final List<SvgImage> imagePack;
 
   @override
   State<_Item> createState() => _ItemState();
@@ -60,6 +60,8 @@ class _ItemState extends State<_Item> {
 
   @override
   Widget build(BuildContext context) {
+    final imagesPack = widget.imagePack;
+
     return SizedBox(
       height: 140.sp,
       child: Stack(
@@ -81,19 +83,28 @@ class _ItemState extends State<_Item> {
                 width: 80.sp,
                 alignment: Alignment.center,
                 child: Text(
-                  'Robocop',
+                  imagesPack.firstOrNull?.subcategories ?? '',
                   textAlign: TextAlign.center,
                   style: AppStyles.shared.toast,
                 ),
               ),
               ListView.separated(
-                itemCount: 4,
+                itemCount: imagesPack.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.all(20.sp),
                 scrollDirection: Axis.horizontal,
                 separatorBuilder: (_, __) => SizedBox(width: 16.sp),
-                itemBuilder: (context, index) => ComicsListItem(index: index),
+                itemBuilder: (context, index) {
+                  final isActive = index == 0 ||
+                      (imagesPack[index].complete == 1) ||
+                      imagesPack[index - 1].complete == 1;
+
+                  return ComicsListItem(
+                    image: imagesPack[index],
+                    isActive: isActive,
+                  );
+                },
               ),
             ],
           ),

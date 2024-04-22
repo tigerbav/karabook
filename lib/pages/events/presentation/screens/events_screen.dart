@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:karabookapp/common/utils/utils.dart';
 import 'package:karabookapp/pages/events/data/datasources/events_datasource.dart';
 import 'package:karabookapp/pages/events/domain/repositories/events_repository.dart';
 import 'package:karabookapp/pages/events/presentation/logic/comics/comics_cubit.dart';
@@ -51,15 +52,29 @@ class _EventsScreenViewState extends State<_EventsScreenView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: EventsAppBar(),
-      body: ListView(
-        controller: _controller,
-        children: [
-          const DailyWidget(),
-          SizedBox(height: 40.sp),
-          const ComicsWidget(),
-        ],
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ComicsCubit, ComicsState>(
+          listener: (context, state) {
+            if (state.isFailure) Utils.showToast(context, null);
+          },
+        ),
+        BlocListener<DailyCubit, DailyState>(
+          listener: (context, state) {
+            if (state.isFailure) Utils.showToast(context, null);
+          },
+        ),
+      ],
+      child: Scaffold(
+        appBar: EventsAppBar(),
+        body: ListView(
+          controller: _controller,
+          children: [
+            const DailyWidget(),
+            SizedBox(height: 40.sp),
+            const ComicsWidget(),
+          ],
+        ),
       ),
     );
   }

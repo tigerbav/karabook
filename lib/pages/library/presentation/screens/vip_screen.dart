@@ -68,7 +68,7 @@ class VipScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20.sp),
-            ImagesGrid(images: images),
+            ImagesGrid(images),
           ],
         ),
       ),

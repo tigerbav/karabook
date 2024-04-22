@@ -1,14 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-class Achievements extends Equatable {
-  const Achievements(
-      {required this.icon,
-      required this.title,
-      required this.counter,
-      required this.current,
-      required this.subTitle,
-      required this.category,
-      required this.progress});
+class Achievement extends Equatable {
+  const Achievement({
+    required this.icon,
+    required this.title,
+    required this.counter,
+    required this.current,
+    required this.subTitle,
+    required this.category,
+    required this.progress,
+  });
 
   final String icon;
   final String title;
@@ -18,7 +19,7 @@ class Achievements extends Equatable {
   final String category;
   final double progress;
 
-  factory Achievements.fromJson(Map<String, dynamic> json) => Achievements(
+  factory Achievement.fromJson(Map<String, dynamic> json) => Achievement(
         icon: json["icon"],
         title: json["title"],
         counter: json["counter"],

@@ -18,7 +18,7 @@ class SvgImage extends Equatable {
   final String imageCategory;
   final int height;
   final int width;
-  final String? subcategories;
+  final String subcategories;
   final int? complete;
   final Uint8List? screenProgress;
 
@@ -58,7 +58,7 @@ class SvgImage extends Equatable {
       };
 
   String get svgOnlyStroke {
-    return imageParts.replaceAll(RegExp('"#.*?\\"'), '"#FFFFFF"');
+    return imageParts;
   }
 
   @override

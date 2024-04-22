@@ -4,16 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
+import 'package:karabookapp/common/widgets/images_grid_item.dart';
 import 'package:karabookapp/pages/events/presentation/logic/daily/daily_cubit.dart';
 
-class DailyImage extends StatefulWidget {
-  const DailyImage({super.key});
+class DailyGrid extends StatefulWidget {
+  const DailyGrid({super.key});
 
   @override
-  State<DailyImage> createState() => _DailyImageState();
+  State<DailyGrid> createState() => _DailyGridState();
 }
 
-class _DailyImageState extends State<DailyImage> {
+class _DailyGridState extends State<DailyGrid> {
   final _controller = ScrollController();
 
   @override
@@ -27,14 +28,15 @@ class _DailyImageState extends State<DailyImage> {
     return BlocBuilder<DailyCubit, DailyState>(
       buildWhen: (p, c) => p.images != c.images,
       builder: (context, state) {
+        final length = state.images.length > 7 ? 7 : state.images.length;
         return GridView.builder(
-          padding: EdgeInsets.symmetric(horizontal: 20.sp),
           shrinkWrap: true,
-          controller: _controller,
           //daily image shouldn't be here
-          itemCount: state.images.length - 1,
-          physics: const NeverScrollableScrollPhysics(),
+          itemCount: length - 1,
+          controller: _controller,
           scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.symmetric(horizontal: 20.sp),
+          physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             mainAxisSpacing: 12.sp,
@@ -42,6 +44,8 @@ class _DailyImageState extends State<DailyImage> {
           ),
           itemBuilder: (context, index) => _Item(
             image: state.images[index + 1],
+            day: (DateTime.now().toUtc().subtract(Duration(days: index + 1)))
+                .day,
           ),
         );
       },
@@ -50,24 +54,15 @@ class _DailyImageState extends State<DailyImage> {
 }
 
 class _Item extends StatelessWidget {
-  const _Item({required this.image});
+  const _Item({required this.image, required this.day});
   final SvgImage image;
+  final int day;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          padding: EdgeInsets.all(4.sp),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.shared.grey),
-            borderRadius: BorderRadius.all(Radius.circular(16.sp)),
-          ),
-          child: Image.asset(
-            'assets/images/octopus.png',
-            fit: BoxFit.contain,
-          ),
-        ),
+        ImagesGridItem(image),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(
@@ -79,7 +74,7 @@ class _Item extends StatelessWidget {
               border: Border.all(color: AppColors.shared.purple),
             ),
             child: Text(
-              '10',
+              day.toString(),
               textAlign: TextAlign.center,
               style: AppStyles.shared.segment,
             ),

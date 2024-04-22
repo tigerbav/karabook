@@ -2,7 +2,7 @@ import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/models/pack.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/library/data/models/image_category.dart';
-import 'package:karabookapp/pages/portfolio/data/models/achievements.dart';
+import 'package:karabookapp/pages/portfolio/data/models/achievement.dart';
 
 import '../sqflite/db_provider.dart';
 import 'package:dio/dio.dart';
@@ -58,10 +58,10 @@ class ApiProvider {
     }).toList();
   }
 
-  Future<List<Achievements?>> createAchievementsProgress() async {
+  Future<List<Achievement?>> createAchievementsProgress() async {
     return (C.achievementsLocalData).map((achievementsLocalData) {
       DBProvider.db.createAchievementsProgress(
-        Achievements.fromJson(achievementsLocalData.toJson()),
+        Achievement.fromJson(achievementsLocalData.toJson()),
       );
     }).toList();
   }

@@ -1,7 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/navigator.dart';
 import 'package:karabookapp/common/models/pack.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/app_tab_bar/presentation/screens/tab_bar_screen.dart';
@@ -43,5 +41,6 @@ class AppRouter extends _$AppRouter {
         ),
         AutoRoute(page: SvgViewRoute.page),
         AutoRoute(page: LoadingRoute.page),
+        AutoRoute(page: AchievementRoute.page),
       ];
 }
