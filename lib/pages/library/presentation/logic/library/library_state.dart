@@ -14,19 +14,17 @@ class LibraryState extends Equatable {
     required this.status,
     this.errorMessage,
     required this.currCategory,
-    required List<ImageCategory> categories,
-    required List<SvgImage> images,
-  })  : _categories = categories,
-        _images = images;
+    required this.categories,
+    required this.images,
+    required this.packs,
+  });
 
   final LibraryStatus status;
   final String? errorMessage;
   final ImageCategory? currCategory;
-  final List<ImageCategory> _categories;
-  final List<SvgImage> _images;
-
-  List<ImageCategory> get categories => _categories;
-  List<SvgImage> get images => _images;
+  final List<ImageCategory> categories;
+  final List<SvgImage> images;
+  final List<Pack> packs;
 
   bool get isLoadingCategories => status == LibraryStatus.loadingCategories;
   bool get isLoadingImages => status == LibraryStatus.loadingImages;
@@ -35,18 +33,21 @@ class LibraryState extends Equatable {
   List<SvgImage>? get imagesByCategory {
     if (currCategory == null) return null;
 
-    return _images.where((e) => e.imageCategory == currCategory?.name).toList();
+    return images.where((e) => e.imageCategory == currCategory?.name).toList();
   }
 
   List<ImageCategory> categoriesWithImages([List<SvgImage>? images]) {
     final filteredCategories = <ImageCategory>[];
 
-    for (final category in _categories) {
-      final image = (images ?? _images).firstWhereOrNull(
+    for (final category in categories) {
+      final image = images?.firstWhereOrNull(
         (e) => e.imageCategory == category.name,
       );
 
       if (image != null) filteredCategories.add(category);
+    }
+    if (filteredCategories.firstWhereOrNull((e) => e.name == C.vip) == null) {
+      filteredCategories.add(const ImageCategory(id: -1, name: C.vip));
     }
 
     return filteredCategories;
@@ -58,13 +59,15 @@ class LibraryState extends Equatable {
     ImageCategory? currCategory,
     List<ImageCategory>? categories,
     List<SvgImage>? images,
+    List<Pack>? packs,
   }) {
     return LibraryState(
       status: status,
       errorMessage: errorMessage ?? this.errorMessage,
       currCategory: currCategory ?? this.currCategory,
-      categories: categories ?? _categories,
-      images: images ?? _images,
+      categories: categories ?? this.categories,
+      images: images ?? this.images,
+      packs: packs ?? this.packs,
     );
   }
 
@@ -73,7 +76,8 @@ class LibraryState extends Equatable {
         status,
         errorMessage,
         currCategory,
-        _categories,
-        _images,
+        categories,
+        images,
+        packs,
       ];
 }

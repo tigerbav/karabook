@@ -21,6 +21,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AchievementScreen(),
       );
     },
+    ContactUsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ContactUsScreen(),
+      );
+    },
     EmptyRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -88,8 +94,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: VipScreen(
           key: args.key,
-          packs: args.packs,
-          images: args.images,
+          pack: args.pack,
         ),
       );
     },
@@ -106,6 +111,20 @@ class AchievementRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AchievementRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ContactUsScreen]
+class ContactUsRoute extends PageRouteInfo<void> {
+  const ContactUsRoute({List<PageRouteInfo>? children})
+      : super(
+          ContactUsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ContactUsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -300,15 +319,13 @@ class TabBarRoute extends PageRouteInfo<void> {
 class VipRoute extends PageRouteInfo<VipRouteArgs> {
   VipRoute({
     Key? key,
-    required Pack packs,
-    required List<SvgImage> images,
+    required Pack pack,
     List<PageRouteInfo>? children,
   }) : super(
           VipRoute.name,
           args: VipRouteArgs(
             key: key,
-            packs: packs,
-            images: images,
+            pack: pack,
           ),
           initialChildren: children,
         );
@@ -321,18 +338,15 @@ class VipRoute extends PageRouteInfo<VipRouteArgs> {
 class VipRouteArgs {
   const VipRouteArgs({
     this.key,
-    required this.packs,
-    required this.images,
+    required this.pack,
   });
 
   final Key? key;
 
-  final Pack packs;
-
-  final List<SvgImage> images;
+  final Pack pack;
 
   @override
   String toString() {
-    return 'VipRouteArgs{key: $key, packs: $packs, images: $images}';
+    return 'VipRouteArgs{key: $key, pack: $pack}';
   }
 }

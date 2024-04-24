@@ -67,7 +67,7 @@ class DBProvider {
           'packName TEXT,'
           'packIcon TEXT,'
           'packDescription TEXT,'
-          'packsIdentifier TEXT'
+          'packIdentifier TEXT'
           ')');
     });
   }

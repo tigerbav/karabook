@@ -33,4 +33,10 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1387367164840158~9046769983" />
     </application>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action." />
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
 </manifest>

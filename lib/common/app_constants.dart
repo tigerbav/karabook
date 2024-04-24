@@ -4,6 +4,11 @@ import 'package:karabookapp/pages/portfolio/data/models/achievement.dart';
 class C {
   static const vip = 'Vip';
   static const gift = 'Gift';
+  static const vibration = 'Vibration';
+  static const fillAnimation = 'Fill Animation';
+
+  static const support = 'KaraBook support';
+  static const email = 'aburavikov@gmail.com';
 
   static final achievementsLocalData = <Achievement>[
     const Achievement(

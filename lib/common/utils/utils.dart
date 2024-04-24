@@ -10,10 +10,10 @@ class Utils {
   // Icon(Icons.arrow_drop_down_circle_outlined),LocaleKeys.congratulations_mission_completed.tr(),
   static FToast showToast(
     BuildContext context,
-    String? text, [
+    String? text, {
     Icon? icon,
     bool isError = true,
-  ]) {
+  }) {
     final redBg = isError || text == null;
 
     return FToast()
@@ -39,5 +39,20 @@ class Utils {
           ),
         ),
       );
+  }
+
+  static showPopUp(
+    BuildContext context,
+    Widget widget,
+  ) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: AppColors.shared.popupBg,
+      builder: (_) => Dialog(
+        elevation: 0,
+        child: widget,
+      ),
+    );
   }
 }

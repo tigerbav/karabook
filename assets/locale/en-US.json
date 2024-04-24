@@ -12,5 +12,15 @@
   "completed":"Completed",
   "loading":"Loading",
   "no_progress_pictures":"Oops.. No progress pictures!",
-  "any_finished_paintings":"It seems you don't have any finished paintings!"
+  "any_finished_paintings":"It seems you don't have any finished paintings!",
+  "settings":"Settings",
+  "vibration_on_completion":"Vibration on Completion",
+  "animation_to_fill":"Animation to Fill",
+  "contact_us":"Contact Us",
+  "remove_ads":"Remove Ads",
+  "restore_purchases":"Restore Purchases",
+  "privacy_policy":"Privacy Policy",
+  "term_of_use":"Term of Use",
+  "send":"Send",
+  "email_sent":"Your email was successfully sent."
 }

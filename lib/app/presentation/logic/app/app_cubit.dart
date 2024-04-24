@@ -22,7 +22,7 @@ class AppCubit extends Cubit<AppState> {
     try {
       await ApiProvider.shared.getAllSvgImage();
       await ApiProvider.shared.getAllImageCategory();
-      // await ApiProvider.shared.getAllPacks();
+      await ApiProvider.shared.getAllPacks();
       // await ApiProvider.shared.createAchievementsProgress();
     } catch (e) {
       print(e);

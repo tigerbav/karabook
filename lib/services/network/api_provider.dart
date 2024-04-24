@@ -50,11 +50,14 @@ class ApiProvider {
   }
 
   Future<List<Pack?>> getAllPacks() async {
-    var url = "https://heroku-karabook-backend-v2.herokuapp.com/packs";
+    var url = "${_baseUrl}packs";
     Response response = await Dio().get(url);
 
     return (response.data as List).map((packs) {
-      DBProvider.db.createPacks(Pack.fromJson(packs));
+      final fromJson = Pack.fromJson(packs);
+      DBProvider.db.createPacks(fromJson);
+
+      return fromJson;
     }).toList();
   }
 

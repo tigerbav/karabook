@@ -2,8 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:karabookapp/app/presentation/screens/settings_popup.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
+import 'package:karabookapp/common/utils/utils.dart';
 import 'package:karabookapp/services/navigation/app_router.dart';
 
 class PortfolioAppBar extends AppBar {
@@ -22,7 +24,10 @@ class PortfolioAppBar extends AppBar {
                   },
                   child: SvgPicture.asset(AppResources.achievement),
                 ),
-                SvgPicture.asset(AppResources.settings),
+                GestureDetector(
+                  onTap: () => Utils.showPopUp(context, const SettingsPopup()),
+                  child: SvgPicture.asset(AppResources.settings),
+                ),
               ],
             ),
           ),

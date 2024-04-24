@@ -15,5 +15,15 @@ abstract class  LocaleKeys {
   static const loading = 'loading';
   static const no_progress_pictures = 'no_progress_pictures';
   static const any_finished_paintings = 'any_finished_paintings';
+  static const settings = 'settings';
+  static const vibration_on_completion = 'vibration_on_completion';
+  static const animation_to_fill = 'animation_to_fill';
+  static const contact_us = 'contact_us';
+  static const remove_ads = 'remove_ads';
+  static const restore_purchases = 'restore_purchases';
+  static const privacy_policy = 'privacy_policy';
+  static const term_of_use = 'term_of_use';
+  static const send = 'send';
+  static const email_sent = 'email_sent';
 
 }

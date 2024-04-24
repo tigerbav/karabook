@@ -3,6 +3,7 @@ class AppResources {
   static const _pathToImages = 'assets/images';
   static const _pathToLottie = 'assets/lottie';
   static const _pathToAchievement = 'assets/icons/achievements';
+  static const _pathToSettings = 'assets/icons/settings';
 
   // tabs
   static const library = '$_pathToLottie/library_lottie.json';
@@ -29,6 +30,8 @@ class AppResources {
   static const achievement = '$_pathToIcons/achievement_icon.svg';
   static const lock = '$_pathToIcons/lock.svg';
   static const unlock = '$_pathToIcons/unlock.svg';
+  static const close = '$_pathToIcons/close.svg';
+  static const attach = '$_pathToIcons/attach.svg';
 
   //achievement
   static const butterfly = '$_pathToAchievement/butterfly.svg';
@@ -47,4 +50,11 @@ class AppResources {
   static const silver = '$_pathToAchievement/silver.svg';
   static const transport = '$_pathToAchievement/transport.svg';
   static const vip = '$_pathToAchievement/vip.svg';
+
+  //settings icons
+  static const vibration = '$_pathToSettings/vibro.svg';
+  static const fill = '$_pathToSettings/fill.svg';
+  static const contactUs = '$_pathToSettings/contact.svg';
+  static const deleteAds = '$_pathToSettings/no_ads.svg';
+  static const restore = '$_pathToSettings/restore.svg';
 }

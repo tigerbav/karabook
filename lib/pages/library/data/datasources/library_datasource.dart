@@ -1,3 +1,4 @@
+import 'package:karabookapp/common/models/pack.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/library/data/models/image_category.dart';
 import 'package:karabookapp/services/sqflite/db_provider.dart';
@@ -5,7 +6,8 @@ import 'package:karabookapp/services/sqflite/db_provider.dart';
 abstract class ILibraryDataSource {
   Future<List<ImageCategory?>> getAllCategories();
   Future<List<SvgImage?>> getAllImages();
-  Future<List<SvgImage>> getImagesByCategoryId();
+  Future<List<Pack?>> getAllPacks();
+  Future<List<SvgImage?>> getAllImagesFromPack(String packName);
 }
 
 class LibraryDataSource extends ILibraryDataSource {
@@ -20,8 +22,12 @@ class LibraryDataSource extends ILibraryDataSource {
   }
 
   @override
-  Future<List<SvgImage>> getImagesByCategoryId() {
-    // TODO: implement getImagesByCategoryId
-    throw UnimplementedError();
+  Future<List<Pack?>> getAllPacks() async {
+    return await DBProvider.db.getPacks();
+  }
+
+  @override
+  Future<List<SvgImage?>> getAllImagesFromPack(String packName) async {
+    return await DBProvider.db.getPacksColoringVIP(packName);
   }
 }

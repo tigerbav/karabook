@@ -30,7 +30,8 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
       height: 24.sp,
       child: BlocBuilder<LibraryCubit, LibraryState>(
         buildWhen: (p, c) =>
-            p.categoriesWithImages != c.categoriesWithImages ||
+            p.categoriesWithImages(p.images) !=
+                c.categoriesWithImages(c.images) ||
             p.isLoadingCategories != c.isLoadingCategories ||
             p.currCategory != c.currCategory,
         builder: (context, state) {
@@ -43,7 +44,7 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
             );
           }
 
-          final categories = state.categoriesWithImages();
+          final categories = state.categoriesWithImages(state.images);
 
           if (categories.isEmpty) {
             return Text(

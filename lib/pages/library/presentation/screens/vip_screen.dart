@@ -1,26 +1,44 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/models/pack.dart';
-import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/common/widgets/arrow_back.dart';
 import 'package:karabookapp/common/widgets/images_grid.dart';
 import 'package:karabookapp/common/widgets/primary_button.dart';
+import 'package:karabookapp/pages/library/data/datasources/library_datasource.dart';
+import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
+import 'package:karabookapp/pages/library/presentation/logic/vip/vip_cubit.dart';
 
 @RoutePage()
 class VipScreen extends StatelessWidget {
   const VipScreen({
     super.key,
-    required this.packs,
-    required this.images,
+    required this.pack,
   });
 
-  final Pack packs;
-  final List<SvgImage> images;
+  final Pack pack;
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (ctx) => VipCubit(
+        repository: LibraryRepository(LibraryDataSource()),
+        pack: pack,
+      ),
+      child: const _VipScreen(),
+    );
+  }
+}
+
+class _VipScreen extends StatelessWidget {
+  const _VipScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<VipCubit>();
+
     return Scaffold(
       appBar: AppBar(
         leading: const ArrowBack(),
@@ -48,7 +66,7 @@ class VipScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      'Pokemon',
+                      cubit.pack.packName,
                       style: AppStyles.shared.packTitles,
                     ),
                   ),
@@ -63,12 +81,17 @@ class VipScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.sp),
               child: Text(
-                'Мы рады поделиться инкиальной историей созданной нашей талантилой художницей. В этом самом первом пакете картино вы можете п...  И бла-бла) Тянем всю страницу с сервака',
+                cubit.pack.packDescription,
                 style: AppStyles.shared.packDescription,
               ),
             ),
             SizedBox(height: 20.sp),
-            ImagesGrid(images),
+            BlocBuilder<VipCubit, VipState>(
+              buildWhen: (p, c) => p.images != c.images,
+              builder: (context, state) {
+                return ImagesGrid(state.images);
+              },
+            ),
           ],
         ),
       ),

@@ -13,6 +13,9 @@ class AppColors {
   Color get purple => _colors.purple;
   Color get darkPurple => _colors.darkPurple;
   Color get grey => _colors.grey;
+  Color get darkGrey => _colors.darkGrey;
+  Color get lightGrey => _colors.lightGrey;
+  Color get popupBg => _colors.popupBg;
   Color get transparent => _colors.transparent;
 }
 
@@ -25,6 +28,9 @@ abstract class IColor {
   late final Color purple;
   late final Color darkPurple;
   late final Color grey;
+  late final Color darkGrey;
+  late final Color lightGrey;
+  late final Color popupBg;
   late final Color transparent;
 }
 
@@ -52,6 +58,15 @@ class LightColors implements IColor {
 
   @override
   Color grey = const Color(0xFF828282);
+
+  @override
+  Color lightGrey = const Color(0xFFF4F4FC);
+
+  @override
+  Color darkGrey = const Color(0xFFD3D3D3);
+
+  @override
+  Color popupBg = const Color(0x99331B27);
 
   @override
   Color transparent = Colors.transparent;

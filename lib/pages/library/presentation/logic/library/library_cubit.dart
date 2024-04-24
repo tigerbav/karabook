@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karabookapp/common/app_constants.dart';
+import 'package:karabookapp/common/models/pack.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/common/utils/extensions/iterable.dart';
 import 'package:karabookapp/pages/library/data/models/image_category.dart';
@@ -14,9 +16,11 @@ class LibraryCubit extends Cubit<LibraryState> {
           currCategory: null,
           categories: [],
           images: [],
+          packs: [],
         )) {
     _loadCategories();
     _loadImages();
+    _loadPack();
   }
 
   final LibraryRepository _repository;
@@ -31,8 +35,7 @@ class LibraryCubit extends Cubit<LibraryState> {
         errorMessage: l.errorMessage,
       )),
       (r) {
-        if (r.length == state._categories.length) return;
-
+        if (r.length == state.categories.length) return;
         emit(state.copyWith(
           status: LibraryStatus.success,
           categories: r,
@@ -51,7 +54,7 @@ class LibraryCubit extends Cubit<LibraryState> {
         errorMessage: l.errorMessage,
       )),
       (r) {
-        if (r.length == state._images.length) return;
+        if (r.length == state.images.length) return;
 
         emit(state.copyWith(
           status: LibraryStatus.success,
@@ -62,10 +65,26 @@ class LibraryCubit extends Cubit<LibraryState> {
     );
   }
 
+  Future<void> _loadPack() async {
+    final result = await _repository.getAllPacks();
+    result.fold(
+      (l) => emit(state.copyWith(
+        status: LibraryStatus.failure,
+        errorMessage: l.errorMessage,
+      )),
+      (r) {
+        emit(state.copyWith(
+          status: LibraryStatus.success,
+          packs: r,
+        ));
+      },
+    );
+  }
+
   void setCurrentCategory(int id) {
     emit(state.copyWith(
       status: LibraryStatus.idle,
-      currCategory: state._categories.firstWhereOrNull((e) => e.id == id),
+      currCategory: state.categories.firstWhereOrNull((e) => e.id == id),
     ));
   }
 }

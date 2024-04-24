@@ -5,6 +5,7 @@ import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/common/utils/extensions/string.dart';
 import 'package:karabookapp/pages/events/domain/repositories/events_repository.dart';
+import 'package:karabookapp/services/managers/shared_pref_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'daily_state.dart';
@@ -20,12 +21,11 @@ class DailyCubit extends Cubit<DailyState> {
 
   final IEventsRepository _repository;
 
-  late final SharedPreferences _prefs;
+  Future<void> _checkCurrentDaily() async {
+    final timeStr = await SharedPrefManager.share.get(C.gift);
+    if (timeStr is! String) return;
 
-  Future<void> _initSharedPreferences() async {
-    _prefs = await SharedPreferences.getInstance();
-
-    final parsedTime = _prefs.getString(C.gift)?.time;
+    final parsedTime = timeStr.time;
     if (parsedTime == null) return;
 
     //check days between current and last sessions
@@ -36,7 +36,7 @@ class DailyCubit extends Cubit<DailyState> {
 
   Future<void> _loadImages() async {
     emit(state.copyWith(status: DailyStatus.loading));
-    await _initSharedPreferences();
+    await _checkCurrentDaily();
 
     final result = await _repository.getDailyImages();
     result.fold(
@@ -54,7 +54,7 @@ class DailyCubit extends Cubit<DailyState> {
   bool decreaseOpacity() {
     if (state.isGotGift == true) return true;
     final formatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    _prefs.setString(C.gift, formatted);
+    SharedPrefManager.share.write(C.gift, formatted);
 
     emit(state.copyWith(status: DailyStatus.idle, opacity: 0));
     return false;
