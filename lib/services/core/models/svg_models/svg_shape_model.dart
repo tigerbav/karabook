@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:karabookapp/common/utils/extensions/string.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:xml/xml.dart';
 
@@ -22,14 +23,27 @@ class SvgShapeModel {
     //this.listModelSvgFile,
   ) : _path = parseSvgPathData(d);
 
-  factory SvgShapeModel.fromElement(XmlElement svgElement) {
+  factory SvgShapeModel.fromElement( svgElement) {
     return SvgShapeModel._(
       svgElement.getAttribute('id').toString(),
       svgElement.getAttribute('d').toString(),
-      HexColor(svgElement.getAttribute('fill').toString() == 'black' ? '#000000' : svgElement.getAttribute('fill').toString()),
+      HexColor(_getHexColorFromAttrs(svgElement)),
       //svgElement.findElements('path').map<ModelSvgShape>((e) => ModelSvgShape.fromElement(e)).toList(),
       svgElement.getAttribute('fill').toString() == 'black',
     );
+  }
+
+  static String _getHexColorFromAttrs(XmlElement svgElement){
+    final getHexColorFromStyle = svgElement.getAttribute('fill')?.hexFromColorName ?? svgElement.getAttribute('fill') ?? _getHexColorFromStyle(svgElement.getAttribute('style').toString());
+    return getHexColorFromStyle;
+
+  }
+
+  static String _getHexColorFromStyle(String styleAttr){
+    String fillStyle = styleAttr.split(';').where((element) => element.contains('fill:')).first;
+    String colorValue = fillStyle.replaceAll('fill:', '');
+
+    return colorValue.hexFromColorName ?? colorValue;
   }
 
   factory SvgShapeModel.epmty() {
