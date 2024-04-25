@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +40,7 @@ class _VipListViewState extends State<VipListView> {
           separatorBuilder: (_, __) => SizedBox(height: 24.sp),
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
+            final pack = state.packs[index];
             return Column(
               children: [
                 Row(
@@ -45,16 +48,14 @@ class _VipListViewState extends State<VipListView> {
                   children: [
                     Expanded(
                       child: Text(
-                        state.packs[index].packName,
+                        pack.packName,
                         style: AppStyles.shared.packTitles,
                       ),
                     ),
                     PrimaryButton(
                       text: LocaleKeys.get_this_comic.tr(),
                       action: () {
-                        context.router.navigate(
-                          VipRoute(pack: state.packs[index]),
-                        );
+                        context.router.navigate(VipRoute(pack: pack));
                       },
                     ),
                   ],
@@ -64,9 +65,10 @@ class _VipListViewState extends State<VipListView> {
                   width: double.infinity,
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(16.sp)),
-                    child: Image.asset(
-                      'assets/images/pokemon.png',
+                    child: Image.memory(
+                      const Base64Decoder().convert(pack.packIcon),
                       fit: BoxFit.cover,
+                      gaplessPlayback: true,
                     ),
                   ),
                 ),

@@ -10,6 +10,7 @@ class SvgImage extends Equatable {
     required this.width,
     required this.subcategories,
     required this.complete,
+    this.isActive = false,
     this.screenProgress,
   });
 
@@ -20,6 +21,7 @@ class SvgImage extends Equatable {
   final int width;
   final String subcategories;
   final int? complete;
+  final bool isActive;
   final Uint8List? screenProgress;
 
   factory SvgImage.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class SvgImage extends Equatable {
       width: json["width"],
       subcategories: json["subCategories"],
       complete: json["complete"],
+      isActive: json["isActive"] == 1,
       screenProgress: json["screenProgress"],
     );
   }
@@ -44,6 +47,7 @@ class SvgImage extends Equatable {
       width: json["width"],
       subcategories: json["subCategories"],
       complete: json["complete"],
+      isActive: json["isActive"] == 1,
       screenProgress: Uint8List.fromList((json["screenProgress"]).codeUnits),
     );
   }
@@ -54,12 +58,9 @@ class SvgImage extends Equatable {
         "imageCategory": imageCategory,
         "height": height,
         "width": width,
+        "isActive": isActive ? 1 : 0,
         "subcategories": subcategories,
       };
-
-  String get svgOnlyStroke {
-    return imageParts;
-  }
 
   @override
   List<Object?> get props => [
@@ -70,6 +71,7 @@ class SvgImage extends Equatable {
         width,
         subcategories,
         complete,
+        isActive,
         screenProgress,
       ];
 }

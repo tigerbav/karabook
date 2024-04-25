@@ -55,7 +55,7 @@ class _DailyWidgetState extends State<DailyWidget>
                   image: MemoryImage(image!.screenProgress!),
                   fit: BoxFit.cover,
                 )
-              : SvgPicture.string(image!.svgOnlyStroke);
+              : SvgPicture.string(image!.imageParts);
 
           return ListView(
             controller: _scrollController,

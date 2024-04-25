@@ -59,6 +59,7 @@ class DBProvider {
           'achievementsComplete INTEGER DEFAULT 0,'
           'shapes TEXT,'
           'screenProgress BLOB,'
+          'isActive INTEGER DEFAULT 0,'
           'createdAt TEXT,'
           'updatedAt TEXT'
           ')');
