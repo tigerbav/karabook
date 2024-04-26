@@ -32,6 +32,8 @@ class AppResources {
   static const unlock = '$_pathToIcons/unlock.svg';
   static const close = '$_pathToIcons/close.svg';
   static const attach = '$_pathToIcons/attach.svg';
+  static const fullImage = '$_pathToIcons/full_image.svg';
+  static const hints = '$_pathToIcons/hints.svg';
 
   //achievement
   static const butterfly = '$_pathToAchievement/butterfly.svg';

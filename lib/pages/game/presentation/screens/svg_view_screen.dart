@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:karabookapp/common/app_constants.dart';
+import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/checkers_paint/checkers_paint.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/circle_paint/circle_paint.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/color_picker/color_picker.dart';
@@ -15,7 +16,6 @@ import 'package:karabookapp/pages/game/presentation/widgets/line_paint/line_pain
 import 'package:karabookapp/pages/game/presentation/widgets/number_painter.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/painter_inherited.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/reward_button.dart';
-import 'package:karabookapp/pages/game/presentation/widgets/settings_shared_preferences.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/shape_painter.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/zoom_out_button.dart';
 
@@ -26,6 +26,7 @@ import 'package:karabookapp/services/core/models/svg_models/svg_shape_model.dart
 import 'package:karabookapp/services/core/painter_tools.dart';
 import 'package:karabookapp/services/core/rewards.dart';
 import 'package:karabookapp/services/core/toast.dart';
+import 'package:karabookapp/services/managers/shared_pref_manager.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -81,9 +82,7 @@ class _SvgViewScreenState extends State<SvgViewScreen>
 
   final _screenShotController = ScreenshotController();
 
-  final _settingsPreferences = SettingsPreferences();
-  var _millisecondsAnimation;
-  var _vibration;
+  var _millisecondsAnimation = 0;
 
   @override
   void dispose() {
@@ -96,7 +95,8 @@ class _SvgViewScreenState extends State<SvgViewScreen>
   @override
   void initState() {
     super.initState();
-    _getSwitchValues();
+
+    _isAnimatedPaint();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _transformationController.value = Matrix4Transform()
@@ -115,7 +115,7 @@ class _SvgViewScreenState extends State<SvgViewScreen>
 
   @override
   Widget build(BuildContext context) {
-    final _size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     debugPrint('build');
     return Scaffold(
       backgroundColor: Colors.white,
@@ -152,41 +152,40 @@ class _SvgViewScreenState extends State<SvgViewScreen>
                     alignment: Alignment.center,
                     children: [
                       SizedBox(
-                        width: _size.width,
-                        height: _size.height,
+                        width: size.width,
+                        height: size.height,
                         child: const CheckersPaint(),
                       ),
                       SizedBox(
-                        width: _size.width,
-                        height: _size.height,
+                        width: size.width,
+                        height: size.height,
                         child: ManyCirclesPaint(
                           notifier: _offsetNotifier,
                           selectedColoredShapes: _selectedColoringShapes,
                           percentController: _percentController,
                           colorListKey: _colorListKey,
-                          millisecondsAnimation: _millisecondsAnimation ?? 400,
+                          millisecondsAnimation: _millisecondsAnimation,
                           onEndCircle: () => setState(() {
                             _screenShotProgressColoring();
-                            if (_vibration == true || _vibration == null) {
-                              _vibrationEndColor();
-                            }
+                            _vibrationEndColor();
                           }),
                         ),
                       ),
                       SizedBox(
-                        width: _size.width,
-                        height: _size.height,
+                        width: size.width,
+                        height: size.height,
                         child: FadePaint(
-                            fadeController: _fadeController,
-                            selectedSvgShapes: _selectedShapes),
+                          fadeController: _fadeController,
+                          selectedSvgShapes: _selectedShapes,
+                        ),
                       ),
                       Screenshot(
                         controller: _screenShotController,
                         child: Stack(
                           children: [
                             SizedBox(
-                              width: _size.width,
-                              height: _size.height,
+                              width: size.width,
+                              height: size.height,
                               child: Listener(
                                 onPointerUp: (e) {
                                   _onTapUp(e, context);
@@ -202,8 +201,8 @@ class _SvgViewScreenState extends State<SvgViewScreen>
                                     selectedColor: _selectedColor,
                                     isInit: isInit,
                                     center: Offset(
-                                      _size.width / 2,
-                                      _size.height * 0.85 / 2,
+                                      size.width / 2,
+                                      size.height * 0.85 / 2,
                                     ),
                                   ),
                                 ),
@@ -211,8 +210,8 @@ class _SvgViewScreenState extends State<SvgViewScreen>
                             ),
                             IgnorePointer(
                               child: SizedBox(
-                                width: _size.width,
-                                height: _size.height,
+                                width: size.width,
+                                height: size.height,
                                 child: LinePaint(svgLines: widget.svgLines),
                               ),
                             ),
@@ -221,8 +220,8 @@ class _SvgViewScreenState extends State<SvgViewScreen>
                       ),
                       IgnorePointer(
                         child: SizedBox(
-                          width: _size.width,
-                          height: _size.height,
+                          width: size.width,
+                          height: size.height,
                           //С помощью этого виджета слушаем изменения при зуме
                           child: ValueListenableBuilder(
                             valueListenable: _scaleNotifier,
@@ -230,8 +229,9 @@ class _SvgViewScreenState extends State<SvgViewScreen>
                               return RepaintBoundary(
                                 child: CustomPaint(
                                   painter: NumberPainter(
-                                      shapes: widget.svgShapes,
-                                      scale: scale as double),
+                                    shapes: widget.svgShapes,
+                                    scale: scale,
+                                  ),
                                 ),
                               );
                             },
@@ -247,8 +247,9 @@ class _SvgViewScreenState extends State<SvgViewScreen>
               bottom: 200,
               right: 10,
               child: ZoomOutButton(
-                  key: _zoomKey,
-                  transformController: _transformationController),
+                key: _zoomKey,
+                transformController: _transformationController,
+              ),
             ),
             Visibility(
               visible: !widget.painterProgressModel.isCompleted,
@@ -267,7 +268,7 @@ class _SvgViewScreenState extends State<SvgViewScreen>
               left: 10,
               child: IconButton(
                 onPressed: context.router.pop,
-                icon: SvgPicture.asset('assets/icons/arrow_back.svg'),
+                icon: SvgPicture.asset(AppResources.back),
               ),
             ),
             Visibility(
@@ -276,8 +277,10 @@ class _SvgViewScreenState extends State<SvgViewScreen>
                 rewards: _rewards,
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
+            Positioned(
+              bottom: 0,
+              right: 0,
+              left: 0,
               child: Visibility(
                 visible: !widget.painterProgressModel.isCompleted,
                 child: ColorPicker(
@@ -350,36 +353,17 @@ class _SvgViewScreenState extends State<SvgViewScreen>
     await PainterTools.dbProvider.updatePainter(widget.painterProgressModel);
   }
 
-  _getSwitchValues() async {
-    var _switchedVibration =
-        await _settingsPreferences.getSwitchValue("switchedVibration");
-    var _switchedAnimation =
-        await _settingsPreferences.getSwitchValue("switchedAnimation");
-
-    if (_switchedAnimation == null || _switchedAnimation == true) {
-      setState(() {
-        _millisecondsAnimation = 1000;
-      });
-    } else {
-      setState(() {
-        _millisecondsAnimation = 0;
-      });
-    }
-
-    if (_switchedVibration == null || _switchedVibration == true) {
-      setState(() {
-        _vibration = true;
-      });
-    } else {
-      setState(() {
-        _vibration = false;
-      });
-    }
+  Future<void> _vibrationEndColor() async {
+    final isVibrate = await SharedPrefManager.share.get(C.vibration);
+    if (isVibrate is bool && isVibrate == true) Vibrate.vibrate();
   }
 
-  _vibrationEndColor() {
-    if (_vibration = true) {
-      Vibrate.vibrate();
+  Future<void> _isAnimatedPaint() async {
+    final isAnimated = await SharedPrefManager.share.get(C.fillAnimation);
+    if (isAnimated is bool && isAnimated == true) {
+      _millisecondsAnimation = 400;
+      return;
     }
+    _millisecondsAnimation = 0;
   }
 }

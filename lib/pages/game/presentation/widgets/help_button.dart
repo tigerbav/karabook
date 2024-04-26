@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/services/core/models/svg_models/svg_shape_model.dart';
 import 'package:karabookapp/services/core/rewards.dart';
 import 'package:karabookapp/services/core/toast.dart';
@@ -78,7 +79,7 @@ class _HelpButtonState extends State<HelpButton>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset('assets/svg/game_page/hints_icon.svg'),
+                SvgPicture.asset(AppResources.hints),
                 if (helpCount == 0)
                   const Text(
                     '+1',

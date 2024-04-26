@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/painter_inherited.dart';
 import 'package:karabookapp/services/core/rewards.dart';
 
@@ -90,7 +91,7 @@ class _RewardButtonState extends State<RewardButton>
                     '+2',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  SvgPicture.asset('assets/svg/game_page/hints_icon.svg'),
+                  SvgPicture.asset(AppResources.hints),
                 ],
               ),
             ),

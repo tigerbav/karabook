@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:karabookapp/common/app_resources.dart';
 
 class ZoomOutButton extends StatefulWidget {
   final TransformationController transformController;
-  const ZoomOutButton({required this.transformController, Key? key}) : super(key: key);
+  const ZoomOutButton({required this.transformController, Key? key})
+      : super(key: key);
 
   @override
   ZoomOutButtonState createState() => ZoomOutButtonState();
 }
 
-class ZoomOutButtonState extends State<ZoomOutButton> with SingleTickerProviderStateMixin {
+class ZoomOutButtonState extends State<ZoomOutButton>
+    with SingleTickerProviderStateMixin {
   AnimationController? _controllerReset;
   Animation<Matrix4>? _animationReset;
 
@@ -28,13 +31,11 @@ class ZoomOutButtonState extends State<ZoomOutButton> with SingleTickerProviderS
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: animateResetInitialize,
-      icon: SvgPicture.asset('assets/svg/game_page/zoom_icon.svg')
-    );
+        onPressed: animateResetInitialize,
+        icon: SvgPicture.asset(AppResources.fullImage));
   }
 
   void animateResetInitialize() {

@@ -33,8 +33,9 @@ class _FadePaintState extends State<FadePaint> {
     return RepaintBoundary(
       child: CustomPaint(
         painter: FadePainter(
-            animation: widget.fadeController,
-            selectedShapes: widget.selectedSvgShapes),
+          animation: widget.fadeController,
+          selectedShapes: widget.selectedSvgShapes,
+        ),
       ),
     );
   }

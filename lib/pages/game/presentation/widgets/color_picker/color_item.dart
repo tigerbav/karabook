@@ -27,7 +27,6 @@ class ColorItem extends StatefulWidget {
 
 class _ColorItemState extends State<ColorItem>
     with SingleTickerProviderStateMixin {
-  double percentage = 0;
   @override
   void initState() {
     super.initState();
@@ -48,8 +47,8 @@ class _ColorItemState extends State<ColorItem>
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          width: 55,
-          height: 55,
+          width: 50,
+          height: 50,
           margin: widget.selected
               ? const EdgeInsets.only(bottom: 20, left: 5, right: 5)
               : const EdgeInsets.symmetric(horizontal: 5),
@@ -57,18 +56,6 @@ class _ColorItemState extends State<ColorItem>
               ? Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Positioned(
-                      top: -20,
-                      bottom: -10,
-                      left: -20,
-                      right: -20,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Colors.teal[50],
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
                     RepaintBoundary(
                       child: CustomPaint(
                         painter: RadialProgressPainter(
@@ -89,9 +76,10 @@ class _ColorItemState extends State<ColorItem>
                             child: Text(
                               '${widget.number + 1}',
                               style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),

@@ -6,8 +6,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 int helpCount = 2;
 
 class Rewards {
-  final BannerAd myBanner = BannerAd(
-    adUnitId: Platform.isAndroid ? 'ca-app-pub-3407714794829576/5676927967' : 'ca-app-pub-3407714794829576/1152672671',
+  final myBanner = BannerAd(
+    adUnitId: Platform.isAndroid
+        ? 'ca-app-pub-3940256099942544/6300978111'
+        : 'ca-app-pub-3940256099942544/2934735716',
     //adUnitId: Platform.isAndroid ? 'ca-app-pub-7041305716395438/8678472773' : 'ca-app-pub-7041305716395438/1702000889',
     size: AdSize.banner,
     request: const AdRequest(),
@@ -30,7 +32,7 @@ class Rewards {
   );
   RewardedAd? rewardedAd;
   int numRewardedLoadAttempts = 0;
-  
+
   Rewards() {
     createBannerAd();
     createBannerAd();
@@ -42,7 +44,9 @@ class Rewards {
 
   void createRewardedAd() {
     RewardedAd.load(
-      adUnitId: Platform.isAndroid ? 'ca-app-pub-3407714794829576/6300261410' : 'ca-app-pub-3407714794829576/7825892234',
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/5224354917'
+          : 'ca-app-pub-3940256099942544/1712485313',
       //adUnitId: Platform.isAndroid ? 'ca-app-pub-7041305716395438/4728884824' : 'ca-app-pub-7041305716395438/9351173032',
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
@@ -82,9 +86,10 @@ class Rewards {
       },
     );
 
-    rewardedAd!.setImmersiveMode(true);
-    rewardedAd!.show(onUserEarnedReward: (ad, reward) {
-      debugPrint('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
+    rewardedAd?.setImmersiveMode(true);
+    rewardedAd?.show(onUserEarnedReward: (ad, reward) {
+      debugPrint(
+          '$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
       helpCount += 2;
       onRewarded();
     });

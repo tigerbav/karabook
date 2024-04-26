@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/color_picker/color_item.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/painter_inherited.dart';
 import 'package:karabookapp/services/core/models/color_list_model.dart';
 import 'package:karabookapp/services/core/models/svg_models/svg_shape_model.dart';
 import 'package:karabookapp/services/core/rewards.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
 
 class ColorPicker extends StatefulWidget {
   final Map<Color, List<SvgShapeModel>> sortedShapes;
@@ -13,13 +13,13 @@ class ColorPicker extends StatefulWidget {
   final AnimationController percentController;
   final Rewards rewards;
 
-  const ColorPicker(
-      {required this.sortedShapes,
-      required this.onColorSelect,
-      required this.percentController,
-      required this.rewards,
-      Key? key})
-      : super(key: key);
+  const ColorPicker({
+    required this.sortedShapes,
+    required this.onColorSelect,
+    required this.percentController,
+    required this.rewards,
+    Key? key,
+  }) : super(key: key);
 
   @override
   ColorPickerState createState() => ColorPickerState();
@@ -27,20 +27,18 @@ class ColorPicker extends StatefulWidget {
 
 class ColorPickerState extends State<ColorPicker>
     with SingleTickerProviderStateMixin {
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final _listKey = GlobalKey<AnimatedListState>();
   late final _colorList = _calcPaintedColors();
-  late final ColorListModel<Color> _animatedList = ColorListModel<Color>(
+  late final _animatedList = ColorListModel<Color>(
     listKey: _listKey,
     initialItems: _colorList,
     removedItemBuilder: _buildRemovedItem,
   );
-  late final Map<Color, List<SvgShapeModel>> _sortedShapes =
-      Map.from(widget.sortedShapes);
+  late final _sortedShapes =
+      Map<Color, List<SvgShapeModel>>.from(widget.sortedShapes);
   Color selectedColor = Colors.transparent;
   double currentPercent = 0;
   double oldPercent = 0;
-
-  var _isActive;
 
   @override
   void initState() {
@@ -73,45 +71,35 @@ class ColorPickerState extends State<ColorPicker>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Positioned.fill(
-          top: 100,
-          child: Container(
-            color: Colors.teal[50],
-            alignment: Alignment.center,
-            height: 80,
+    return Container(
+      color: Colors.teal[50],
+      height: 140.sp,
+      child: ListView(
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 70.sp,
             width: MediaQuery.of(context).size.width,
+            child: AnimatedList(
+              key: _listKey,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              scrollDirection: Axis.horizontal,
+              initialItemCount: _animatedList.length,
+              itemBuilder: _buildItem,
+            ),
           ),
-        ),
-        Container(
-          //color: Colors.red,
-          alignment: Alignment.center,
-          height: 270,
-          width: MediaQuery.of(context).size.width,
-          child: AnimatedList(
-            key: _listKey,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            scrollDirection: Axis.horizontal,
-            initialItemCount: _animatedList.length,
-            itemBuilder: _buildItem,
-          ),
-        ),
-        Positioned(
-          bottom: MediaQuery.of(context).padding.bottom,
-          child: SizedBox(
+          SizedBox(
             width: widget.rewards.myBanner.size.width.toDouble(),
             height: widget.rewards.myBanner.size.height.toDouble(),
-            child: _isActive == false
-                ? Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: AdWidget(ad: widget.rewards.myBanner),
-                  )
-                : Container(),
-          ),
-        ),
-      ],
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: AdWidget(ad: widget.rewards.myBanner),
+            ),
+          )
+        ],
+      ),
     );
   }
 
