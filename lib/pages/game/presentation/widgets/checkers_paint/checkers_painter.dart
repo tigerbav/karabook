@@ -6,7 +6,7 @@ class CheckersPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.clipRect(Offset.zero & size);
-    Checkers(bgColor: Colors.grey[300]!, fgColor: Colors.grey[500]!, featuresCount: 100).paintOnCanvas(canvas, size);
+    Checkers(bgColor: Colors.grey[300]!, fgColor: Colors.grey[500]!, featuresCount: 400).paintOnCanvas(canvas, size);
   }
 
   @override

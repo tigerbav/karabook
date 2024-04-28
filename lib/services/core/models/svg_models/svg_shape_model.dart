@@ -27,16 +27,15 @@ class SvgShapeModel {
     return SvgShapeModel._(
       svgElement.getAttribute('id').toString(),
       svgElement.getAttribute('d').toString(),
-      HexColor(_getHexColorFromAttrs(svgElement)),
+      HexColor(getHexColorFromAttrs(svgElement)),
       //svgElement.findElements('path').map<ModelSvgShape>((e) => ModelSvgShape.fromElement(e)).toList(),
-      svgElement.getAttribute('fill').toString() == 'black',
+      getHexColorFromAttrs(svgElement) == '#000000',
     );
   }
 
-  static String _getHexColorFromAttrs(XmlElement svgElement){
+  static String getHexColorFromAttrs(XmlElement svgElement){
     final getHexColorFromStyle = svgElement.getAttribute('fill')?.hexFromColorName ?? svgElement.getAttribute('fill') ?? _getHexColorFromStyle(svgElement.getAttribute('style').toString());
     return getHexColorFromStyle;
-
   }
 
   static String _getHexColorFromStyle(String styleAttr){
@@ -67,9 +66,10 @@ class SvgShapeModel {
   void setNumberProperties(int num) {
     final path = transformedPath;
     final bounds = path!.getBounds();
-    var txtSize = 16.0;
+    var txtSizeProps = 16.0;
+    var currTxtSize = 16.0;
 
-    var textRect = Rect.fromCenter(center: bounds.center - Offset(txtSize / 5, -txtSize / 8), width: txtSize / 2, height: txtSize);
+    var textRect = Rect.fromCenter(center: bounds.center - Offset(currTxtSize / 5, -currTxtSize / 8), width: currTxtSize / 2, height: currTxtSize);
     var isInclude = false;
 
     var x = bounds.topLeft.dx;
@@ -80,8 +80,8 @@ class SvgShapeModel {
         textDirection: TextDirection.rtl,
       );
       final textStyle = TextStyle(
-        color: Colors.black,
-        fontSize: txtSize,
+        color: const Color(0x80000000),//Colors.black,
+        fontSize: currTxtSize,
       );
       final textSpan = TextSpan(
         text: '${num + 1}',
@@ -93,13 +93,13 @@ class SvgShapeModel {
           minWidth: 0.5,
           maxWidth: 100,
         );
-      for (var dx = x; dx < bounds.topRight.dx; dx = txtSize > 3 ? dx + 5.0 : dx + 1.0) {
-        for (var dy = y; dy > bounds.topRight.dy; dy = txtSize > 3 ? dy - 5.0 : dy - 1.0) {
+      for (var dx = x; dx < bounds.topRight.dx; dx = currTxtSize > 3 ? dx + 5.0 : dx + 1.0) {
+        for (var dy = y; dy > bounds.topRight.dy; dy = currTxtSize > 3 ? dy - 5.0 : dy - 1.0) {
           if (path.contains(Offset(dx.toDouble(), dy.toDouble()))) {
             textRect = Rect.fromCenter(
               center: Offset(dx, dy),
-              width: txtSize > 3 ? textPainter.width + 3 : textPainter.width + 1,
-              height: txtSize > 3 ? textPainter.height + 3 : textPainter.height + 1,
+              width: currTxtSize > 3 ? textPainter.width + 3 : textPainter.width + 1,
+              height: currTxtSize > 3 ? textPainter.height + 3 : textPainter.height + 1,
             );
             for (var i = textRect.topLeft.dx; i < textRect.topRight.dx; i += 1.0) {
               if (textRect.topRight.dx - i < 1.0) {
@@ -139,9 +139,9 @@ class SvgShapeModel {
         }
       }
       if (!isInclude) {
-        txtSize -= 0.5;
-        if (txtSize <= 0.1) {
-          txtSize = 1;
+        currTxtSize -= 6;
+        if (currTxtSize <= 4) {
+          currTxtSize = 4;
           for (var dx = bounds.topLeft.dx + (bounds.topRight.dx / 2); dx < bounds.topRight.dx; dx += 3.0) {
             if (bounds.topRight.dx - dx < 3.0) {
               dx = bounds.topRight.dx;
@@ -164,7 +164,7 @@ class SvgShapeModel {
         }
       }
     } while (!isInclude);
-    number = PainterNumber(dx: x, dy: y, number: num, size: txtSize);
+    number = PainterNumber(dx: x, dy: y, number: num, size: currTxtSize);
   }
 }
 

@@ -24,6 +24,7 @@ class PainterTools {
         shape.setNumberProperties(
             sortedShapes.keys.toList().indexOf(shape.fill));
       }
+      debugPrint(shape.id.toString());
     }
     debugPrint(DateTime.now().toString());
     return sortedShapes;

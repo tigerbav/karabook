@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_drawing/path_drawing.dart';
 
+import '../services/core/models/svg_models/svg_shape_model.dart';
+
 /*dependencies:
 hexcolor: ^2.0.5
 xml: ^5.1.0
@@ -919,7 +921,7 @@ class ModelSvgFile {
     return ModelSvgFile._(
       svgElement.getAttribute('id').toString(),
       svgElement.getAttribute('d').toString(),
-      svgElement.getAttribute('fill').toString(),
+      SvgShapeModel.getHexColorFromAttrs(svgElement),
       svgElement.getAttribute('stroke').toString(),
       svgElement
           .findElements('path')
