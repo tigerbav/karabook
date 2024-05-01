@@ -116,7 +116,7 @@ class _SingleCirclePaintState extends State<SingleCirclePaint>
     return RepaintBoundary(
       child: CustomPaint(
         painter: CirclePainter(
-          position: widget.coloringShape.cicrclePosition,
+          position: widget.coloringShape.circlePosition,
           // Радиус круга равен самой длиной стороне Rect данного Path
           radius: _animationController.value *
               widget.coloringShape.shape.transformedPath!

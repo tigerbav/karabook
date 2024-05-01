@@ -17,6 +17,7 @@ class ImagesGridItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        print(image.id);
         context.router.push(LoadingRoute(
           svgString: image.imageParts,
           id: image.id,
@@ -39,7 +40,7 @@ class ImagesGridItem extends StatelessWidget {
                 ),
               )
             : Opacity(
-                opacity: 0.05,
+                opacity: 1,
                 child: SvgPicture.string(
                   image.imageParts,
                   fit: BoxFit.contain,

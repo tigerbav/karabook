@@ -73,14 +73,14 @@ class ColorPickerState extends State<ColorPicker>
   Widget build(BuildContext context) {
     return Container(
       color: Colors.teal[50],
-      height: 140.sp,
+      height: 145.sp,
       child: ListView(
         shrinkWrap: true,
         padding: EdgeInsets.zero,
         physics: const NeverScrollableScrollPhysics(),
         children: [
           SizedBox(
-            height: 70.sp,
+            height: 80.sp,
             width: MediaQuery.of(context).size.width,
             child: AnimatedList(
               key: _listKey,

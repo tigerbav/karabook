@@ -57,13 +57,17 @@ class _SvgViewScreenState extends State<SvgViewScreen>
 
   final List<ColoringShape> _selectedColoringShapes = [];
 
-  final GlobalKey<ColorPickerState> _colorListKey =
-      GlobalKey<ColorPickerState>();
+  final _colorListKey = GlobalKey<ColorPickerState>();
 
   late final _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 300), vsync: this);
+    duration: const Duration(milliseconds: 300),
+    vsync: this,
+  );
+
   late final _percentController = AnimationController(
-      duration: const Duration(milliseconds: 300), vsync: this);
+    duration: const Duration(milliseconds: 300),
+    vsync: this,
+  );
 
   final _transformationController = TransformationController();
 
@@ -116,7 +120,6 @@ class _SvgViewScreenState extends State<SvgViewScreen>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    debugPrint('build');
     return Scaffold(
       backgroundColor: Colors.white,
       extendBody: true,
@@ -187,9 +190,7 @@ class _SvgViewScreenState extends State<SvgViewScreen>
                               width: size.width,
                               height: size.height,
                               child: Listener(
-                                onPointerUp: (e) {
-                                  _onTapUp(e, context);
-                                },
+                                onPointerUp: (e) => _onTapUp(e, context),
                                 child: CustomPaint(
                                   isComplex: true,
                                   painter: ShapePainter(
@@ -273,9 +274,7 @@ class _SvgViewScreenState extends State<SvgViewScreen>
             ),
             Visibility(
               visible: !widget.painterProgressModel.isCompleted,
-              child: RewardButton(
-                rewards: _rewards,
-              ),
+              child: RewardButton(rewards: _rewards),
             ),
             Positioned(
               bottom: 0,
@@ -307,7 +306,9 @@ class _SvgViewScreenState extends State<SvgViewScreen>
             setState(() {
               _selectedShape = shape;
               _selectedColoringShapes.add(ColoringShape(
-                  cicrclePosition: e.localPosition, shape: shape));
+                circlePosition: e.localPosition,
+                shape: shape,
+              ));
             });
             break;
           }
@@ -334,11 +335,7 @@ class _SvgViewScreenState extends State<SvgViewScreen>
       _selectedColor = selectedColor;
       _selectedShapes = widget.sortedShapes[selectedColor]!;
       for (final shape in widget.svgShapes) {
-        if (shape.fill == _selectedColor) {
-          shape.isPicked = true;
-        } else {
-          shape.isPicked = false;
-        }
+        shape.isPicked = shape.fill == _selectedColor;
       }
       setState(() {});
       _fadeController.forward(from: 0.0);
