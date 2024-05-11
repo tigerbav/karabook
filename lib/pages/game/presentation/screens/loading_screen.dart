@@ -6,7 +6,6 @@ import 'package:karabookapp/services/core/models/db_models/painter_progress_mode
 import 'package:karabookapp/services/core/models/svg_models/svg_line_model.dart';
 import 'package:karabookapp/services/core/models/svg_models/svg_shape_model.dart';
 import 'package:karabookapp/services/core/painter_tools.dart';
-import 'package:karabookapp/services/navigation/app_router.dart';
 
 @RoutePage()
 class LoadingScreen extends StatefulWidget {
@@ -38,17 +37,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 300), _initPainter).then(
-      (_) => context.router.replace(
-        SvgViewRoute(
-          painterProgressModel: _painterProgress,
-          svgShapes: _svgShapes,
-          svgLines: _svgLines,
-          sortedShapes: _sortedShapes,
-          fittedSvgSize: _fittedSvgSize,
-        ),
-      ),
-    );
+    // Future.delayed(const Duration(milliseconds: 300), _initPainter).then(
+    //   (_) => context.router.replace(
+    //     // SvgViewRoute(
+    //     //   painterProgressModel: _painterProgress,
+    //     //   svgShapes: _svgShapes,
+    //     //   svgLines: _svgLines,
+    //     //   sortedShapes: _sortedShapes,
+    //     //   fittedSvgSize: _fittedSvgSize,
+    //     // ),
+    //   ),
+    // );
   }
 
   @override

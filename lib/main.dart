@@ -7,11 +7,13 @@ import 'package:karabookapp/app/presentation/logic/app/app_cubit.dart';
 import 'package:karabookapp/app/presentation/logic/settings/settings_cubit.dart';
 import 'package:karabookapp/app/presentation/screens/app.dart';
 import 'package:karabookapp/generated/codegen_loader.g.dart';
+import 'package:karabookapp/services/isar/isar_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   MobileAds.instance.initialize();
+  IsarService.shared.setup();
 
   runApp(
     EasyLocalization(

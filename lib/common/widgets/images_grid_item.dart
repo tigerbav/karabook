@@ -17,11 +17,16 @@ class ImagesGridItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        print(image.id);
-        context.router.push(LoadingRoute(
+        context.router.push(LoadingGameRoute(
           svgString: image.imageParts,
           id: image.id,
         ));
+
+        /// old version
+        // context.router.push(LoadingRoute(
+        //   svgString: image.imageParts,
+        //   id: image.id,
+        // ));
       },
       child: Container(
         clipBehavior: Clip.antiAlias,

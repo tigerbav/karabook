@@ -30,7 +30,6 @@ import 'package:karabookapp/services/managers/shared_pref_manager.dart';
 import 'package:matrix4_transform/matrix4_transform.dart';
 import 'package:screenshot/screenshot.dart';
 
-@RoutePage()
 class SvgViewScreen extends StatefulWidget {
   final PainterProgressModel painterProgressModel;
   final List<SvgShapeModel> svgShapes;

@@ -6,6 +6,7 @@ class C {
   static const gift = 'Gift';
   static const vibration = 'Vibration';
   static const fillAnimation = 'Fill Animation';
+  static const helpCounter = 'Help';
 
   static const support = 'KaraBook support';
   static const email = 'aburavikov@gmail.com';

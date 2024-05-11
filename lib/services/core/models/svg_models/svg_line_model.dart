@@ -30,20 +30,25 @@ class SvgLineModel {
       ..color = HexColor('#1A171B')
       ..strokeWidth = svgElement.getAttribute('stroke-width') != null
           ? double.tryParse(svgElement.getAttribute('stroke-width')!) != null
-              ?  double.parse(svgElement.getAttribute('stroke-width')!)
+              ? double.parse(svgElement.getAttribute('stroke-width')!)
               : 0
           : 0
       ..style = PaintingStyle.stroke
-      ..strokeMiterLimit =
-          svgElement.getAttribute('stroke-miterlimit') != null ? double.tryParse(svgElement.getAttribute('stroke-miterlimit')!) ?? 0 : 0
+      ..strokeMiterLimit = svgElement.getAttribute('stroke-miterlimit') != null
+          ? double.tryParse(svgElement.getAttribute('stroke-miterlimit')!) ?? 0
+          : 0
       ..strokeCap = StrokeCap.round;
 
     return SvgLineModel._(
       svgElement.getAttribute('id').toString(),
       svgElement.getAttribute('d').toString(),
       svgElement.getAttribute('stroke').toString(),
-      svgElement.getAttribute('stroke-width') != null ? double.tryParse(svgElement.getAttribute('stroke-width')!) ?? 0 : 0,
-      svgElement.getAttribute('stroke-miterlimit') != null ? double.tryParse(svgElement.getAttribute('stroke-miterlimit')!) ?? 0 : 0,
+      svgElement.getAttribute('stroke-width') != null
+          ? double.tryParse(svgElement.getAttribute('stroke-width')!) ?? 0
+          : 0,
+      svgElement.getAttribute('stroke-miterlimit') != null
+          ? double.tryParse(svgElement.getAttribute('stroke-miterlimit')!) ?? 0
+          : 0,
       svgElement.getAttribute('stroke-linecap'),
       paint,
       //svgElement.findElements('path').map<ModelSvgLine>((e) => ModelSvgLine.fromElement(e)).toList(),
@@ -51,7 +56,6 @@ class SvgLineModel {
   }
 
   /// transforms a [_path] into [transformedPath] using given [matrix]
-  void transform(Matrix4 matrix) => transformedPath = _path.transform(matrix.storage);
+  void transform(Matrix4 matrix) =>
+      transformedPath = _path.transform(matrix.storage);
 }
-
-

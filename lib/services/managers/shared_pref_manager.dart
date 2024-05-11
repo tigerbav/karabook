@@ -9,6 +9,9 @@ class SharedPrefManager {
     if (value is String) {
       pref.setString(key, value);
     } //
+    else if (value is int) {
+      pref.setInt(key, value);
+    } //
     else if (value is bool) {
       pref.setBool(key, value);
     }

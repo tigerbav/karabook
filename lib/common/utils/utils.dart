@@ -6,8 +6,6 @@ import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 
 class Utils {
-  //Icon(Icons.check), LocaleKeys.please_select_a_color.tr(),
-  // Icon(Icons.arrow_drop_down_circle_outlined),LocaleKeys.congratulations_mission_completed.tr(),
   static FToast showToast(
     BuildContext context,
     String? text, {

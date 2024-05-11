@@ -27,7 +27,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    App.lifecycleState = state; // save actual state
+    App.lifecycleState = state;
+    // context.read<AppCubit>().updateLifecycleState(state);
     super.didChangeAppLifecycleState(state);
   }
 

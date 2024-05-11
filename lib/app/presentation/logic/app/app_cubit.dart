@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karabookapp/app/presentation/screens/app.dart';
 import 'package:karabookapp/services/network/api_provider.dart';
 
 part 'app_state.dart';
@@ -28,6 +31,10 @@ class AppCubit extends Cubit<AppState> {
       print(e);
     }
 
-    emit(AppMenu());
+    emit(AppMenu(lifecycleState: App.lifecycleState));
+  }
+
+  void updateLifecycleState(AppLifecycleState lifecycleState) {
+    if (state is AppMenu) emit(state.setLifecycle(lifecycleState));
   }
 }
