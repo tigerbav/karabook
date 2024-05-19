@@ -22,6 +22,7 @@ class DBProvider {
     // If database don't exists, create one
     _database = await initDB();
 
+
     return _database;
   }
 
@@ -176,7 +177,7 @@ class DBProvider {
 
   Future<List<SvgImage>> getAllImages() async {
     final db = await database;
-    final res = await db!.rawQuery("SELECT * FROM SvgImage");
+    final res = await db!.rawQuery("SELECT * FROM SvgImage where imageCategory = 'DimaTest2'");
 
     List<SvgImage> list =
         res.isNotEmpty ? res.map((c) => SvgImage.fromJson(c)).toList() : [];
@@ -209,8 +210,8 @@ class DBProvider {
   Future<List<SvgImage>> getSvgImageInProgress(int complete) async {
     final db = await database;
     final res = await db!.rawQuery(
-        "SELECT * FROM SvgImage WHERE complete = $complete AND screenProgress != 'Null' AND imageCategory != 'Comics' AND imageCategory != 'Daily' AND imageCategory != 'Vip'");
-
+        //"SELECT * FROM SvgImage WHERE complete = $complete AND screenProgress != 'Null' AND imageCategory != 'Comics' AND imageCategory != 'Daily' AND imageCategory != 'Vip'");
+        "SELECT * FROM SvgImage WHERE complete = $complete AND screenProgress != 'Null' AND imageCategory = 'DimaTest2'");
     List<SvgImage> list =
         res.isNotEmpty ? res.map((c) => SvgImage.fromJson(c)).toList() : [];
 
@@ -234,6 +235,18 @@ class DBProvider {
 
     List<SvgImage> list =
         res.isNotEmpty ? res.map((c) => SvgImage.fromJson(c)).toList() : [];
+
+    return list;
+  }
+
+  //TODO с ним чтото не так
+  Future<List<SvgImage>> getImagesByCategory(int categoryId) async {
+    final db = await database;
+    final res = await db!.rawQuery(
+        "SELECT * FROM SvgImage WHERE imageCategory = 'Vip' AND subcategories = '$categoryId'");
+
+    List<SvgImage> list =
+    res.isNotEmpty ? res.map((c) => SvgImage.fromJson(c)).toList() : [];
 
     return list;
   }

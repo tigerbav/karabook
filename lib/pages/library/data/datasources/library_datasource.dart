@@ -8,6 +8,7 @@ abstract class ILibraryDataSource {
   Future<List<SvgImage?>> getAllImages();
   Future<List<Pack?>> getAllPacks();
   Future<List<SvgImage?>> getAllImagesFromPack(String packName);
+  //Future<List<SvgImage?>> getAllImagesFromCategory(int categoryId);
 }
 
 class LibraryDataSource extends ILibraryDataSource {
@@ -26,8 +27,17 @@ class LibraryDataSource extends ILibraryDataSource {
     return await DBProvider.db.getPacks();
   }
 
+
+
   @override
   Future<List<SvgImage?>> getAllImagesFromPack(String packName) async {
     return await DBProvider.db.getPacksColoringVIP(packName);
   }
+
+  // @override
+  // Future<List<SvgImage?>> getAllImagesFromCategory(int categoryId) {
+  //   return await DBProvider.db.
+  //   // TODO: implement getAllImagesFromCategory
+  //   throw UnimplementedError();
+  // }
 }

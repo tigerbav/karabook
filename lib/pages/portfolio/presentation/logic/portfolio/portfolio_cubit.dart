@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/portfolio/domain/repositories/portfolio_repository.dart';
@@ -24,6 +25,7 @@ class PortfolioCubit extends Cubit<PortfolioState> {
   }
 
   Future<void> _loadCurrImages() async {
+    debugPrint('Loading current images...');
     emit(state.copyWith(status: PortfolioStatus.loading));
     final result = await _repository.getCurrentImages();
     result.fold(
@@ -39,6 +41,7 @@ class PortfolioCubit extends Cubit<PortfolioState> {
   }
 
   Future<void> _loadCompletedImages() async {
+    debugPrint('Loading completed images...');
     emit(state.copyWith(status: PortfolioStatus.loading));
     final result = await _repository.getCompletedImages();
     result.fold(
