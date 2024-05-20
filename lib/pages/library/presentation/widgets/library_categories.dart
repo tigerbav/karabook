@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
-import 'package:karabookapp/pages/library/data/models/image_category.dart';
+import 'package:karabookapp/services/isar/models/image_category.dart';
 import 'package:karabookapp/pages/library/presentation/logic/library/library_cubit.dart';
 
 class LibraryCategories extends StatefulWidget {
@@ -94,7 +94,8 @@ class _Item extends StatelessWidget {
               )
             : null,
         child: Text(
-          category.name,
+          //TODO
+          category.name!,
           style: isSelected ? AppStyles.shared.segment : AppStyles.shared.toast,
         ),
       ),

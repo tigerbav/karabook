@@ -111,6 +111,8 @@ class GameCubit extends Cubit<GameState> {
     ));
   }
 
+  void setStatusIdle() => emit(state.copyWith(status: GameStatus.idle));
+
   Future<void> _vibrationEndColor() async {
     final isVibrate = await SharedPrefManager.share.get(C.vibration);
     if (isVibrate is bool && isVibrate == true) Vibrate.vibrate();

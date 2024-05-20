@@ -18,17 +18,17 @@ class ComicsState extends Equatable {
 
   List<SvgImage> get images => _images;
 
-  List<List<SvgImage>> get comicsPack {
-    final map = <String, List<SvgImage>>{};
-    for (final image in _images) {
-      final key = image.subcategories;
-      if (map.containsKey(image.subcategories) == false) map[key] = [];
-
-      map[key]?.add(image);
-    }
-
-    return map.values.toList();
-  }
+  // List<List<SvgImage>> get comicsPack {
+  //   final map = <String, List<SvgImage>>{};
+  //   for (final image in _images) {
+  //     final key = image.subcategories;
+  //     if (map.containsKey(image.subcategories) == false) map[key] = [];
+  //
+  //     map[key]?.add(image);
+  //   }
+  //
+  //   return map.values.toList();
+  // }
 
   ComicsState copyWith({
     required ComicsStatus status,

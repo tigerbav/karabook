@@ -70,17 +70,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    LoadingRoute.name: (routeData) {
-      final args = routeData.argsAs<LoadingRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: LoadingScreen(
-          svgString: args.svgString,
-          id: args.id,
-          key: args.key,
-        ),
-      );
-    },
     PortfolioRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -97,16 +86,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TabBarScreen(),
-      );
-    },
-    VipRoute.name: (routeData) {
-      final args = routeData.argsAs<VipRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: VipScreen(
-          key: args.key,
-          pack: args.pack,
-        ),
       );
     },
   };
@@ -283,49 +262,6 @@ class LoadingGameRouteArgs {
 }
 
 /// generated route for
-/// [LoadingScreen]
-class LoadingRoute extends PageRouteInfo<LoadingRouteArgs> {
-  LoadingRoute({
-    required String svgString,
-    required int id,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          LoadingRoute.name,
-          args: LoadingRouteArgs(
-            svgString: svgString,
-            id: id,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'LoadingRoute';
-
-  static const PageInfo<LoadingRouteArgs> page =
-      PageInfo<LoadingRouteArgs>(name);
-}
-
-class LoadingRouteArgs {
-  const LoadingRouteArgs({
-    required this.svgString,
-    required this.id,
-    this.key,
-  });
-
-  final String svgString;
-
-  final int id;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'LoadingRouteArgs{svgString: $svgString, id: $id, key: $key}';
-  }
-}
-
-/// generated route for
 /// [PortfolioScreen]
 class PortfolioRoute extends PageRouteInfo<void> {
   const PortfolioRoute({List<PageRouteInfo>? children})
@@ -365,41 +301,4 @@ class TabBarRoute extends PageRouteInfo<void> {
   static const String name = 'TabBarRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [VipScreen]
-class VipRoute extends PageRouteInfo<VipRouteArgs> {
-  VipRoute({
-    Key? key,
-    required Pack pack,
-    List<PageRouteInfo>? children,
-  }) : super(
-          VipRoute.name,
-          args: VipRouteArgs(
-            key: key,
-            pack: pack,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'VipRoute';
-
-  static const PageInfo<VipRouteArgs> page = PageInfo<VipRouteArgs>(name);
-}
-
-class VipRouteArgs {
-  const VipRouteArgs({
-    this.key,
-    required this.pack,
-  });
-
-  final Key? key;
-
-  final Pack pack;
-
-  @override
-  String toString() {
-    return 'VipRouteArgs{key: $key, pack: $pack}';
-  }
 }

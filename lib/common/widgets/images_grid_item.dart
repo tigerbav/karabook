@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/common/app_colors.dart';
-import 'package:karabookapp/common/models/svg_image.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 import 'package:karabookapp/services/navigation/app_router.dart';
 
 class ImagesGridItem extends StatelessWidget {
@@ -13,20 +13,17 @@ class ImagesGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //TODO
     // if (image.isActive == false) return const SizedBox();
 
     return GestureDetector(
       onTap: () {
+        if (image.imageRawData == null) return;
+
         context.router.push(LoadingGameRoute(
-          svgString: image.imageParts,
+          svgString: image.imageRawData!,
           id: image.id,
         ));
-
-        /// old version
-        // context.router.push(LoadingRoute(
-        //   svgString: image.imageParts,
-        //   id: image.id,
-        // ));
       },
       child: Container(
         clipBehavior: Clip.antiAlias,
@@ -34,23 +31,26 @@ class ImagesGridItem extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(16.sp)),
           border: Border.all(color: AppColors.shared.grey),
         ),
-        child: image.screenProgress != null
-            ? FractionallySizedBox(
-                heightFactor: 2.0,
-                widthFactor: 1.0,
-                alignment: const Alignment(0, -0.3),
-                child: Image(
-                  image: MemoryImage(image.screenProgress!),
-                  fit: BoxFit.cover,
-                ),
-              )
-            : Opacity(
-                opacity: 1,
-                child: SvgPicture.string(
-                  image.imageParts,
-                  fit: BoxFit.contain,
-                ),
-              ),
+        child:
+            // image.screenProgress != null
+            //     ? FractionallySizedBox(
+            //         heightFactor: 2.0,
+            //         widthFactor: 1.0,
+            //         alignment: const Alignment(0, -0.3),
+            //         child: Image(
+            //           image: MemoryImage(image.screenProgress!),
+            //           fit: BoxFit.cover,
+            //         ),
+            //       )
+            //     :
+            Opacity(
+          opacity: 1,
+          child: SvgPicture.string(
+            //TODO
+            image.imageRawData!,
+            fit: BoxFit.contain,
+          ),
+        ),
       ),
     );
   }

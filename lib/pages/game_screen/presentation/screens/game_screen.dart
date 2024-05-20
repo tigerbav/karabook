@@ -127,6 +127,9 @@ class _GameViewState extends State<_GameView> {
             switch (state.status) {
               case GameStatus.shapeTapped:
                 context.read<ColorPickerCubit>().incrementCompletedItem();
+                //TODO need refactor
+                context.read<GameCubit>().setStatusIdle();
+
               case GameStatus.exit:
                 Navigator.pop(context);
               case GameStatus.completed:

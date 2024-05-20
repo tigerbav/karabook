@@ -1,6 +1,6 @@
 import 'package:either_dart/either.dart';
-import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/events/data/datasources/events_datasource.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 import 'package:karabookapp/services/network/failures/failure.dart';
 
 abstract class IEventsRepository {

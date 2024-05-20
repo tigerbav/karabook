@@ -1,5 +1,4 @@
-import 'package:karabookapp/common/models/svg_image.dart';
-import 'package:karabookapp/services/sqflite/db_provider.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 
 abstract class IPortfolioDataSources {
   Future<List<SvgImage>> getCurrentImages();
@@ -9,11 +8,11 @@ abstract class IPortfolioDataSources {
 class PortfolioDataSources extends IPortfolioDataSources {
   @override
   Future<List<SvgImage>> getCompletedImages() async {
-    return await DBProvider.db.getSvgImageInProgress(1);
+    return [];
   }
 
   @override
   Future<List<SvgImage>> getCurrentImages() async {
-    return await DBProvider.db.getSvgImageInProgress(0);
+    return [];
   }
 }

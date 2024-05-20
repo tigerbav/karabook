@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:karabookapp/pages/contact_us/presentation/screens/contact_us_screen.dart';
-import 'package:karabookapp/common/models/pack.dart';
 import 'package:karabookapp/pages/app_tab_bar/presentation/screens/tab_bar_screen.dart';
 import 'package:karabookapp/pages/events/presentation/screens/events_screen.dart';
-import 'package:karabookapp/pages/game/presentation/screens/loading_screen.dart';
 import 'package:karabookapp/pages/game_screen/presentation/screens/game_screen.dart';
 import 'package:karabookapp/pages/game_screen/presentation/screens/loading_game_screen.dart';
 import 'package:karabookapp/pages/library/presentation/screens/library_screen.dart';
@@ -33,15 +31,13 @@ class AppRouter extends _$AppRouter {
               page: EmptyRoute.page,
               children: [
                 AutoRoute(initial: true, page: LibraryRoute.page),
-                AutoRoute(page: VipRoute.page),
+                // AutoRoute(page: VipRoute.page),
               ],
             ),
             AutoRoute(page: EventsRoute.page),
             AutoRoute(page: PortfolioRoute.page),
           ],
         ),
-        AutoRoute(page: LoadingRoute.page),
-        //
         AutoRoute(page: AchievementRoute.page),
         AutoRoute(page: ContactUsRoute.page),
         AutoRoute(page: LoadingGameRoute.page),

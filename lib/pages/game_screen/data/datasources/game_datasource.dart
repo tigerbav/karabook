@@ -11,14 +11,14 @@ class GameDataSource extends IGameDataSource {
   Future<void> updateImage(PainterProgress painterProgress) async {
     await IsarService.shared.writeSync<PainterProgress>(
       object: painterProgress,
-      to: IsarService.shared.isar.painterProgress,
+      to: isar.painterProgress,
     );
   }
 
   @override
   Future<List<int>> getProgress(int id) async {
     final result = await IsarService.shared.getObject(
-      from: IsarService.shared.isar.painterProgress,
+      from: isar.painterProgress,
       id: id,
     );
     if (result == null || result.completedIds == null) return [];

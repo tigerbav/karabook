@@ -1,5 +1,4 @@
-import 'package:karabookapp/common/models/svg_image.dart';
-import 'package:karabookapp/services/sqflite/db_provider.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 
 abstract class IEventsDataSource {
   Future<List<SvgImage>> getDailyImages();
@@ -11,19 +10,11 @@ class EventsDataSource extends IEventsDataSource {
 
   @override
   Future<List<SvgImage>> getDailyImages() async {
-    final images = await DBProvider.db.getCategoryNameAndSub('Daily');
-    final swappedImages = <SvgImage>[];
-    for (final image in images) {
-      swappedImages.insert(0, image);
-    }
-
-    return swappedImages;
+    return [];
   }
 
   @override
   Future<List<SvgImage>> getComics() async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    return await DBProvider.db.getCategoryNameAndSub('Comics');
+    return [];
   }
 }

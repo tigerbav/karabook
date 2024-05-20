@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:karabookapp/common/app_constants.dart';
-import 'package:karabookapp/common/models/pack.dart';
-import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/common/utils/extensions/iterable.dart';
-import 'package:karabookapp/pages/library/data/models/image_category.dart';
+import 'package:karabookapp/services/isar/models/image_category.dart';
 import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 
 part 'library_state.dart';
 
@@ -16,11 +14,11 @@ class LibraryCubit extends Cubit<LibraryState> {
           currCategory: null,
           categories: [],
           images: [],
-          packs: [],
+          // packs: [],
         )) {
     _loadCategories();
     _loadImages();
-    _loadPack();
+    // _loadPack();
   }
 
   final LibraryRepository _repository;
@@ -65,21 +63,21 @@ class LibraryCubit extends Cubit<LibraryState> {
     );
   }
 
-  Future<void> _loadPack() async {
-    final result = await _repository.getAllPacks();
-    result.fold(
-      (l) => emit(state.copyWith(
-        status: LibraryStatus.failure,
-        errorMessage: l.errorMessage,
-      )),
-      (r) {
-        emit(state.copyWith(
-          status: LibraryStatus.success,
-          packs: r,
-        ));
-      },
-    );
-  }
+  // Future<void> _loadPack() async {
+  //   final result = await _repository.getAllPacks();
+  //   result.fold(
+  //     (l) => emit(state.copyWith(
+  //       status: LibraryStatus.failure,
+  //       errorMessage: l.errorMessage,
+  //     )),
+  //     (r) {
+  //       emit(state.copyWith(
+  //         status: LibraryStatus.success,
+  //         packs: r,
+  //       ));
+  //     },
+  //   );
+  // }
 
   void setCurrentCategory(int id) {
     emit(state.copyWith(

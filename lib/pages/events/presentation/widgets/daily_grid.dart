@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_styles.dart';
-import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
 import 'package:karabookapp/pages/events/presentation/logic/daily/daily_cubit.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 
 class DailyGrid extends StatefulWidget {
   const DailyGrid({super.key});

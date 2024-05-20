@@ -35,8 +35,10 @@ class SvgShapeModel {
       fill: HexColor(getHexColorFromAttrs(svgElement)),
       isPainted: getHexColorFromAttrs(svgElement) == '#000000',
       transformedPath: transformPath,
-      number: _defineNumber(transformPath,
-          int.tryParse(svgElement.getAttribute('id') ?? '-1') ?? -1),
+      number: _defineNumber(
+        transformPath,
+        int.tryParse(svgElement.getAttribute('id') ?? '-1') ?? -1,
+      ),
     );
   }
 

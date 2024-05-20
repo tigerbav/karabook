@@ -1,11 +1,7 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:karabookapp/common/app_colors.dart';
-import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
-import 'package:karabookapp/services/navigation/app_router.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 
 class ImagesGrid extends StatefulWidget {
   const ImagesGrid(this.images, {super.key});

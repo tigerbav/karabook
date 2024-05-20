@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
+import 'package:karabookapp/services/isar/models/image_category.dart';
 import 'package:karabookapp/services/isar/models/painter_progress.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 import 'package:path_provider/path_provider.dart';
+
+late final Isar isar;
 
 class IsarService {
   IsarService._();
   static IsarService shared = IsarService._();
-  late final Isar isar;
 
   Future<void> setup() async {
     if (Isar.instanceNames.isNotEmpty) {
@@ -16,7 +19,11 @@ class IsarService {
 
     final dir = await getApplicationDocumentsDirectory();
     isar = await Isar.open(
-      [PainterProgressSchema],
+      [
+        PainterProgressSchema,
+        ImageCategorySchema,
+        SvgImageSchema,
+      ],
       directory: dir.path,
     );
   }

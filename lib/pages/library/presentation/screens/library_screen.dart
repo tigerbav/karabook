@@ -47,22 +47,22 @@ class LibraryScreen extends StatelessWidget {
                 );
               }
 
-              if (state.currCategory?.name == C.vip) return const VipListView();
+              // if (state.currCategory?.name == C.vip) return const VipListView();
 
-              final images = state.imagesByCategory;
+              // final images = state.imagesByCategory;
+              //
+              // if (images == null || images.isEmpty) {
+              //   return Container(
+              //     alignment: Alignment.center,
+              //     padding: EdgeInsets.only(top: 100.sp),
+              //     child: Text(
+              //       LocaleKeys.no_images.tr(),
+              //       style: AppStyles.shared.h1,
+              //     ),
+              //   );
+              // }
 
-              if (images == null || images.isEmpty) {
-                return Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: 100.sp),
-                  child: Text(
-                    LocaleKeys.no_images.tr(),
-                    style: AppStyles.shared.h1,
-                  ),
-                );
-              }
-
-              return ImagesGrid(images);
+              return ImagesGrid(state.images);
             },
           ),
         ],

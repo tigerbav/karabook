@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:karabookapp/common/models/pack.dart';
-import 'package:karabookapp/common/models/svg_image.dart';
 import 'package:karabookapp/pages/events/domain/repositories/events_repository.dart';
+import 'package:karabookapp/services/isar/models/svg_image.dart';
 
 part 'comics_state.dart';
 
