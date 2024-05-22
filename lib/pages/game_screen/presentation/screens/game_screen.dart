@@ -109,6 +109,7 @@ class _GameViewState extends State<_GameView> {
           listenWhen: (_, c) =>
               c is AppMenu && c.lifecycleState == AppLifecycleState.paused,
           listener: (context, state) async {
+            //TODO: implement
             await gameCubit.saveData();
           },
         ),
@@ -118,6 +119,7 @@ class _GameViewState extends State<_GameView> {
               p.activePickers.length != c.activePickers.length,
           listener: (context, state) {
             gameCubit.setSelectedShapes(state.selected?.color);
+            if (state.selected == null) gameCubit.saveData();
 
             if (state.activePickers.isEmpty) gameCubit.finishGame();
           },
