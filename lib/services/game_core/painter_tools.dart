@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/utils/extensions/iterable.dart';
@@ -68,7 +70,7 @@ class PainterTools {
 
   /// sort list by colors
   Map<Color, List<SvgShapeModel>> setSortedShapes(List<SvgShapeModel> shapes) {
-    final sortedShapes = <Color, List<SvgShapeModel>>{};
+    var sortedShapes = <Color, List<SvgShapeModel>>{};
     final updatedShapes = <SvgShapeModel>[];
 
     for (final shape in shapes) {
@@ -88,7 +90,35 @@ class PainterTools {
     shapes.clear();
     shapes.addAll(updatedShapes);
 
+    sortedShapes = sortSortedShapes(sortedShapes);
     return sortedShapes;
+  }
+
+  Map<Color, List<SvgShapeModel>> sortSortedShapes(Map<Color, List<SvgShapeModel>> unsortedShapes){
+    // Create a list of entries from the map
+    List<MapEntry<Color, List<SvgShapeModel>>> entries = unsortedShapes.entries.toList();
+
+    // Define a custom sorting function
+    entries.sort((a, b) {
+      // Check if either entry has the color #000000
+      bool isABlack = a.key.value == 0xff000000;
+      bool isBBlack = b.key.value == 0xff000000;
+
+      // If both colors are black, maintain their original order
+      if (isABlack && isBBlack) return 0;
+
+      // If 'a' is black, move it to the front
+      if (isABlack) return -1;
+
+      // If 'b' is black, move it to the front
+      if (isBBlack) return 1;
+
+      // Otherwise, maintain the original order
+      return 0;
+    });
+
+    // Convert the sorted entries back to a map
+    return Map.fromEntries(entries);
   }
 
   static final _canvasSize = Size(1.sw, 1.sh * 0.85);
