@@ -94,15 +94,17 @@ class PainterTools {
     return sortedShapes;
   }
 
-  Map<Color, List<SvgShapeModel>> sortSortedShapes(Map<Color, List<SvgShapeModel>> unsortedShapes){
+  Map<Color, List<SvgShapeModel>> sortSortedShapes(
+    Map<Color, List<SvgShapeModel>> unsortedShapes,
+  ) {
     // Create a list of entries from the map
-    List<MapEntry<Color, List<SvgShapeModel>>> entries = unsortedShapes.entries.toList();
+    final entries = unsortedShapes.entries.toList();
 
     // Define a custom sorting function
     entries.sort((a, b) {
       // Check if either entry has the color #000000
-      bool isABlack = a.key.value == 0xff000000;
-      bool isBBlack = b.key.value == 0xff000000;
+      final isABlack = a.key.value == 0xff000000;
+      final isBBlack = b.key.value == 0xff000000;
 
       // If both colors are black, maintain their original order
       if (isABlack && isBBlack) return 0;
