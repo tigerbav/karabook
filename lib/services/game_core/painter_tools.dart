@@ -1,7 +1,9 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:isar/isar.dart';
 import 'package:karabookapp/common/utils/extensions/iterable.dart';
 
 import 'package:karabookapp/services/game_core/game_const.dart';
@@ -9,6 +11,7 @@ import 'package:karabookapp/services/game_core/models/svg_models/svg_line_model.
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
 import 'package:karabookapp/services/network/failures/failure.dart';
 import 'package:xml/xml.dart';
+
 
 class PainterTools {
   static PainterTools shared = PainterTools._();
@@ -90,11 +93,21 @@ class PainterTools {
     shapes.clear();
     shapes.addAll(updatedShapes);
 
-    sortedShapes = sortSortedShapes(sortedShapes);
+    sortedShapes = sortBlackFirst(sortedShapes);
+
+    // debugPrint('SORTED_SORTED_SHAPES');
+    // sortedShapes.entries.forEach((element) {
+    //   debugPrint('${element.key}:');
+    //   element.value.forEach((svgShape) {
+    //     debugPrint('    ${svgShape.toString()}');
+    //   });
+    // });
+
     return sortedShapes;
   }
 
-  Map<Color, List<SvgShapeModel>> sortSortedShapes(Map<Color, List<SvgShapeModel>> unsortedShapes){
+  /// Сортує шейпи таким чином, щоб першим завжди був чорний колір
+  static Map<Color, List<SvgShapeModel>> sortBlackFirst(Map<Color, List<SvgShapeModel>> unsortedShapes){
     // Create a list of entries from the map
     List<MapEntry<Color, List<SvgShapeModel>>> entries = unsortedShapes.entries.toList();
 
@@ -122,4 +135,6 @@ class PainterTools {
   }
 
   static final _canvasSize = Size(1.sw, 1.sh * 0.85);
+
+
 }
