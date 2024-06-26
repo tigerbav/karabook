@@ -90,11 +90,21 @@ class PainterTools {
     shapes.clear();
     shapes.addAll(updatedShapes);
 
-    sortedShapes = sortSortedShapes(sortedShapes);
+    sortedShapes = sortBlackFirst(sortedShapes);
+
+    // debugPrint('SORTED_SORTED_SHAPES');
+    // sortedShapes.entries.forEach((element) {
+    //   debugPrint('${element.key}:');
+    //   element.value.forEach((svgShape) {
+    //     debugPrint('    ${svgShape.toString()}');
+    //   });
+    // });
+
     return sortedShapes;
   }
 
-  Map<Color, List<SvgShapeModel>> sortSortedShapes(
+  /// Сортує шейпи таким чином, щоб першим завжди був чорний колір
+  static Map<Color, List<SvgShapeModel>> sortBlackFirst(
     Map<Color, List<SvgShapeModel>> unsortedShapes,
   ) {
     // Create a list of entries from the map

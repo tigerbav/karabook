@@ -5,13 +5,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/pages/game_screen/presentation/models/color_item_model.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
 
+import '../../../../../services/game_core/painter_tools.dart';
+
 part 'color_picker_state.dart';
 
 class ColorPickerCubit extends Cubit<ColorPickerState> {
   ColorPickerCubit({
     required Map<Color, List<SvgShapeModel>> sortedShapes,
   }) : super(const ColorPickerState()) {
-    _calcPaintedColors(sortedShapes);
+    _calcPaintedColors(PainterTools.sortBlackFirst(sortedShapes));
   }
 
   void _calcPaintedColors(Map<Color, List<SvgShapeModel>> sortedShapes) {
@@ -32,6 +34,8 @@ class ColorPickerCubit extends Cubit<ColorPickerState> {
   }
 
   void selectColor(ColorItemModel model) {
+    //debugPrint('SHAPES: tapped color: ${model.toString()}');
+
     if (state.selected == model) {
       emit(ColorPickerState(selected: null, items: state.items));
       return;

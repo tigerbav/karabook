@@ -18,6 +18,9 @@ class ColorItemModel extends Equatable {
 
   double get percent => 1 - completedItems / maxItems;
 
+  @override
+  String toString() => 'ClassName(color: $color, number: $number, maxItems: $maxItems, completedItems: $completedItems)';
+
   ColorItemModel get incrementCompletedItems =>
       copyWith(completedItems: completedItems + 1);
 

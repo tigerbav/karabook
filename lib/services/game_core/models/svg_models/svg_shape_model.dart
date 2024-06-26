@@ -42,6 +42,9 @@ class SvgShapeModel {
     );
   }
 
+  @override
+  String toString() => 'SvgShapeModel(id: $id, fill: $fill, number: $number, isPainted: $isPainted, isPicked: $isPicked';
+
   static String getHexColorFromAttrs(XmlElement svgElement) {
     final getHexColorFromStyle =
         svgElement.getAttribute('fill')?.hexFromColorName ??
