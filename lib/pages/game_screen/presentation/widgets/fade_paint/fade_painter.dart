@@ -17,7 +17,7 @@ class FadePainter extends CustomPainter {
 
     for (final shape in selectedShapes) {
       canvas.drawPath(
-        shape.transformedPath!,
+        shape.transformedPath,
         Paint()
           ..color = shape.isPainted ? shape.fill : AppColors.shared.transparent
           ..blendMode = BlendMode.src

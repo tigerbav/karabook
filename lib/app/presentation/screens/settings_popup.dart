@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/app/presentation/enums/settings_type.dart';
+import 'package:karabookapp/app/presentation/widgets/google_sign_in_btn.dart';
 import 'package:karabookapp/app/presentation/widgets/settings_options_widget.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
@@ -45,6 +46,8 @@ class SettingsPopup extends StatelessWidget {
           SizedBox(height: 20.sp),
           // Text(LocaleKeys.term_of_use.tr(), style: AppStyles.shared.politic),
           // SizedBox(height: 8.sp),
+          const GoogleSignInButton(),
+          SizedBox(height: 20.sp),
           Text(LocaleKeys.privacy_policy.tr(), style: AppStyles.shared.politic),
         ],
       ),

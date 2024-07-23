@@ -1,6 +1,6 @@
 part of 'game_cubit.dart';
 
-enum GameStatus { initial, shapeTapped, exit, idle, completed }
+enum GameStatus { initial, shapeTapped, exit, idle, completed, loading }
 
 class GameState extends Equatable {
   const GameState({
@@ -18,6 +18,7 @@ class GameState extends Equatable {
   final List<int> completedIds;
 
   bool get isCompleted => status == GameStatus.completed;
+  bool get isLoading => status == GameStatus.loading;
 
   GameState copyWith({
     GameStatus? status,

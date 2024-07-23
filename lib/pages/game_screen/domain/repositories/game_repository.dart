@@ -1,4 +1,5 @@
 import 'package:either_dart/either.dart';
+import 'package:karabookapp/app/data/models/progress.dart';
 import 'package:karabookapp/pages/game_screen/data/datasources/game_datasource.dart';
 import 'package:karabookapp/services/isar/models/painter_progress.dart';
 import 'package:karabookapp/services/network/failures/failure.dart';
@@ -6,6 +7,7 @@ import 'package:karabookapp/services/network/failures/failure.dart';
 abstract class IGameRepository {
   Future<Either<Failure, void>> updateImage(PainterProgress painterProgress);
   Future<Either<Failure, List<int>>> getProgress(int id);
+  Future<Either<Failure, void>> updateServer(Progress progress);
 }
 
 class GameRepository extends IGameRepository {
@@ -29,6 +31,16 @@ class GameRepository extends IGameRepository {
     try {
       final result = await _dataSource.getProgress(id);
       return Right(result);
+    } catch (e, trace) {
+      return Left(Failure.from(e, trace));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updateServer(Progress progress) async {
+    try {
+      await _dataSource.updateServer(progress);
+      return const Right({});
     } catch (e, trace) {
       return Left(Failure.from(e, trace));
     }

@@ -30,8 +30,10 @@ class LinePainter extends CustomPainter {
       bigPathMap[currentWidth] = bigPath;
     }
     for (var i = 0; i < bigPathMap.length; i++) {
-      canvas.drawPath(bigPathMap.values.elementAt(i),
-          paint..strokeWidth = bigPathMap.keys.elementAt(i));
+      canvas.drawPath(
+        bigPathMap.values.elementAt(i),
+        paint..strokeWidth = bigPathMap.keys.elementAt(i),
+      );
     }
   }
 

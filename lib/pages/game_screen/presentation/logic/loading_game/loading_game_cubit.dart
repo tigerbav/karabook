@@ -71,7 +71,7 @@ class LoadingGameCubit extends Cubit<LoadingGameState> {
   }
 
   Future<int> _getHelpPoints() async {
-    final counter = await SharedPrefManager.share.get(C.helpCounter);
+    final counter = await SharedPrefManager.shared.get(C.helpCounter);
 
     return (counter != null && counter is int) ? counter : 2;
   }

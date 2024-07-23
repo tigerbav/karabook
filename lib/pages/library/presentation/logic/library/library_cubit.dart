@@ -1,24 +1,16 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/utils/extensions/iterable.dart';
-import 'package:karabookapp/services/isar/models/image_category.dart';
+import 'package:karabookapp/services/isar/models/category_model.dart';
 import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
-import 'package:karabookapp/services/isar/models/svg_image.dart';
+import 'package:karabookapp/services/isar/models/image_model.dart';
 
 part 'library_state.dart';
 
 class LibraryCubit extends Cubit<LibraryState> {
-  LibraryCubit(this._repository)
-      : super(const LibraryState(
-          status: LibraryStatus.initial,
-          currCategory: null,
-          categories: [],
-          images: [],
-          // packs: [],
-        )) {
+  LibraryCubit(this._repository) : super(const LibraryState()) {
     _loadCategories();
-    _loadImages();
-    // _loadPack();
   }
 
   final LibraryRepository _repository;
@@ -33,56 +25,111 @@ class LibraryCubit extends Cubit<LibraryState> {
         errorMessage: l.errorMessage,
       )),
       (r) {
-        if (r.length == state.categories.length) return;
         emit(state.copyWith(
           status: LibraryStatus.success,
           categories: r,
+          currCategory: r.firstOrNull,
+        ));
+
+        if (r.isEmpty) return;
+
+        loadImages();
+      },
+    );
+  }
+
+  Future<void> loadImages() async {
+    late final category = state.currCategory;
+
+    if (state.isLoadingImages ||
+        category?.id == null ||
+        state.pages[category!.id] != null) {
+      return;
+    }
+
+    if (category.id == C.vipID) {
+      _loadPacks();
+      return;
+    }
+
+    emit(state.copyWith(status: LibraryStatus.loadingImages));
+
+    final categoryId = category.id;
+
+    final result = await _repository.getImages(
+      categoryId: categoryId,
+      currPage: state.currPage ?? 0,
+    );
+    result.fold(
+      (l) => emit(state.copyWith(
+        status: LibraryStatus.failure,
+        currCategory: category,
+        errorMessage: l.errorMessage,
+      )),
+      (r) {
+        if (r.isEmpty) {
+          emit(state.copyWith(
+            status: LibraryStatus.idle,
+            currCategory: category,
+            pages: _writeLastPage(categoryId),
+          ));
+        }
+
+        final map = Map<int, List<ImageModel>>.from(state.mapImages);
+
+        if (map[categoryId] == null) {
+          map[categoryId] = r;
+        } else {
+          final list = {...map[categoryId]!, ...r}.toList();
+          map[categoryId]!.clear();
+          map[categoryId]!.addAll(list);
+        }
+
+        emit(state.copyWith(
+          status: LibraryStatus.idle,
+          mapImages: map,
+          currCategory: category,
+          pages: r.length < C.imageOnPage ? _writeLastPage(categoryId) : null,
         ));
       },
     );
   }
 
-  Future<void> _loadImages() async {
-    emit(state.copyWith(status: LibraryStatus.loadingImages));
+  Map<int, int>? _writeLastPage(int categoryId) {
+    final pageMap = Map<int, int>.from(state.pages);
+    pageMap[categoryId] = state.currPage ?? 0;
 
-    final result = await _repository.getAllImages();
+    return pageMap;
+  }
+
+  Future<void> _loadPacks() async {
+    if (state.vipPacks.isNotEmpty) return;
+
+    emit(state.copyWith(status: LibraryStatus.loadingImages));
+    final result = await _repository.getVipCategories();
     result.fold(
       (l) => emit(state.copyWith(
         status: LibraryStatus.failure,
         errorMessage: l.errorMessage,
       )),
       (r) {
-        if (r.length == state.images.length) return;
-
         emit(state.copyWith(
           status: LibraryStatus.success,
-          images: r,
-          currCategory: state.categoriesWithImages(r).firstOrNull,
+          vipPacks: r,
         ));
       },
     );
   }
 
-  // Future<void> _loadPack() async {
-  //   final result = await _repository.getAllPacks();
-  //   result.fold(
-  //     (l) => emit(state.copyWith(
-  //       status: LibraryStatus.failure,
-  //       errorMessage: l.errorMessage,
-  //     )),
-  //     (r) {
-  //       emit(state.copyWith(
-  //         status: LibraryStatus.success,
-  //         packs: r,
-  //       ));
-  //     },
-  //   );
-  // }
-
   void setCurrentCategory(int id) {
+    final currCategory = state.categories.firstWhereOrNull((e) => e.id == id);
+    if (state.currCategory == currCategory) return;
+
     emit(state.copyWith(
       status: LibraryStatus.idle,
-      currCategory: state.categories.firstWhereOrNull((e) => e.id == id),
+      currCategory: currCategory,
     ));
+
+    if (state.imagesByCategory.isEmpty) loadImages();
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/app/presentation/enums/settings_type.dart';
 import 'package:karabookapp/app/presentation/logic/settings/settings_cubit.dart';
-import 'package:karabookapp/app/presentation/logic/settings/settings_cubit.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_styles.dart';
 
@@ -39,7 +38,11 @@ class _Item extends StatelessWidget {
         color: AppColors.shared.transparent,
         child: Row(
           children: [
-            SvgPicture.asset(_type.icon),
+            SvgPicture.asset(
+              _type.icon,
+              width: 24.sp,
+              height: 24.sp,
+            ),
             SizedBox(width: 8.sp),
             Expanded(
               child: Text(_type.title, style: AppStyles.shared.settingsOption),
@@ -49,7 +52,7 @@ class _Item extends StatelessWidget {
                 child: SizedBox(
                   height: 16.sp,
                   child: Transform.scale(
-                    scale: 0.6,
+                    scale: 0.8,
                     child: BlocBuilder<SettingsCubit, SettingsState>(
                       buildWhen: (p, c) =>
                           p.valueByOptionType(_type) !=

@@ -4,24 +4,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/utils/extensions/string.dart';
 import 'package:karabookapp/pages/events/domain/repositories/events_repository.dart';
-import 'package:karabookapp/services/isar/models/svg_image.dart';
+import 'package:karabookapp/services/isar/models/image_model.dart';
 import 'package:karabookapp/services/managers/shared_pref_manager.dart';
 
 part 'daily_state.dart';
 
 class DailyCubit extends Cubit<DailyState> {
-  DailyCubit(this._repository)
-      : super(const DailyState(
-          status: DailyStatus.initial,
-          images: [],
-        )) {
+  DailyCubit(this._repository) : super(const DailyState(images: [])) {
     _loadImages();
   }
 
   final IEventsRepository _repository;
 
   Future<void> _checkCurrentDaily() async {
-    final timeStr = await SharedPrefManager.share.get(C.gift);
+    final timeStr = await SharedPrefManager.shared.get(C.gift);
     if (timeStr is! String) return;
 
     final parsedTime = timeStr.time;
@@ -35,7 +31,7 @@ class DailyCubit extends Cubit<DailyState> {
 
   Future<void> _loadImages() async {
     emit(state.copyWith(status: DailyStatus.loading));
-    await _checkCurrentDaily();
+    // await _checkCurrentDaily();
 
     final result = await _repository.getDailyImages();
     result.fold(
@@ -53,7 +49,7 @@ class DailyCubit extends Cubit<DailyState> {
   bool decreaseOpacity() {
     if (state.isGotGift == true) return true;
     final formatted = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    SharedPrefManager.share.write(C.gift, formatted);
+    SharedPrefManager.shared.write(C.gift, formatted);
 
     emit(state.copyWith(status: DailyStatus.idle, opacity: 0));
     return false;

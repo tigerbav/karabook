@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
@@ -37,7 +35,9 @@ class NumberPainter extends CustomPainter {
           minWidth: 0.5,
           maxWidth: 100,
         );
-      if (completedIds.contains(shape.id) == false && canShowByScale(shape) && isShapeNotBlack(shape)) {
+      if (completedIds.contains(shape.id) == false &&
+          canShowByScale(shape) &&
+          isShapeNotBlack(shape)) {
         textPainter.paint(
           canvas,
           Offset(
@@ -51,12 +51,12 @@ class NumberPainter extends CustomPainter {
 
   bool canShowByScale(SvgShapeModel shape) {
     return scale > 0 && shape.number.size >= 16 && shape.number.size <= 25 ||
-          scale > 1 && shape.number.size >= 10 && shape.number.size <= 16 ||
-          scale > 2 && shape.number.size >= 8 && shape.number.size < 10 ||
-          scale > 3 && shape.number.size >= 6 && shape.number.size < 8 ||
-          scale > 4 && shape.number.size >= 5 && shape.number.size < 6 ||
-          scale > 5 && shape.number.size >= 4 && shape.number.size < 5 ||
-          scale > 7 && shape.number.size >= 1 && shape.number.size < 4;
+        scale > 1 && shape.number.size >= 10 && shape.number.size <= 16 ||
+        scale > 2 && shape.number.size >= 8 && shape.number.size < 10 ||
+        scale > 3 && shape.number.size >= 6 && shape.number.size < 8 ||
+        scale > 4 && shape.number.size >= 5 && shape.number.size < 6 ||
+        scale > 5 && shape.number.size >= 4 && shape.number.size < 5 ||
+        scale > 7 && shape.number.size >= 1 && shape.number.size < 4;
   }
 
   bool isShapeNotBlack(SvgShapeModel shape) => shape.fill.value != 0xff000000;

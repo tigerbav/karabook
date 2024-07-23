@@ -1,11 +1,11 @@
 import 'package:either_dart/either.dart';
 import 'package:karabookapp/pages/portfolio/data/datasources/portfolio_datasource.dart';
-import 'package:karabookapp/services/isar/models/svg_image.dart';
+import 'package:karabookapp/services/isar/models/image_model.dart';
 import 'package:karabookapp/services/network/failures/failure.dart';
 
 abstract class IPortfolioRepository {
-  Future<Either<Failure, List<SvgImage>>> getCurrentImages();
-  Future<Either<Failure, List<SvgImage>>> getCompletedImages();
+  Future<Either<Failure, List<ImageModel>>> getCurrentImages();
+  Future<Either<Failure, List<ImageModel>>> getCompletedImages();
 }
 
 class PortfolioRepository extends IPortfolioRepository {
@@ -13,9 +13,9 @@ class PortfolioRepository extends IPortfolioRepository {
   final IPortfolioDataSources _dataSources;
 
   @override
-  Future<Either<Failure, List<SvgImage>>> getCompletedImages() async {
+  Future<Either<Failure, List<ImageModel>>> getCompletedImages() async {
     try {
-      final result = await _dataSources.getCompletedImages();
+      final result = await _dataSources.getImages(true);
       return Right(result);
     } catch (e, trace) {
       return Left(Failure.from(e, trace));
@@ -23,9 +23,9 @@ class PortfolioRepository extends IPortfolioRepository {
   }
 
   @override
-  Future<Either<Failure, List<SvgImage>>> getCurrentImages() async {
+  Future<Either<Failure, List<ImageModel>>> getCurrentImages() async {
     try {
-      final result = await _dataSources.getCurrentImages();
+      final result = await _dataSources.getImages(false);
       return Right(result);
     } catch (e, trace) {
       return Left(Failure.from(e, trace));

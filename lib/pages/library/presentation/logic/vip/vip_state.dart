@@ -10,12 +10,14 @@ class VipState extends Equatable {
   });
 
   final VipStatus status;
-  final List<SvgImage> images;
+  final List<ImageModel> images;
   final String? messageError;
+
+  bool get isLoading => status == VipStatus.loading;
 
   VipState copyWith({
     required VipStatus status,
-    List<SvgImage>? images,
+    List<ImageModel>? images,
     String? messageError,
   }) {
     return VipState(

@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
                   repeat: false,
                   onLoaded: (composition) => _controller
                     ..duration = composition.duration
-                    ..forward().whenComplete(context.read<AppCubit>().setMenu),
+                    ..forward().whenComplete(context.read<AppCubit>().goToApp),
                 ),
               ),
               SizedBox(height: 8.sp),

@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
-import 'package:karabookapp/services/isar/models/image_category.dart';
+import 'package:karabookapp/services/isar/models/category_model.dart';
 import 'package:karabookapp/pages/library/presentation/logic/library/library_cubit.dart';
 
 class LibraryCategories extends StatefulWidget {
@@ -30,8 +30,6 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
       height: 24.sp,
       child: BlocBuilder<LibraryCubit, LibraryState>(
         buildWhen: (p, c) =>
-            p.categoriesWithImages(p.images) !=
-                c.categoriesWithImages(c.images) ||
             p.isLoadingCategories != c.isLoadingCategories ||
             p.currCategory != c.currCategory,
         builder: (context, state) {
@@ -44,9 +42,7 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
             );
           }
 
-          final categories = state.categoriesWithImages(state.images);
-
-          if (categories.isEmpty) {
+          if (state.currCategory == null) {
             return Text(
               LocaleKeys.no_categories.tr(),
               textAlign: TextAlign.center,
@@ -59,11 +55,11 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
             padding: EdgeInsets.symmetric(horizontal: 20.sp),
             controller: _controller,
             shrinkWrap: true,
-            itemCount: categories.length,
+            itemCount: state.categories.length,
             separatorBuilder: (_, __) => SizedBox(width: 8.sp),
             itemBuilder: (context, index) => _Item(
-              category: categories[index],
-              isSelected: categories[index].id == state.currCategory?.id,
+              category: state.categories[index],
+              isSelected: state.categories[index].id == state.currCategory?.id,
             ),
           );
         },
@@ -77,7 +73,7 @@ class _Item extends StatelessWidget {
     required this.category,
     required this.isSelected,
   });
-  final ImageCategory category;
+  final CategoryModel category;
   final bool isSelected;
 
   @override
@@ -94,8 +90,7 @@ class _Item extends StatelessWidget {
               )
             : null,
         child: Text(
-          //TODO
-          category.name!,
+          category.name ?? LocaleKeys.oops.tr(),
           style: isSelected ? AppStyles.shared.segment : AppStyles.shared.toast,
         ),
       ),

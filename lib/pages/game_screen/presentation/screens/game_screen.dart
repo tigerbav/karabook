@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/app/presentation/logic/app/app_cubit.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
+import 'package:karabookapp/common/cubits/image/painter_progress_cubit.dart';
 import 'package:karabookapp/common/utils/utils.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/game_screen/data/datasources/game_datasource.dart';
@@ -19,15 +20,14 @@ import 'package:karabookapp/pages/game_screen/presentation/widgets/checkers_pain
 import 'package:karabookapp/pages/game_screen/presentation/widgets/color_picker.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/fade_paint/fade_paint.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/help_button.dart';
-import 'package:karabookapp/pages/game_screen/presentation/widgets/line_paint/line_paint.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/number_painter.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/reward_button.dart';
-import 'package:karabookapp/pages/game_screen/presentation/widgets/shape_painter.dart';
+import 'package:karabookapp/pages/game_screen/presentation/widgets/screenshot_widget.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/zoom_out_button.dart';
+import 'package:karabookapp/pages/portfolio/presentation/logic/portfolio/portfolio_cubit.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_line_model.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
 import 'package:karabookapp/services/isar/models/painter_progress.dart';
-import 'package:screenshot/screenshot.dart';
 
 @RoutePage()
 class GameScreen extends StatelessWidget {
@@ -38,6 +38,8 @@ class GameScreen extends StatelessWidget {
     required this.svgLines,
     required this.painterProgress,
     required this.completedIds,
+    required this.painterProgressCubit,
+    required this.portfolioCubit,
   });
 
   final Map<Color, List<SvgShapeModel>> sortedShapes;
@@ -45,6 +47,8 @@ class GameScreen extends StatelessWidget {
   final List<SvgLineModel> svgLines;
   final PainterProgress painterProgress;
   final List<int> completedIds;
+  final PainterProgressCubit painterProgressCubit;
+  final PortfolioCubit portfolioCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +62,8 @@ class GameScreen extends StatelessWidget {
             svgLines: svgLines,
             painterProgress: painterProgress,
             completedIds: completedIds,
+            painterProgressCubit: painterProgressCubit,
+            portfolioCubit: portfolioCubit,
           ),
         ),
         BlocProvider(create: (_) => RewardsCubit()),
@@ -110,16 +116,15 @@ class _GameViewState extends State<_GameView> {
               c is AppMenu && c.lifecycleState == AppLifecycleState.paused,
           listener: (context, state) async {
             //TODO: implement
-            await gameCubit.saveData();
+            await gameCubit.saveGame();
           },
         ),
         BlocListener<ColorPickerCubit, ColorPickerState>(
           listenWhen: (p, c) =>
               p.selected?.number != c.selected?.number ||
               p.activePickers.length != c.activePickers.length,
-          listener: (context, state) {
+          listener: (context, state) async {
             gameCubit.setSelectedShapes(state.selected?.color);
-            if (state.selected == null) gameCubit.saveData();
 
             if (state.activePickers.isEmpty) gameCubit.finishGame();
           },
@@ -128,10 +133,6 @@ class _GameViewState extends State<_GameView> {
           listener: (context, state) {
             switch (state.status) {
               case GameStatus.shapeTapped:
-                context.read<ColorPickerCubit>().incrementCompletedItem();
-                //TODO need refactor
-                context.read<GameCubit>().setStatusIdle();
-
               case GameStatus.exit:
                 Navigator.pop(context);
               case GameStatus.completed:
@@ -143,6 +144,7 @@ class _GameViewState extends State<_GameView> {
 
               case GameStatus.initial:
               case GameStatus.idle:
+              case GameStatus.loading:
                 break;
             }
           },
@@ -156,7 +158,6 @@ class _GameViewState extends State<_GameView> {
             alignment: Alignment.center,
             children: [
               InteractiveViewer(
-                //TODO: check SizedBox
                 transformationController: _transformationController,
                 boundaryMargin: EdgeInsets.all(100.sp),
                 maxScale: 50,
@@ -173,57 +174,28 @@ class _GameViewState extends State<_GameView> {
                       height: 1.sh,
                       child: const FadePaint(),
                     ),
-                    Screenshot(
-                      controller: gameCubit.screenshotController,
-                      child: Stack(
-                        children: [
-                          SizedBox(
-                            width: 1.sw,
-                            height: 1.sh,
-                            child: GestureDetector(
-                              onTapUp: gameCubit.paintTappedShape,
-                              child: BlocBuilder<GameCubit, GameState>(
-                                builder: (context, state) {
-                                  return CustomPaint(
-                                    isComplex: true,
-                                    painter: ShapePainter(
-                                      shapes: state.allShapes,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          IgnorePointer(
-                            child: SizedBox(
-                              width: 1.sw,
-                              height: 1.sh,
-                              child: LinePaint(svgLines: gameCubit.svgLines),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    const ScreenshotWidget(),
                     IgnorePointer(
                       child: SizedBox(
                         width: 1.sw,
                         height: 1.sh,
                         child: ValueListenableBuilder(
                           valueListenable: _scaleNotifier,
-                          builder: (_, scale, __) => RepaintBoundary(
-                            child: BlocBuilder<GameCubit, GameState>(
-                              buildWhen: (p, c) =>
-                                  p.completedIds != c.completedIds,
-                              builder: (_, state) {
-                                return CustomPaint(
+                          builder: (_, scale, __) =>
+                              BlocBuilder<GameCubit, GameState>(
+                            buildWhen: (p, c) =>
+                                p.completedIds != c.completedIds,
+                            builder: (_, state) {
+                              return RepaintBoundary(
+                                child: CustomPaint(
                                   painter: NumberPainter(
                                     shapes: gameCubit.state.allShapes,
                                     scale: scale,
                                     completedIds: state.completedIds,
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -235,7 +207,10 @@ class _GameViewState extends State<_GameView> {
                 top: MediaQuery.of(context).padding.top + 10,
                 left: 10,
                 child: IconButton(
-                  onPressed: gameCubit.exit,
+                  onPressed: () {
+                    context.read<ColorPickerCubit>().resetColor();
+                    gameCubit.exit();
+                  },
                   icon: SvgPicture.asset(AppResources.back),
                 ),
               ),

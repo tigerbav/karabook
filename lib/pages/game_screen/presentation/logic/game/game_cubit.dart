@@ -1,10 +1,16 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:karabookapp/app/data/datasources/setting_datasource.dart';
+import 'package:karabookapp/app/data/models/progress.dart';
 import 'package:karabookapp/common/app_constants.dart';
+import 'package:karabookapp/common/cubits/image/painter_progress_cubit.dart';
 import 'package:karabookapp/common/utils/extensions/iterable.dart';
 import 'package:karabookapp/pages/game_screen/domain/repositories/game_repository.dart';
+import 'package:karabookapp/pages/portfolio/presentation/logic/portfolio/portfolio_cubit.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_line_model.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
 import 'package:karabookapp/services/isar/models/painter_progress.dart';
@@ -18,6 +24,8 @@ class GameCubit extends Cubit<GameState> {
     required this.repository,
     required this.sortedShapes,
     required this.svgLines,
+    required this.painterProgressCubit,
+    required this.portfolioCubit,
     required List<SvgShapeModel> allShapes,
     required PainterProgress painterProgress,
     required List<int> completedIds,
@@ -29,7 +37,11 @@ class GameCubit extends Cubit<GameState> {
           ),
         );
 
+  Timer? _timer;
+
   final IGameRepository repository;
+  final PainterProgressCubit painterProgressCubit;
+  final PortfolioCubit portfolioCubit;
 
   final screenshotController = ScreenshotController();
 
@@ -43,7 +55,12 @@ class GameCubit extends Cubit<GameState> {
     ));
   }
 
-  Future<void> saveData() async {
+  Future<void> _saveProgress() async {
+    _timer?.cancel();
+    _timer = Timer(const Duration(seconds: 1), () => saveGame());
+  }
+
+  Future<void> saveGame({bool saveServer = false}) async {
     final screenProgress = await screenshotController.capture();
 
     final painterProgress = state.painterProgress
@@ -52,9 +69,10 @@ class GameCubit extends Cubit<GameState> {
       ..isCompleted = state.isCompleted;
 
     try {
-      repository.updateImage(painterProgress);
+      if (saveServer) await saveOnServer();
+      await repository.updateImage(painterProgress);
     } catch (_) {
-      debugPrint('Error update image in local base!!!');
+      debugPrint('Error updating image in local base!!!');
     }
   }
 
@@ -78,11 +96,11 @@ class GameCubit extends Cubit<GameState> {
     return updatedShapes;
   }
 
-  Future<void> paintTappedShape(TapUpDetails details) async {
+  Future<bool> paintTappedShape(TapUpDetails details) async {
     final shapes = state.selectedShapes;
-    if (shapes.isEmpty) return;
+    if (shapes.isEmpty) return false;
 
-    GameStatus? tappedStatus;
+    bool isPainted = false;
     int? tappedShapeId;
 
     final updatedShapes = shapes.map((e) {
@@ -91,8 +109,9 @@ class GameCubit extends Cubit<GameState> {
             state.completedIds.firstWhereOrNull((id) => id == e.id);
         if (completedId != null) return e;
 
-        tappedStatus = GameStatus.shapeTapped;
+        _saveProgress();
         tappedShapeId = e.id;
+        isPainted = true;
         _vibrationEndColor();
 
         return e.copyWith(isPainted: true);
@@ -105,25 +124,45 @@ class GameCubit extends Cubit<GameState> {
           ?..add(tappedShapeId!);
 
     emit(state.copyWith(
-      status: tappedStatus,
       selectedShapes: updatedShapes,
       completedIds: completedIds,
     ));
+
+    return isPainted;
   }
 
-  void setStatusIdle() => emit(state.copyWith(status: GameStatus.idle));
-
   Future<void> _vibrationEndColor() async {
-    final isVibrate = await SharedPrefManager.share.get(C.vibration);
+    final isVibrate = await SharedPrefManager.shared.get(C.vibration);
     if (isVibrate is bool && isVibrate == true) Vibrate.vibrate();
   }
 
   void finishGame() => emit(state.copyWith(status: GameStatus.completed));
-  void exit() => emit(state.copyWith(status: GameStatus.exit));
+
+  Future<void> exit() async {
+    _timer?.cancel();
+    await saveGame(saveServer: true);
+    await painterProgressCubit.getProgress();
+    await portfolioCubit.loadImages();
+    emit(state.copyWith(status: GameStatus.exit));
+  }
+
+  Future<void> saveOnServer() async {
+    final completedParts = state.isCompleted
+        ? null
+        : state.completedIds.map((e) => e.toString()).join(',');
+    final progress = Progress(
+      id: 0,
+      userId: ISettingDataSource.userId,
+      imageId: state.painterProgress.id,
+      completedParts: completedParts,
+      isCompleted: state.isCompleted,
+    );
+    await repository.updateServer(progress);
+  }
 
   @override
   Future<void> close() async {
-    await saveData();
+    _timer?.cancel();
     return super.close();
   }
 }

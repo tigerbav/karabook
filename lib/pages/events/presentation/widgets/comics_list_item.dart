@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/common/app_colors.dart';
+import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
-import 'package:karabookapp/services/isar/models/svg_image.dart';
+import 'package:karabookapp/services/isar/models/image_model.dart';
 
 class ComicsListItem extends StatelessWidget {
   const ComicsListItem({
@@ -12,7 +13,8 @@ class ComicsListItem extends StatelessWidget {
     required this.image,
     required this.isActive,
   });
-  final SvgImage image;
+
+  final ImageModel image;
   final bool isActive;
 
   @override
@@ -24,7 +26,11 @@ class ComicsListItem extends StatelessWidget {
           SizedBox(
             height: 100.sp,
             width: 100.sp,
-            child: ImagesGridItem(image),
+            child: ImagesGridItem(
+              image,
+              heroTag: C.comics,
+              size: 100,
+            ),
           )
         else
           Container(

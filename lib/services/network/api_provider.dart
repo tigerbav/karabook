@@ -4,9 +4,6 @@ class ApiProvider {
   ApiProvider._();
   static final shared = ApiProvider._();
 
-  static const _token =
-      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJKV1QgU2lnbiBBZG1pbiIsImlhdCI6MTcxMjEzMTIxNSwiZXhwIjoxNzQzNjY3MjY3LCJhdWQiOiJrYXJhYm9vay5jb20iLCJzdWIiOiJuby1yZXBseUBrYXJhYm9vay5jb20iLCJHaXZlbk5hbWUiOiJBbmRyaWkiLCJTdXJuYW1lIjoiWmRyb2J5bGtvIiwiRW1haWwiOiJuby1yZXBseUBrYXJhYm9vay5jb20iLCJSb2xlIjoiRGV2ZWxvcGVyIn0.TzcJ9_DCuA3f1RI_0D1RDg4EhBJmbo3Ys6VEpy5GGUM';
-
   static final _options = Options(
     headers: {
       "Content-Type": "application/json",
@@ -17,6 +14,16 @@ class ApiProvider {
 
   Future<Response> get(String url) async {
     final response = await Dio().get(url, options: _options);
+    return response;
+  }
+
+  Future<Response> delete(String url) async {
+    final response = await Dio().delete(url, options: _options);
+    return response;
+  }
+
+  Future<Response> post(String url, Map<String, dynamic> data) async {
+    final response = await Dio().post(url, options: _options, data: data);
     return response;
   }
 }

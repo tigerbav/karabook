@@ -19,12 +19,12 @@ class RewardsCubit extends Cubit<RewardsState> {
   var _numRewardedLoadAttempts = 0;
 
   Future<void> increaseHelpCount() async {
-    await SharedPrefManager.share.write(C.helpCounter, state.helpCount - 1);
+    await SharedPrefManager.shared.write(C.helpCounter, state.helpCount - 1);
     emit(state.copyWith(helpCount: state.helpCount - 1));
   }
 
   Future<void> _getHelpPoints() async {
-    final counter = await SharedPrefManager.share.get(C.helpCounter);
+    final counter = await SharedPrefManager.shared.get(C.helpCounter);
 
     emit(state.copyWith(
         helpCount: (counter != null && counter is int) ? counter : 2));
@@ -134,7 +134,7 @@ class RewardsCubit extends Cubit<RewardsState> {
         '$ad with reward $RewardItem(${reward.amount}, ${reward.type})',
       );
 
-      await SharedPrefManager.share.write(C.helpCounter, state.helpCount + 2);
+      await SharedPrefManager.shared.write(C.helpCounter, state.helpCount + 2);
       emit(RewardsState(
         bannerAd: state.bannerAd,
         rewardedAd: state.rewardedAd,

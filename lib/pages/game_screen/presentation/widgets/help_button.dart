@@ -1,12 +1,9 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
-import 'package:karabookapp/common/utils/utils.dart';
-import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/game_screen/presentation/logic/color_picker/color_picker_cubit.dart';
 import 'package:karabookapp/pages/game_screen/presentation/logic/game/game_cubit.dart';
 import 'package:karabookapp/pages/game_screen/presentation/logic/rewards/rewards_cubit.dart';
@@ -62,24 +59,24 @@ class _HelpButtonState extends State<HelpButton>
               onTap: () {
                 final gameCubit = context.read<GameCubit>();
                 final rewardCubit = context.read<RewardsCubit>();
-
-                if (gameCubit.state.selectedShapes.isEmpty) {
-                  Utils.showToast(
-                    context,
-                    LocaleKeys.please_select_a_color.tr(),
-                    isError: false,
-                  );
-                }
-                if (rewardCubit.state.helpCount == 0) {
-                  rewardCubit.showRewardedAd();
-                  return;
-                }
+                //
+                // if (gameCubit.state.selectedShapes.isEmpty) {
+                //   Utils.showToast(
+                //     context,
+                //     LocaleKeys.please_select_a_color.tr(),
+                //     isError: false,
+                //   );
+                // }
+                // if (rewardCubit.state.helpCount == 0) {
+                //   rewardCubit.showRewardedAd();
+                //   return;
+                // }
 
                 for (final shape in gameCubit.state.selectedShapes) {
                   if (gameCubit.state.completedIds.contains(shape.id) ==
                       false) {
                     _animateHelpInitialize(shape);
-                    rewardCubit.increaseHelpCount();
+                    // rewardCubit.increaseHelpCount();
                     break;
                   }
                 }

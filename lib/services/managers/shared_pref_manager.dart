@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefManager {
-  static SharedPrefManager share = SharedPrefManager._();
+  static SharedPrefManager shared = SharedPrefManager._();
   SharedPrefManager._();
 
   Future<void> write(String key, Object value) async {

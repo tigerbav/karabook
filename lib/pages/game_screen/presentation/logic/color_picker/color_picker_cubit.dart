@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:karabookapp/pages/game_screen/presentation/models/color_item_model.dart';
+import 'package:karabookapp/pages/game_screen/presentation/widgets/color_picker.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
-
-import '../../../../../services/game_core/painter_tools.dart';
+import 'package:karabookapp/services/game_core/painter_tools.dart';
 
 part 'color_picker_state.dart';
 
@@ -37,14 +37,17 @@ class ColorPickerCubit extends Cubit<ColorPickerState> {
     //debugPrint('SHAPES: tapped color: ${model.toString()}');
 
     if (state.selected == model) {
-      emit(ColorPickerState(selected: null, items: state.items));
+      resetColor();
       return;
     }
     emit(state.copyWith(selected: model));
   }
 
+  void resetColor() =>
+      emit(ColorPickerState(selected: null, items: state.items));
+
   //not very good realization
-  void incrementCompletedItem() {
+  Future<void> incrementCompletedItem() async {
     if (state.selected == null) return;
     final item = state.selected?.incrementCompletedItems;
     final items = List<ColorItemModel>.from(state.items)

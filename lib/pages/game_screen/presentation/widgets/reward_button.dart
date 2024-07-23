@@ -18,8 +18,8 @@ class RewardButton extends StatefulWidget {
 
 class _RewardButtonState extends State<RewardButton>
     with SingleTickerProviderStateMixin {
-  static const _lowerBound = -100.0;
-  static const _upperBound = 20.0;
+  static final _lowerBound = -100.0.sp;
+  static final _upperBound = 20.0.sp;
 
   late final AnimationController _rewardController = AnimationController(
     vsync: this,
@@ -114,11 +114,13 @@ class _RewardButtonState extends State<RewardButton>
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.yellow, width: 2.sp),
                     ),
-                    height: 30,
-                    width: 30,
-                    child: Text(
-                      'AD',
-                      style: AppStyles.shared.btnBlack,
+                    height: 30.sp,
+                    width: 30.sp,
+                    child: FittedBox(
+                      child: Text(
+                        'AD',
+                        style: AppStyles.shared.btnBlack,
+                      ),
                     ),
                   ),
                 ),

@@ -15,8 +15,32 @@ import 'package:karabookapp/pages/library/presentation/widgets/library_categorie
 import 'package:karabookapp/pages/library/presentation/widgets/vip_list_view.dart';
 
 @RoutePage()
-class LibraryScreen extends StatelessWidget {
+class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
+
+  @override
+  State<LibraryScreen> createState() => _LibraryScreenState();
+}
+
+class _LibraryScreenState extends State<LibraryScreen> {
+  final _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller.addListener(() {
+      if (_controller.position.maxScrollExtent <= _controller.position.pixels) {
+        context.read<LibraryCubit>().loadImages();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +49,9 @@ class LibraryScreen extends StatelessWidget {
         if (state.isFailure) Utils.showToast(context, state.errorMessage);
       },
       child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        controller: _controller,
+        primary: false,
         children: [
           const LibraryBanner(),
           SizedBox(height: 20.sp),
@@ -33,38 +60,51 @@ class LibraryScreen extends StatelessWidget {
           BlocBuilder<LibraryCubit, LibraryState>(
             buildWhen: (p, c) =>
                 p.imagesByCategory != c.imagesByCategory ||
+                p.currCategory != c.currCategory ||
                 p.isLoadingImages != c.isLoadingImages ||
-                p.currCategory != c.currCategory,
+                p.mapImages != c.mapImages,
             builder: (context, state) {
-              if (state.isLoadingImages) {
-                return Center(
-                  child: SizedBox(
-                    width: 24.sp,
-                    child: CircularProgressIndicator(
-                      color: AppColors.shared.pink,
-                    ),
+              if (state.currCategory?.id == C.vipID) {
+                return const VipListView();
+              }
+
+              final images = state.imagesByCategory;
+
+              if (state.isLoadingImages && images.isEmpty) {
+                return const SizedBox();
+              }
+
+              if (images.isEmpty) {
+                return Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 100.sp),
+                  child: Text(
+                    LocaleKeys.no_images.tr(),
+                    style: AppStyles.shared.h1,
                   ),
                 );
               }
 
-              // if (state.currCategory?.name == C.vip) return const VipListView();
-
-              // final images = state.imagesByCategory;
-              //
-              // if (images == null || images.isEmpty) {
-              //   return Container(
-              //     alignment: Alignment.center,
-              //     padding: EdgeInsets.only(top: 100.sp),
-              //     child: Text(
-              //       LocaleKeys.no_images.tr(),
-              //       style: AppStyles.shared.h1,
-              //     ),
-              //   );
-              // }
-
-              return ImagesGrid(state.images);
+              return ImagesGrid(images, heroTag: C.library);
             },
           ),
+          BlocBuilder<LibraryCubit, LibraryState>(
+            buildWhen: (p, c) => p.isLoadingImages != c.isLoadingImages,
+            builder: (context, state) {
+              if (state.isLoadingImages == false) return const SizedBox();
+
+              return Center(
+                child: SizedBox(
+                  width: 24.sp,
+                  height: 24.sp,
+                  child: CircularProgressIndicator(
+                    color: AppColors.shared.pink,
+                  ),
+                ),
+              );
+            },
+          ),
+          SizedBox(height: 20.sp),
         ],
       ),
     );

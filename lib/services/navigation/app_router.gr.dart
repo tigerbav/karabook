@@ -50,6 +50,19 @@ abstract class _$AppRouter extends RootStackRouter {
           svgLines: args.svgLines,
           painterProgress: args.painterProgress,
           completedIds: args.completedIds,
+          painterProgressCubit: args.painterProgressCubit,
+          portfolioCubit: args.portfolioCubit,
+        ),
+      );
+    },
+    ImagePreviewRoute.name: (routeData) {
+      final args = routeData.argsAs<ImagePreviewRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ImagePreviewScreen(
+          key: args.key,
+          imageData: args.imageData,
+          tag: args.tag,
         ),
       );
     },
@@ -67,6 +80,8 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           svgString: args.svgString,
           id: args.id,
+          painterProgressCubit: args.painterProgressCubit,
+          portfolioCubit: args.portfolioCubit,
         ),
       );
     },
@@ -86,6 +101,16 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const TabBarScreen(),
+      );
+    },
+    VipRoute.name: (routeData) {
+      final args = routeData.argsAs<VipRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: VipScreen(
+          key: args.key,
+          pack: args.pack,
+        ),
       );
     },
   };
@@ -157,6 +182,8 @@ class GameRoute extends PageRouteInfo<GameRouteArgs> {
     required List<SvgLineModel> svgLines,
     required PainterProgress painterProgress,
     required List<int> completedIds,
+    required PainterProgressCubit painterProgressCubit,
+    required PortfolioCubit portfolioCubit,
     List<PageRouteInfo>? children,
   }) : super(
           GameRoute.name,
@@ -167,6 +194,8 @@ class GameRoute extends PageRouteInfo<GameRouteArgs> {
             svgLines: svgLines,
             painterProgress: painterProgress,
             completedIds: completedIds,
+            painterProgressCubit: painterProgressCubit,
+            portfolioCubit: portfolioCubit,
           ),
           initialChildren: children,
         );
@@ -184,6 +213,8 @@ class GameRouteArgs {
     required this.svgLines,
     required this.painterProgress,
     required this.completedIds,
+    required this.painterProgressCubit,
+    required this.portfolioCubit,
   });
 
   final Key? key;
@@ -198,9 +229,56 @@ class GameRouteArgs {
 
   final List<int> completedIds;
 
+  final PainterProgressCubit painterProgressCubit;
+
+  final PortfolioCubit portfolioCubit;
+
   @override
   String toString() {
-    return 'GameRouteArgs{key: $key, sortedShapes: $sortedShapes, allShapes: $allShapes, svgLines: $svgLines, painterProgress: $painterProgress, completedIds: $completedIds}';
+    return 'GameRouteArgs{key: $key, sortedShapes: $sortedShapes, allShapes: $allShapes, svgLines: $svgLines, painterProgress: $painterProgress, completedIds: $completedIds, painterProgressCubit: $painterProgressCubit, portfolioCubit: $portfolioCubit}';
+  }
+}
+
+/// generated route for
+/// [ImagePreviewScreen]
+class ImagePreviewRoute extends PageRouteInfo<ImagePreviewRouteArgs> {
+  ImagePreviewRoute({
+    Key? key,
+    required String imageData,
+    required String tag,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ImagePreviewRoute.name,
+          args: ImagePreviewRouteArgs(
+            key: key,
+            imageData: imageData,
+            tag: tag,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ImagePreviewRoute';
+
+  static const PageInfo<ImagePreviewRouteArgs> page =
+      PageInfo<ImagePreviewRouteArgs>(name);
+}
+
+class ImagePreviewRouteArgs {
+  const ImagePreviewRouteArgs({
+    this.key,
+    required this.imageData,
+    required this.tag,
+  });
+
+  final Key? key;
+
+  final String imageData;
+
+  final String tag;
+
+  @override
+  String toString() {
+    return 'ImagePreviewRouteArgs{key: $key, imageData: $imageData, tag: $tag}';
   }
 }
 
@@ -225,6 +303,8 @@ class LoadingGameRoute extends PageRouteInfo<LoadingGameRouteArgs> {
     Key? key,
     required String svgString,
     required int id,
+    required PainterProgressCubit painterProgressCubit,
+    required PortfolioCubit portfolioCubit,
     List<PageRouteInfo>? children,
   }) : super(
           LoadingGameRoute.name,
@@ -232,6 +312,8 @@ class LoadingGameRoute extends PageRouteInfo<LoadingGameRouteArgs> {
             key: key,
             svgString: svgString,
             id: id,
+            painterProgressCubit: painterProgressCubit,
+            portfolioCubit: portfolioCubit,
           ),
           initialChildren: children,
         );
@@ -247,6 +329,8 @@ class LoadingGameRouteArgs {
     this.key,
     required this.svgString,
     required this.id,
+    required this.painterProgressCubit,
+    required this.portfolioCubit,
   });
 
   final Key? key;
@@ -255,9 +339,13 @@ class LoadingGameRouteArgs {
 
   final int id;
 
+  final PainterProgressCubit painterProgressCubit;
+
+  final PortfolioCubit portfolioCubit;
+
   @override
   String toString() {
-    return 'LoadingGameRouteArgs{key: $key, svgString: $svgString, id: $id}';
+    return 'LoadingGameRouteArgs{key: $key, svgString: $svgString, id: $id, painterProgressCubit: $painterProgressCubit, portfolioCubit: $portfolioCubit}';
   }
 }
 
@@ -301,4 +389,41 @@ class TabBarRoute extends PageRouteInfo<void> {
   static const String name = 'TabBarRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [VipScreen]
+class VipRoute extends PageRouteInfo<VipRouteArgs> {
+  VipRoute({
+    Key? key,
+    required CategoryModel pack,
+    List<PageRouteInfo>? children,
+  }) : super(
+          VipRoute.name,
+          args: VipRouteArgs(
+            key: key,
+            pack: pack,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'VipRoute';
+
+  static const PageInfo<VipRouteArgs> page = PageInfo<VipRouteArgs>(name);
+}
+
+class VipRouteArgs {
+  const VipRouteArgs({
+    this.key,
+    required this.pack,
+  });
+
+  final Key? key;
+
+  final CategoryModel pack;
+
+  @override
+  String toString() {
+    return 'VipRouteArgs{key: $key, pack: $pack}';
+  }
 }

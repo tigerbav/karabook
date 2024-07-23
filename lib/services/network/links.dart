@@ -1,6 +1,30 @@
 class Links {
-  static const baseUrl = 'http://185.65.244.209:1974';
-  static const categoryGetAll = '$baseUrl/api/category/get/all';
-  static const imageGetAll = '$baseUrl/api/image/get/all';
-  static const imageGetAllByCategory = '$imageGetAll/ByCategory/';
+  static const _baseUrl = 'http://185.65.244.209:1974';
+
+  static const locale = '$_baseUrl/api/text/locale/get/all';
+
+  //text
+  static const serverText = '$_baseUrl/api/text/i18n/get/all';
+  static const serverTextByLocale = '$_baseUrl/api/text/i18n/get/all/ByLocale/';
+  static const serverTextByTextKey =
+      '$_baseUrl/api/text/i18n/get/all/ByTextKey';
+
+  //category
+  static const categoryGetAll = '$_baseUrl/api/category/get/all';
+
+  //images
+  static const _imageGetAll = '$_baseUrl/api/image/get/all';
+  static const modifiedImage = '$_imageGetAll/ByModifiedDate';
+  static const imageByIds = '$_imageGetAll/ByIds/';
+
+  //user
+  static const userAdd = '$_baseUrl/api/user/add';
+  static const userByEmail = '$_baseUrl/api/user/get/all/ByUserEmail/';
+
+  // progress
+  static const progressByUser =
+      '$_baseUrl/api/image/progress/get/all/ByUserId/';
+  static const progressAdd = '$_baseUrl/api/image/progress/add';
+  static const deleteByUserAndImage =
+      '$_baseUrl/api/image/progress/delete/ByUserIdAndImageId';
 }

@@ -27,6 +27,8 @@ class ColorPicker extends StatelessWidget {
       ),
     );
   }
+
+  static const duration = Duration(milliseconds: 700);
 }
 
 class _Item extends StatelessWidget {
@@ -65,11 +67,19 @@ class _Item extends StatelessWidget {
                   padding: EdgeInsets.only(top: 2.5.sp),
                   width: 47.5.sp,
                   height: 47.5.sp,
-                  child: CircularProgressIndicator(
-                    value: state.selected?.percent ?? 0,
-                    strokeWidth: 5.sp,
-                    color: _colorChecker,
-                    backgroundColor: AppColors.shared.transparent,
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(
+                      begin: state.selected?.percent ?? 0,
+                      end: state.selected?.percent ?? 0,
+                    ),
+                    duration: ColorPicker.duration,
+                    curve: Curves.easeInOut,
+                    builder: (context, value, _) => CircularProgressIndicator(
+                      value: value,
+                      strokeWidth: 5.sp,
+                      color: _colorChecker,
+                      backgroundColor: AppColors.shared.transparent,
+                    ),
                   ),
                 )
             ],

@@ -2,14 +2,29 @@ import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/pages/portfolio/data/models/achievement.dart';
 
 class C {
-  static const vip = 'Vip';
+  static const vip = 'VIP';
   static const gift = 'Gift';
   static const vibration = 'Vibration';
   static const fillAnimation = 'Fill Animation';
   static const helpCounter = 'Help';
+  static const locale = 'locale';
+  static const defaultLocale = 'en';
+  static const image = 'image';
+
+  static const removeAds = 'remove_ads';
+
+  static const imageOnPage = 8;
+  static const imageForDaily = 7;
+  static const vipID = 1000;
 
   static const support = 'KaraBook support';
   static const email = 'aburavikov@gmail.com';
+
+  // hero tags
+  static const daily = 'daily';
+  static const comics = 'comics';
+  static const library = 'library';
+  static const portfolio = 'portfolio';
 
   static final achievementsLocalData = <Achievement>[
     const Achievement(

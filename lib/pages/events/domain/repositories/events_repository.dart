@@ -1,11 +1,12 @@
 import 'package:either_dart/either.dart';
 import 'package:karabookapp/pages/events/data/datasources/events_datasource.dart';
-import 'package:karabookapp/services/isar/models/svg_image.dart';
+import 'package:karabookapp/services/isar/models/category_model.dart';
+import 'package:karabookapp/services/isar/models/image_model.dart';
 import 'package:karabookapp/services/network/failures/failure.dart';
 
 abstract class IEventsRepository {
-  Future<Either<Failure, List<SvgImage>>> getDailyImages();
-  Future<Either<Failure, List<SvgImage>>> getComics();
+  Future<Either<Failure, List<ImageModel>>> getDailyImages();
+  Future<Either<Failure, Map<CategoryModel, List<ImageModel>>>> getComics();
 }
 
 class EventsRepository extends IEventsRepository {
@@ -13,7 +14,7 @@ class EventsRepository extends IEventsRepository {
   final IEventsDataSource _dataSource;
 
   @override
-  Future<Either<Failure, List<SvgImage>>> getDailyImages() async {
+  Future<Either<Failure, List<ImageModel>>> getDailyImages() async {
     try {
       final result = await _dataSource.getDailyImages();
       return Right(result);
@@ -23,7 +24,8 @@ class EventsRepository extends IEventsRepository {
   }
 
   @override
-  Future<Either<Failure, List<SvgImage>>> getComics() async {
+  Future<Either<Failure, Map<CategoryModel, List<ImageModel>>>>
+      getComics() async {
     try {
       final result = await _dataSource.getComics();
       return Right(result);

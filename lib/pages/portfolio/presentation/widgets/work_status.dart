@@ -54,6 +54,7 @@ class _Item extends StatelessWidget {
         return GestureDetector(
           onTap: () => context.read<PortfolioCubit>().setStatusType(statusType),
           child: Container(
+            alignment: Alignment.center,
             padding: EdgeInsets.symmetric(vertical: 4.sp, horizontal: 16.sp),
             decoration: isSelected
                 ? BoxDecoration(

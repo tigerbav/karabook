@@ -1,11 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_colors.dart';
+import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
 import 'package:karabookapp/pages/events/presentation/logic/daily/daily_cubit.dart';
-import 'package:karabookapp/services/isar/models/svg_image.dart';
+import 'package:karabookapp/services/isar/models/image_model.dart';
 
 class DailyGrid extends StatefulWidget {
   const DailyGrid({super.key});
@@ -55,14 +57,20 @@ class _DailyGridState extends State<DailyGrid> {
 
 class _Item extends StatelessWidget {
   const _Item({required this.image, required this.day});
-  final SvgImage image;
+  final ImageModel image;
   final int day;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ImagesGridItem(image),
+        SizedBox(
+          width: double.infinity,
+          child: ImagesGridItem(
+            image,
+            heroTag: C.daily,
+          ),
+        ),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(

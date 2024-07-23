@@ -25,5 +25,7 @@ abstract class  LocaleKeys {
   static const term_of_use = 'term_of_use';
   static const send = 'send';
   static const email_sent = 'email_sent';
+  static const oops = 'oops';
+  static const sign_in_with_google = 'sign_in_with_google';
 
 }
