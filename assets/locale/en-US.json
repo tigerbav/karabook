@@ -24,5 +24,6 @@
   "send":"Send",
   "email_sent":"Your email was successfully sent.",
   "oops":"Oops...",
-  "sign_in_with_google":"Sign in with Google"
+  "sign_in_with_google":"Sign in with Google",
+  "acquired":"Acquired"
 }

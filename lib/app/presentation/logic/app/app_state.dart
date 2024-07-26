@@ -14,10 +14,7 @@ class AppSplash extends AppState {
   List<Object?> get props => [isLoading];
 
   @override
-  AppState setLifecycle(
-    AppLifecycleState lifecycleState,
-  ) =>
-      this;
+  AppState setLifecycle(AppLifecycleState lifecycleState) => this;
 }
 
 class AppMenu extends AppState {

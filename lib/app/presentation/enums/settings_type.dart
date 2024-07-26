@@ -67,7 +67,9 @@ extension SettingsTypeEx on SettingsType {
       case SettingsType.contactUs:
         context.router.push(const ContactUsRoute());
       case SettingsType.deleteAds:
+        context.read<SettingsCubit>().deleteAds();
       case SettingsType.restore:
+        context.read<SettingsCubit>().restorePurchase();
     }
   }
 
@@ -76,9 +78,9 @@ extension SettingsTypeEx on SettingsType {
     SettingsType.fill,
   ];
 
-  static final optionsWithNoSwitcher = [
-    SettingsType.contactUs,
-    SettingsType.deleteAds,
-    SettingsType.restore,
-  ];
+  static List<SettingsType> optionsWithNoSwitcher(bool hasAds) => [
+        SettingsType.contactUs,
+        if (hasAds) SettingsType.deleteAds,
+        SettingsType.restore,
+      ];
 }

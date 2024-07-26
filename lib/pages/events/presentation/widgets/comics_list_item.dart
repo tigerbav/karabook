@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_resources.dart';
+import 'package:karabookapp/common/widgets/empty_image.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
 
@@ -33,18 +34,7 @@ class ComicsListItem extends StatelessWidget {
             ),
           )
         else
-          Container(
-            padding: EdgeInsets.all(4.sp),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.shared.grey),
-              borderRadius: BorderRadius.all(Radius.circular(16.sp)),
-            ),
-            child: Image.asset(
-              'assets/images/octopus.png',
-              fit: BoxFit.contain,
-              color: AppColors.shared.white,
-            ),
-          ),
+          const EmptyImage(isInfinityH: true),
         if (isActive)
           Positioned(
             top: 5.sp,

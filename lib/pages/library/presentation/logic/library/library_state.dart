@@ -17,7 +17,6 @@ class LibraryState extends Equatable {
     this.categories = const [],
     this.vipPacks = const [],
     this.mapImages = const {},
-    this.pages = const {},
   });
 
   final LibraryStatus status;
@@ -27,20 +26,9 @@ class LibraryState extends Equatable {
   final List<CategoryModel> vipPacks;
   final Map<int, List<ImageModel>> mapImages;
 
-  /// {key: categoryId, value: lastPage}
-  final Map<int, int> pages;
-
   bool get isLoadingCategories => status == LibraryStatus.loadingCategories;
   bool get isLoadingImages => status == LibraryStatus.loadingImages;
   bool get isFailure => status == LibraryStatus.failure;
-
-  int? get currPage {
-    if (currCategory == null || mapImages[currCategory?.id] == null) {
-      return null;
-    }
-
-    return mapImages[currCategory!.id]!.length ~/ C.imageOnPage;
-  }
 
   List<ImageModel> get imagesByCategory {
     if (currCategory == null) return [];
@@ -64,7 +52,6 @@ class LibraryState extends Equatable {
       categories: categories ?? this.categories,
       vipPacks: vipPacks ?? this.vipPacks,
       mapImages: mapImages ?? this.mapImages,
-      pages: pages ?? this.pages,
     );
   }
 
@@ -76,6 +63,5 @@ class LibraryState extends Equatable {
         categories,
         vipPacks,
         mapImages,
-        pages,
       ];
 }

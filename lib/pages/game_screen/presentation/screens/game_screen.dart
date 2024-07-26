@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:karabookapp/app/presentation/logic/app/app_cubit.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/common/cubits/image/painter_progress_cubit.dart';
@@ -17,6 +16,7 @@ import 'package:karabookapp/pages/game_screen/presentation/logic/game/game_cubit
 import 'package:karabookapp/pages/game_screen/presentation/logic/rewards/rewards_cubit.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/banner_widget.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/checkers_paint/checkers_paint.dart';
+import 'package:karabookapp/pages/game_screen/presentation/widgets/circle_paint/circle_paint.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/color_picker.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/fade_paint/fade_paint.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/help_button.dart';
@@ -85,13 +85,20 @@ class _GameView extends StatefulWidget {
   State<_GameView> createState() => _GameViewState();
 }
 
-class _GameViewState extends State<_GameView> {
+class _GameViewState extends State<_GameView>
+    with SingleTickerProviderStateMixin {
   final _transformationController = TransformationController();
+  late final AnimationController _fadeController;
   final _scaleNotifier = ValueNotifier(1.0);
 
   @override
   void initState() {
     super.initState();
+
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
 
     _transformationController.addListener(() {
       _scaleNotifier.value =
@@ -102,6 +109,7 @@ class _GameViewState extends State<_GameView> {
   @override
   void dispose() {
     _transformationController.dispose();
+    _scaleNotifier.dispose();
     super.dispose();
   }
 
@@ -111,20 +119,13 @@ class _GameViewState extends State<_GameView> {
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<AppCubit, AppState>(
-          listenWhen: (_, c) =>
-              c is AppMenu && c.lifecycleState == AppLifecycleState.paused,
-          listener: (context, state) async {
-            //TODO: implement
-            await gameCubit.saveGame();
-          },
-        ),
         BlocListener<ColorPickerCubit, ColorPickerState>(
           listenWhen: (p, c) =>
               p.selected?.number != c.selected?.number ||
               p.activePickers.length != c.activePickers.length,
           listener: (context, state) async {
             gameCubit.setSelectedShapes(state.selected?.color);
+            _fadeController.forward(from: 0.0);
 
             if (state.activePickers.isEmpty) gameCubit.finishGame();
           },
@@ -172,7 +173,12 @@ class _GameViewState extends State<_GameView> {
                     SizedBox(
                       width: 1.sw,
                       height: 1.sh,
-                      child: const FadePaint(),
+                      child: const ManyCirclesPaint(),
+                    ),
+                    SizedBox(
+                      width: 1.sw,
+                      height: 1.sh,
+                      child: FadePaint(_fadeController),
                     ),
                     const ScreenshotWidget(),
                     IgnorePointer(
@@ -221,7 +227,13 @@ class _GameViewState extends State<_GameView> {
                   transformationController: _transformationController,
                 ),
               ),
-              const RewardButton(),
+              BlocBuilder<RewardsCubit, RewardsState>(
+                buildWhen: (p, c) => p.noAds != c.noAds,
+                builder: (context, state) {
+                  if (state.noAds == true) return const SizedBox();
+                  return const RewardButton();
+                },
+              ),
               Positioned(
                 bottom: 160.sp,
                 right: 10.sp,

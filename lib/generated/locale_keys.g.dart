@@ -27,5 +27,6 @@ abstract class  LocaleKeys {
   static const email_sent = 'email_sent';
   static const oops = 'oops';
   static const sign_in_with_google = 'sign_in_with_google';
+  static const acquired = 'acquired';
 
 }

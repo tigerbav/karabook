@@ -77,9 +77,7 @@ class _RewardButtonState extends State<RewardButton>
           top: MediaQuery.of(context).padding.top + 100.sp,
           left: _rewardController.value,
           child: GestureDetector(
-            onTap: () {
-              context.read<RewardsCubit>().showRewardedAd();
-            },
+            onTap: () => context.read<RewardsCubit>().showRewardedAd(2),
             child: Stack(
               clipBehavior: Clip.none,
               children: [

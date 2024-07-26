@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Utils {
   static FToast showToast(
@@ -37,6 +38,11 @@ class Utils {
           ),
         ),
       );
+  }
+
+  static Future<void> launchURL(String? url) async {
+    if (url == null) return;
+    await launchUrlString(url);
   }
 
   static showPopUp(

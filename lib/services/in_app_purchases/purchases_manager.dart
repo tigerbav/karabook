@@ -1,52 +1,71 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:flutter/services.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 class PurchasesManager {
-  final InAppPurchase _inAppPurchase = InAppPurchase.instance;
-  final productDetails = <ProductDetails>[];
-  final Set<String> productId = {};
+  static final PurchasesManager shared = PurchasesManager._();
+  PurchasesManager._();
 
-  InAppPurchase get instance => _inAppPurchase;
+  Future<void> initPlatformState() async {
+    await Purchases.setLogLevel(LogLevel.info);
 
-  void init(String id) {
-    productId.add(id.replaceAll('-', '_'));
-    final purchasesUpd = InAppPurchase.instance.purchaseStream;
-
-    purchasesUpd.listen(
-      _listenToPurchases,
-      onError: (error) => debugPrint(error.toString()),
-    );
-    _initStore();
+    final PurchasesConfiguration configuration;
+    if (Platform.isAndroid) {
+      configuration =
+          PurchasesConfiguration('goog_vcYgapPyptXdnjmCvaviJidnTIm');
+    } else {
+      configuration =
+          PurchasesConfiguration('appl_IQgMSbiDcXQWDakqTsoBDTeeijI');
+    }
+    await Purchases.configure(configuration);
   }
 
-  void _listenToPurchases(List<PurchaseDetails> purchases) {
-    for (var p in purchases) {
-      if (p.status == PurchaseStatus.pending) {
-        debugPrint('Pending!!!');
-      }
-      if (p.status == PurchaseStatus.error) {
-        debugPrint('Error!!!');
-      }
-      if (p.status == PurchaseStatus.purchased) {
-        debugPrint('Purchased!!!');
-      }
+  Future<Offering?> fetch(String id) async {
+    try {
+      final offerings = await Purchases.getOfferings();
+      return offerings.getOffering(id);
+    } on PlatformException catch (e) {
+      debugPrint(e.toString());
+      return null;
     }
   }
 
-  Future<void> _initStore() async {
-    final productsResponse = await _inAppPurchase.queryProductDetails({});
-    if (productsResponse.error != null) return;
-
-    productDetails.addAll(productsResponse.productDetails);
+  Future<bool> buy(Package package) async {
+    try {
+      final customerInfo = await Purchases.purchasePackage(package);
+      final identifier = package.storeProduct.identifier;
+      if (customerInfo.entitlements.all[identifier]?.isActive == true) {
+        return true;
+      }
+      return false;
+    } on PlatformException catch (e) {
+      var errorCode = PurchasesErrorHelper.getErrorCode(e);
+      if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
+        debugPrint(errorCode.toString());
+      }
+      return false;
+    }
   }
 
-  void buy() {
-    final product = productDetails.firstOrNull;
-    if (product == null) return;
-    final params = PurchaseParam(productDetails: product);
+  Future<bool> check(String id) async {
+    try {
+      final customerInfo = await Purchases.getCustomerInfo();
+      return customerInfo.entitlements.all[id]?.isActive == true;
+    } on PlatformException catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
 
-    _inAppPurchase.buyConsumable(purchaseParam: params);
+  Future<CustomerInfo?> restorePurchase() async {
+    try {
+      return await Purchases.restorePurchases();
+    } on PlatformException catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
   }
 }

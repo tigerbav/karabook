@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +11,7 @@ import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/widgets/arrow_back.dart';
 import 'package:karabookapp/common/widgets/images_grid.dart';
 import 'package:karabookapp/common/widgets/primary_button.dart';
+import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/library/data/datasources/library_datasource.dart';
 import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
 import 'package:karabookapp/pages/library/presentation/logic/vip/vip_cubit.dart';
@@ -38,23 +40,8 @@ class VipScreen extends StatelessWidget {
   }
 }
 
-class _VipScreen extends StatefulWidget {
+class _VipScreen extends StatelessWidget {
   const _VipScreen();
-
-  @override
-  State<_VipScreen> createState() => _VipScreenState();
-}
-
-class _VipScreenState extends State<_VipScreen> {
-  late final PurchasesManager _purchasesManager;
-
-  @override
-  void initState() {
-    super.initState();
-    final id = context.read<VipCubit>().pack.nameKey ?? '';
-    _purchasesManager = PurchasesManager();
-    _purchasesManager.init(id);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +82,37 @@ class _VipScreenState extends State<_VipScreen> {
                       style: AppStyles.shared.packTitles,
                     ),
                   ),
-                  PrimaryButton(
-                    text: '\$39.9',
-                    action: _purchasesManager.buy,
+                  BlocBuilder<VipCubit, VipState>(
+                    buildWhen: (p, c) =>
+                        p.offering != c.offering ||
+                        p.isLoading != c.isLoading ||
+                        p.isAvailable != c.isAvailable,
+                    builder: (context, state) {
+                      if (state.isLoading) {
+                        return Center(
+                          child: SizedBox(
+                            width: 35.sp,
+                            height: 35.sp,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
+                                color: AppColors.shared.pink,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      final isAvailable = state.isAvailable;
+
+                      return PrimaryButton(
+                        text: isAvailable
+                            ? LocaleKeys.acquired.tr()
+                            : (state.offering?.lifetime?.storeProduct
+                                    .priceString ??
+                                LocaleKeys.oops.tr()),
+                        action: context.read<VipCubit>().buy,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -113,7 +128,8 @@ class _VipScreenState extends State<_VipScreen> {
             SizedBox(height: 20.sp),
             BlocBuilder<VipCubit, VipState>(
               buildWhen: (p, c) =>
-                  p.images != c.images || p.isLoading != c.isLoading,
+                  p.visibleImages != c.visibleImages ||
+                  p.isLoading != c.isLoading,
               builder: (context, state) {
                 if (state.isLoading) {
                   return Center(
@@ -126,7 +142,10 @@ class _VipScreenState extends State<_VipScreen> {
                     ),
                   );
                 }
-                return ImagesGrid(state.images, heroTag: C.vip);
+                return ImagesGrid(
+                  state.visibleImages,
+                  heroTag: C.vip,
+                );
               },
             ),
           ],

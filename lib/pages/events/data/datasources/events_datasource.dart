@@ -187,18 +187,8 @@ class EventsDataSource extends IEventsDataSource {
       if (deletedIds.contains(id) == false) requiredIds.add(id);
     }
 
-    // when isarImages.length is less then [C.imageOnPage] it means, that it is
-    // last page. So, we need to be sure, that there are no new images from server
-    if (isarImages.length < C.imageOnPage) {
-      final allImgs = await IsarService.shared.getObjects(
-        from: isar.imageModels,
-      );
-      final isarImgSet = allImgs
-          .where((e) => e.categoryId == categoryId)
-          .map((e) => e.id)
-          .toSet();
-      final newIds = modifiedDataSet.difference(isarImgSet);
-      if (newIds.isNotEmpty) requiredIds.addAll(newIds);
+    if (isarImages.isEmpty) {
+      requiredIds.addAll(modifiedDates.map((e) => e.id).toList());
     }
 
     if (requiredIds.isEmpty) return isarImages;

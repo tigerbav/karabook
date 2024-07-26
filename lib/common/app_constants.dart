@@ -13,6 +13,8 @@ class C {
 
   static const removeAds = 'remove_ads';
 
+  static const googleSignIn = 'google_sign_in';
+
   static const imageOnPage = 8;
   static const imageForDaily = 7;
   static const vipID = 1000;

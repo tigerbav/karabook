@@ -27,6 +27,7 @@ class ColorPickerCubit extends Cubit<ColorPickerState> {
         number: index++,
         maxItems: entry.value.length,
         completedItems: paintedLength,
+        isCompleted: entry.value.length <= paintedLength,
       ));
     }
 
@@ -48,16 +49,22 @@ class ColorPickerCubit extends Cubit<ColorPickerState> {
 
   //not very good realization
   Future<void> incrementCompletedItem() async {
-    if (state.selected == null) return;
-    final item = state.selected?.incrementCompletedItems;
+    final selected = state.selected;
+    if (selected == null) return;
+    final item = selected.incrementCompletedItems;
     final items = List<ColorItemModel>.from(state.items)
-        .map((e) =>
-            e.number == state.selected?.number ? e.incrementCompletedItems : e)
+        .map((e) => e.number == selected.number ? e.incrementCompletedItems : e)
         .toList();
 
-    emit(ColorPickerState(
-      selected: item?.isCompleted == true ? null : item,
-      items: items,
-    ));
+    emit(ColorPickerState(selected: item, items: items));
+
+    if (item.maxItems <= item.completedItems) {
+      await Future.delayed(ColorPicker.duration);
+      final updItems = List<ColorItemModel>.from(state.items)
+          .map((e) =>
+              e.number == selected.number ? e.copyWith(isCompleted: true) : e)
+          .toList();
+      emit(ColorPickerState(items: updItems));
+    }
   }
 }

@@ -24,14 +24,14 @@ class SvgLineModel {
   ) : _path = parseSvgPathData(d);
 
   factory SvgLineModel.fromElement(XmlElement svgElement) {
-    final strokeWidthAttr = svgElement.getAttribute('stroke-width');
-    final strokeMiterLimitAttr = svgElement.getAttribute('stroke-miterlimit');
+    // final strokeWidthAttr = svgElement.getAttribute('stroke-width');
+    // final strokeMiterLimitAttr = svgElement.getAttribute('stroke-miterlimit');
 
     final paint = Paint()
       ..color = HexColor('#1A171B')
-      ..strokeWidth = double.tryParse(strokeWidthAttr ?? '0') ?? 0
+      ..strokeWidth = 0
       ..style = PaintingStyle.stroke
-      ..strokeMiterLimit = double.tryParse(strokeMiterLimitAttr ?? '0') ?? 0
+      ..strokeMiterLimit = 0
       ..strokeCap = StrokeCap.round;
 
     return SvgLineModel._(

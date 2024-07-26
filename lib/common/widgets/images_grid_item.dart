@@ -25,6 +25,7 @@ class ImagesGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => PainterProgressCubit(image.id),
+      lazy: true,
       child: _ImagesGridItem(image, heroTag, size),
     );
   }
@@ -111,9 +112,6 @@ class _ImagesGridItem extends StatelessWidget {
             ),
             decoration: _boxDecoration,
             child: widget,
-            // child: CachedNetworkSVGImage(
-            //   'https://raw.githubusercontent.com/tigerbav/svg_images/main/image1.svg',
-            // ),
           ),
         );
       },

@@ -55,7 +55,7 @@ class GameCubit extends Cubit<GameState> {
     ));
   }
 
-  Future<void> _saveProgress() async {
+  void _saveProgress() {
     _timer?.cancel();
     _timer = Timer(const Duration(seconds: 1), () => saveGame());
   }
@@ -133,7 +133,9 @@ class GameCubit extends Cubit<GameState> {
 
   Future<void> _vibrationEndColor() async {
     final isVibrate = await SharedPrefManager.shared.get(C.vibration);
-    if (isVibrate is bool && isVibrate == true) Vibrate.vibrate();
+    if (isVibrate is bool && isVibrate == true) {
+      Vibrate.feedback(FeedbackType.success);
+    }
   }
 
   void finishGame() => emit(state.copyWith(status: GameStatus.completed));

@@ -8,7 +8,6 @@ abstract class ILibraryRepository {
   Future<Either<Failure, List<CategoryModel>>> getAllCategories();
   Future<Either<Failure, List<CategoryModel>>> getVipCategories();
   Future<Either<Failure, List<ImageModel>>> getImages({
-    required int currPage,
     required int categoryId,
   });
   Future<Either<Failure, List<ImageModel>>> getAllImagesFromPack(
@@ -42,17 +41,12 @@ class LibraryRepository extends ILibraryRepository {
 
   @override
   Future<Either<Failure, List<ImageModel>>> getImages({
-    required int currPage,
     required int categoryId,
   }) async {
     try {
       final result = await _dataSource.getImagesByPage(
         categoryId: categoryId,
-        currPage: currPage,
       );
-      // const loader = SvgStringLoader('res/large_icon.svg');
-      // svg.cache.putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
-
       return Right(result.where((e) => e.isDaily == false).toList());
     } catch (e, trace) {
       return Left(Failure.from(e, trace));

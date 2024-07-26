@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:karabookapp/common/widgets/empty_image.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
 
 class ImagesGrid extends StatefulWidget {
-  const ImagesGrid(this.images, {super.key, required this.heroTag});
+  const ImagesGrid(
+    this.images, {
+    super.key,
+    required this.heroTag,
+  });
 
-  final List<ImageModel> images;
+  final List<ImageModel?> images;
   final String heroTag;
 
   @override
@@ -34,11 +39,13 @@ class _ImagesGridState extends State<ImagesGrid> {
         mainAxisSpacing: 16.sp,
         crossAxisSpacing: 16.sp,
       ),
-      itemBuilder: (_, index) => ImagesGridItem(
-        widget.images[index],
-        key: ValueKey(widget.images[index].id),
-        heroTag: widget.heroTag,
-      ),
+      itemBuilder: (_, index) => widget.images[index] != null
+          ? ImagesGridItem(
+              widget.images[index]!,
+              key: ValueKey(widget.images[index]!.id),
+              heroTag: widget.heroTag,
+            )
+          : const EmptyImage(isInfinityW: true),
     );
   }
 }

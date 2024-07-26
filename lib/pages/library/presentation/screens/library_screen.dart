@@ -26,17 +26,6 @@ class _LibraryScreenState extends State<LibraryScreen> {
   final _controller = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-
-    _controller.addListener(() {
-      if (_controller.position.maxScrollExtent <= _controller.position.pixels) {
-        context.read<LibraryCubit>().loadImages();
-      }
-    });
-  }
-
-  @override
   void dispose() {
     _controller.dispose();
     super.dispose();

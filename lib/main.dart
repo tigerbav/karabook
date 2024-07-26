@@ -11,6 +11,7 @@ import 'package:karabookapp/app/presentation/screens/app.dart';
 import 'package:karabookapp/common/widgets/restart_widget.dart';
 import 'package:karabookapp/generated/codegen_loader.g.dart';
 import 'package:karabookapp/services/auth_service.dart';
+import 'package:karabookapp/services/in_app_purchases/purchases_manager.dart';
 import 'package:karabookapp/services/isar/isar_service.dart';
 
 void main() async {
@@ -19,6 +20,7 @@ void main() async {
   await IsarService.shared.setup();
   MobileAds.instance.initialize();
   AuthService().init();
+  PurchasesManager.shared.initPlatformState();
 
   runApp(
     RestartWidget(

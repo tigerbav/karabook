@@ -4,7 +4,7 @@ class SettingsState extends Equatable {
   const SettingsState({
     this.isVibration = false,
     this.isAnimation = false,
-    this.isAds = false,
+    this.isAds = true,
     this.email,
   });
 

@@ -41,13 +41,9 @@ class LibraryCubit extends Cubit<LibraryState> {
   Future<void> loadImages() async {
     late final category = state.currCategory;
 
-    if (state.isLoadingImages ||
-        category?.id == null ||
-        state.pages[category!.id] != null) {
-      return;
-    }
+    if (state.isLoadingImages || category?.id == null) return;
 
-    if (category.id == C.vipID) {
+    if (category!.id == C.vipID) {
       _loadPacks();
       return;
     }
@@ -56,10 +52,7 @@ class LibraryCubit extends Cubit<LibraryState> {
 
     final categoryId = category.id;
 
-    final result = await _repository.getImages(
-      categoryId: categoryId,
-      currPage: state.currPage ?? 0,
-    );
+    final result = await _repository.getImages(categoryId: categoryId);
     result.fold(
       (l) => emit(state.copyWith(
         status: LibraryStatus.failure,
@@ -71,7 +64,6 @@ class LibraryCubit extends Cubit<LibraryState> {
           emit(state.copyWith(
             status: LibraryStatus.idle,
             currCategory: category,
-            pages: _writeLastPage(categoryId),
           ));
         }
 
@@ -80,26 +72,16 @@ class LibraryCubit extends Cubit<LibraryState> {
         if (map[categoryId] == null) {
           map[categoryId] = r;
         } else {
-          final list = {...map[categoryId]!, ...r}.toList();
-          map[categoryId]!.clear();
-          map[categoryId]!.addAll(list);
+          map[categoryId]!.addAll(r);
         }
 
         emit(state.copyWith(
           status: LibraryStatus.idle,
           mapImages: map,
           currCategory: category,
-          pages: r.length < C.imageOnPage ? _writeLastPage(categoryId) : null,
         ));
       },
     );
-  }
-
-  Map<int, int>? _writeLastPage(int categoryId) {
-    final pageMap = Map<int, int>.from(state.pages);
-    pageMap[categoryId] = state.currPage ?? 0;
-
-    return pageMap;
   }
 
   Future<void> _loadPacks() async {

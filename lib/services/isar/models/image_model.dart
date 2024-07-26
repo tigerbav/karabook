@@ -28,15 +28,6 @@ class ImageModel {
   Future<PainterProgress?> get progress async =>
       await isar.painterProgress.get(id);
 
-  @ignore
-  String? get justLines => imageRawData?.replaceAll(
-      RegExp(r'^#(?!000000)[0-9A-Fa-f]{6}$'), '#FFFFFF');
-  // @ignore
-  // String? get justLines => imageRawData?.replaceAllMapped(
-  //       RegExp(r'^#(?!000000)[0-9A-Fa-f]{6}$'),
-  //       (_) => '#FFFFFF',
-  //     );
-
   factory ImageModel.fromJson(Map<String, dynamic> json) {
     dynamic modifiedDate = json['modifiedDate'];
     if (modifiedDate != null && modifiedDate is String) {

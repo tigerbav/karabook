@@ -20,6 +20,18 @@ class GameState extends Equatable {
   bool get isCompleted => status == GameStatus.completed;
   bool get isLoading => status == GameStatus.loading;
 
+  List<SvgShapeModel> get painted {
+    final unsortedList =
+        selectedShapes.where((e) => completedIds.contains(e.id));
+    final sortedList = <SvgShapeModel>[];
+
+    for (final id in completedIds) {
+      final item = unsortedList.firstWhereOrNull((e) => e.id == id);
+      if (item != null) sortedList.add(item);
+    }
+    return sortedList;
+  }
+
   GameState copyWith({
     GameStatus? status,
     List<SvgShapeModel>? selectedShapes,

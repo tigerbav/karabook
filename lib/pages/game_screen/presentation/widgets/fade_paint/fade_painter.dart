@@ -3,12 +3,17 @@ import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
 
 class FadePainter extends CustomPainter {
-  FadePainter({
-    required this.selectedShapes,
-  }) : super();
-
   final List<SvgShapeModel> selectedShapes;
+  final Animation<Color?> _color;
 
+  FadePainter({
+    required Animation<double> animation,
+    required this.selectedShapes,
+  })  : _color = ColorTween(
+          begin: Colors.white,
+          end: AppColors.shared.transparent,
+        ).animate(animation),
+        super(repaint: animation);
   @override
   void paint(Canvas canvas, Size size) {
     canvas
@@ -19,7 +24,7 @@ class FadePainter extends CustomPainter {
       canvas.drawPath(
         shape.transformedPath,
         Paint()
-          ..color = shape.isPainted ? shape.fill : AppColors.shared.transparent
+          ..color = _color.value!
           ..blendMode = BlendMode.src
           ..style = PaintingStyle.fill,
       );

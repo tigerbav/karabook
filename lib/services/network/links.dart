@@ -1,5 +1,7 @@
 class Links {
   static const _baseUrl = 'http://185.65.244.209:1974';
+  static const privacy =
+      'https://www.privacypolicies.com/live/e6ecf303-92af-4de5-9b66-c1b7b4d9a9ab';
 
   static const locale = '$_baseUrl/api/text/locale/get/all';
 

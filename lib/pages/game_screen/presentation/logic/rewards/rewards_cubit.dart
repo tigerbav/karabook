@@ -5,18 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:karabookapp/common/app_constants.dart';
+import 'package:karabookapp/services/in_app_purchases/purchases_manager.dart';
 import 'package:karabookapp/services/managers/shared_pref_manager.dart';
 
 part 'rewards_state.dart';
 
 class RewardsCubit extends Cubit<RewardsState> {
   RewardsCubit() : super(const RewardsState()) {
-    _createBannerAd();
-    _createRewardedAd();
-    _getHelpPoints();
+    _init();
   }
 
   var _numRewardedLoadAttempts = 0;
+  var _numBannerLoadAttempts = 0;
+
+  Future<void> _init() async {
+    final isAvailable = await PurchasesManager.shared.check(C.removeAds);
+
+    if (isAvailable) {
+      emit(state.copyWith(noAds: true));
+    } else {
+      _createBannerAd();
+      _createRewardedAd();
+      _getHelpPoints();
+    }
+  }
 
   Future<void> increaseHelpCount() async {
     await SharedPrefManager.shared.write(C.helpCounter, state.helpCount - 1);
@@ -33,24 +45,30 @@ class RewardsCubit extends Cubit<RewardsState> {
   Future<void> _createBannerAd() async {
     final banner = BannerAd(
       adUnitId: Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/6300978111'
-          : 'ca-app-pub-3940256099942544/2934735716',
+          ? 'ca-app-pub-3407714794829576/5070824549'
+          : 'ca-app-pub-3407714794829576/5380949767',
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (ad) => debugPrint('Ad loaded.'),
+        onAdLoaded: (ad) {
+          _numBannerLoadAttempts = 0;
+          debugPrint('Ad loaded.');
+        },
         //
         onAdFailedToLoad: (ad, error) {
           ad.dispose();
           debugPrint('Ad failed to load: $error');
-          _createBannerAd();
+          if (_numBannerLoadAttempts < 10) _createBannerAd();
+          _numBannerLoadAttempts++;
         },
         //
         onAdOpened: (ad) {
+          _numBannerLoadAttempts = 0;
           debugPrint('Ad opened.');
           loadBanner();
         },
         onAdClosed: (ad) {
+          _numBannerLoadAttempts = 0;
           debugPrint('Ad closed.');
           emit(RewardsState(
             bannerAd: null,
@@ -80,7 +98,7 @@ class RewardsCubit extends Cubit<RewardsState> {
     RewardedAd.load(
       adUnitId: Platform.isAndroid
           ? 'ca-app-pub-3940256099942544/5224354917'
-          : 'ca-app-pub-3940256099942544/1712485313',
+          : 'ca-app-pub-3407714794829576/9887170987',
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
@@ -109,7 +127,7 @@ class RewardsCubit extends Cubit<RewardsState> {
     );
   }
 
-  void showRewardedAd() {
+  void showRewardedAd(int count) {
     if (state.rewardedAd == null) {
       debugPrint('Warning: attempt to show rewarded before loaded.');
       _createRewardedAd();
@@ -134,11 +152,14 @@ class RewardsCubit extends Cubit<RewardsState> {
         '$ad with reward $RewardItem(${reward.amount}, ${reward.type})',
       );
 
-      await SharedPrefManager.shared.write(C.helpCounter, state.helpCount + 2);
+      await SharedPrefManager.shared.write(
+        C.helpCounter,
+        state.helpCount + count,
+      );
       emit(RewardsState(
         bannerAd: state.bannerAd,
         rewardedAd: state.rewardedAd,
-        helpCount: state.helpCount + 2,
+        helpCount: state.helpCount + count,
       ));
 
       return;

@@ -2,7 +2,7 @@ name: karabookapp
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 3.0.1+1
+version: 3.0.1+3
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -50,6 +50,7 @@ dependencies:
   screenshot: ^3.0.0
   image_picker: ^1.0.8
   flutter_email_sender: ^6.0.3
+  url_launcher: ^6.3.0
 
   #EXAMPLE
   hexcolor: ^3.0.1
@@ -59,7 +60,7 @@ dependencies:
   google_sign_in: ^6.2.1
 
   #PURCHASES
-  in_app_purchase: ^3.2.0
+  purchases_flutter: ^6.30.2
 
 dev_dependencies:
   auto_route_generator: ^7.3.2

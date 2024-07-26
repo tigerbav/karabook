@@ -1,9 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
+import 'package:karabookapp/common/utils/utils.dart';
+import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/game_screen/presentation/logic/color_picker/color_picker_cubit.dart';
 import 'package:karabookapp/pages/game_screen/presentation/logic/game/game_cubit.dart';
 import 'package:karabookapp/pages/game_screen/presentation/logic/rewards/rewards_cubit.dart';
@@ -59,24 +62,28 @@ class _HelpButtonState extends State<HelpButton>
               onTap: () {
                 final gameCubit = context.read<GameCubit>();
                 final rewardCubit = context.read<RewardsCubit>();
-                //
-                // if (gameCubit.state.selectedShapes.isEmpty) {
-                //   Utils.showToast(
-                //     context,
-                //     LocaleKeys.please_select_a_color.tr(),
-                //     isError: false,
-                //   );
-                // }
-                // if (rewardCubit.state.helpCount == 0) {
-                //   rewardCubit.showRewardedAd();
-                //   return;
-                // }
+
+                if (rewardCubit.state.noAds == false) {
+                  if (gameCubit.state.selectedShapes.isEmpty) {
+                    Utils.showToast(
+                      context,
+                      LocaleKeys.please_select_a_color.tr(),
+                      isError: false,
+                    );
+                  }
+                  if (rewardCubit.state.helpCount == 0) {
+                    rewardCubit.showRewardedAd(1);
+                    return;
+                  }
+                }
 
                 for (final shape in gameCubit.state.selectedShapes) {
                   if (gameCubit.state.completedIds.contains(shape.id) ==
                       false) {
                     _animateHelpInitialize(shape);
-                    // rewardCubit.increaseHelpCount();
+                    if (rewardCubit.state.noAds == false) {
+                      rewardCubit.increaseHelpCount();
+                    }
                     break;
                   }
                 }
@@ -98,33 +105,36 @@ class _HelpButtonState extends State<HelpButton>
                     width: 60.sp,
                     child: SvgPicture.asset(AppResources.hints),
                   ),
-                  Positioned(
-                    bottom: -5.sp,
-                    left: -10.sp,
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.shared.yellow,
-                          width: 2.sp,
-                        ),
-                      ),
-                      height: 30.sp,
-                      width: 30.sp,
-                      child: BlocBuilder<RewardsCubit, RewardsState>(
-                        buildWhen: (p, c) => p.helpCount != c.helpCount,
-                        builder: (context, state) {
-                          return Text(
+                  BlocBuilder<RewardsCubit, RewardsState>(
+                    buildWhen: (p, c) =>
+                        p.helpCount != c.helpCount || p.noAds != c.noAds,
+                    builder: (context, state) {
+                      if (state.noAds) return const SizedBox();
+
+                      return Positioned(
+                        bottom: -5.sp,
+                        left: -10.sp,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.shared.yellow,
+                              width: 2.sp,
+                            ),
+                          ),
+                          height: 30.sp,
+                          width: 30.sp,
+                          child: Text(
                             state.helpCount > 0
                                 ? state.helpCount.toString()
                                 : 'AD',
                             style: const TextStyle(fontWeight: FontWeight.bold),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

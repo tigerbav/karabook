@@ -4,27 +4,23 @@ import 'package:karabookapp/pages/game_screen/presentation/logic/game/game_cubit
 import 'package:karabookapp/pages/game_screen/presentation/widgets/fade_paint/fade_painter.dart';
 
 class FadePaint extends StatefulWidget {
-  const FadePaint({Key? key}) : super(key: key);
+  const FadePaint(this._fadeController, {Key? key}) : super(key: key);
+  final AnimationController _fadeController;
 
   @override
   State<FadePaint> createState() => _FadePaintState();
 }
 
-class _FadePaintState extends State<FadePaint> with TickerProviderStateMixin {
-  late final AnimationController _fadeController;
-
+class _FadePaintState extends State<FadePaint> {
   @override
   void initState() {
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
     super.initState();
+    widget._fadeController.addListener(_fadeControllerListener);
   }
 
   @override
   void dispose() {
-    _fadeController.dispose();
+    widget._fadeController.removeListener(_fadeControllerListener);
     super.dispose();
   }
 
@@ -37,10 +33,13 @@ class _FadePaintState extends State<FadePaint> with TickerProviderStateMixin {
           return CustomPaint(
             painter: FadePainter(
               selectedShapes: state.selectedShapes,
+              animation: widget._fadeController,
             ),
           );
         },
       ),
     );
   }
+
+  void _fadeControllerListener() => setState(() {});
 }
