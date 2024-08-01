@@ -1,6 +1,6 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
-// ignore_for_file: prefer_single_quotes
+// ignore_for_file: prefer_single_quotes, avoid_renaming_method_parameters
 
 import 'dart:ui';
 
@@ -38,7 +38,10 @@ class CodegenLoader extends AssetLoader{
   "privacy_policy": "Privacy Policy",
   "term_of_use": "Term of Use",
   "send": "Send",
-  "email_sent": "Your email was successfully sent."
+  "email_sent": "Your email was successfully sent.",
+  "oops": "Oops...",
+  "sign_in_with_google": "Sign in with Google",
+  "acquired": "Acquired"
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": en_US};
 }

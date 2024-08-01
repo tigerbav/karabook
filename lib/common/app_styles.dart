@@ -8,20 +8,24 @@ class AppStyles {
       : toast = _toast,
         segment = _toast.copyWith(color: AppColors.shared.white),
         btn = _btn,
+        btnBlack = _btn.copyWith(color: AppColors.shared.black),
         packTitles = _btn.copyWith(color: AppColors.shared.black),
         packDescription = _packDescription,
         settingsOption = _settingsOption,
         politic = _politic,
+        h1Pink = _h1.copyWith(color: AppColors.shared.pink),
         h1 = _h1;
 
   final TextStyle toast;
   final TextStyle segment;
   final TextStyle btn;
+  final TextStyle btnBlack;
   final TextStyle packTitles;
   final TextStyle packDescription;
   final TextStyle settingsOption;
   final TextStyle politic;
   final TextStyle h1;
+  final TextStyle h1Pink;
 
   static const _nunito = 'Nunito';
 

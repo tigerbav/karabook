@@ -14,7 +14,7 @@
 
 
     <application
-        android:label="karabookapp"
+        android:label="Karabook"
         android:name="${applicationName}"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher">
@@ -46,12 +46,20 @@
             android:value="2" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1387367164840158~9046769983" />
+            android:value="ca-app-pub-3407714794829576~9703338155" />
     </application>
     <queries>
         <intent>
             <action android:name="android.intent.action." />
             <data android:scheme="mailto" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
         </intent>
     </queries>
 </manifest>

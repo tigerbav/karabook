@@ -1,6 +1,10 @@
 part of 'app_cubit.dart';
 
-abstract class AppState extends Equatable {}
+abstract class AppState extends Equatable {
+  AppState setLifecycle(
+    AppLifecycleState lifecycleState,
+  );
+}
 
 class AppSplash extends AppState {
   AppSplash({this.isLoading = false});
@@ -8,14 +12,23 @@ class AppSplash extends AppState {
 
   @override
   List<Object?> get props => [isLoading];
+
+  @override
+  AppState setLifecycle(AppLifecycleState lifecycleState) => this;
 }
 
 class AppMenu extends AppState {
-  @override
-  List<Object?> get props => [];
-}
+  AppMenu({required this.lifecycleState});
 
-class AppGame extends AppState {
+  final AppLifecycleState lifecycleState;
+
   @override
-  List<Object?> get props => [];
+  AppMenu setLifecycle(AppLifecycleState? lifecycleState) {
+    return AppMenu(
+      lifecycleState: lifecycleState ?? this.lifecycleState,
+    );
+  }
+
+  @override
+  List<Object?> get props => [lifecycleState];
 }

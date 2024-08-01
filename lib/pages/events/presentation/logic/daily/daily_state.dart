@@ -4,14 +4,14 @@ enum DailyStatus { initial, loading, failure, success, idle }
 
 class DailyState extends Equatable {
   const DailyState({
-    required this.status,
+    this.status = DailyStatus.initial,
     this.errorMessage,
     this.opacity = 1.0,
-    this.isGotGift = false,
-    required List<SvgImage> images,
+    this.isGotGift = true,
+    required List<ImageModel> images,
   }) : _images = images;
 
-  List<SvgImage> get images => _images;
+  List<ImageModel> get images => _images;
 
   bool get isLoading => status == DailyStatus.loading;
   bool get isFailure => status == DailyStatus.failure;
@@ -20,14 +20,14 @@ class DailyState extends Equatable {
   final String? errorMessage;
   final double opacity;
   final bool isGotGift;
-  final List<SvgImage> _images;
+  final List<ImageModel> _images;
 
   DailyState copyWith({
     required DailyStatus status,
     String? errorMessage,
     double? opacity,
     bool? isGotGift,
-    List<SvgImage>? images,
+    List<ImageModel>? images,
   }) {
     return DailyState(
       status: status,

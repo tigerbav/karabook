@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:karabookapp/services/network/api_provider.dart';
+import 'package:karabookapp/app/presentation/screens/app.dart';
+import 'package:karabookapp/services/managers/data_manager.dart';
 
 part 'app_state.dart';
 
@@ -17,17 +19,21 @@ class AppCubit extends Cubit<AppState> {
     ]);
   }
 
-  Future<void> setMenu() async {
+  Future<void> goToApp() async {
     emit(AppSplash(isLoading: true));
+
     try {
-      await ApiProvider.shared.getAllSvgImage();
-      await ApiProvider.shared.getAllImageCategory();
-      await ApiProvider.shared.getAllPacks();
-      // await ApiProvider.shared.createAchievementsProgress();
+      await DataManager.shared.getAllLocales();
+      await DataManager.shared.getAllTexts();
+      await DataManager.shared.getAllCategories();
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
 
-    emit(AppMenu());
+    emit(AppMenu(lifecycleState: App.lifecycleState));
+  }
+
+  void updateLifecycleState(AppLifecycleState lifecycleState) {
+    if (state is AppMenu) emit(state.setLifecycle(lifecycleState));
   }
 }

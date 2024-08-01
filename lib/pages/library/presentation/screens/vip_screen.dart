@@ -1,17 +1,23 @@
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:karabookapp/common/app_colors.dart';
+import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_styles.dart';
-import 'package:karabookapp/common/models/pack.dart';
 import 'package:karabookapp/common/widgets/arrow_back.dart';
 import 'package:karabookapp/common/widgets/images_grid.dart';
 import 'package:karabookapp/common/widgets/primary_button.dart';
+import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/library/data/datasources/library_datasource.dart';
 import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
 import 'package:karabookapp/pages/library/presentation/logic/vip/vip_cubit.dart';
+import 'package:karabookapp/pages/library/presentation/widgets/library_banner.dart';
+import 'package:karabookapp/services/in_app_purchases/purchases_manager.dart';
+import 'package:karabookapp/services/isar/models/category_model.dart';
 
 @RoutePage()
 class VipScreen extends StatelessWidget {
@@ -20,7 +26,7 @@ class VipScreen extends StatelessWidget {
     required this.pack,
   });
 
-  final Pack pack;
+  final CategoryModel pack;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +60,14 @@ class _VipScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.sp),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(16.sp)),
-                child: Image.memory(
-                  const Base64Decoder().convert(cubit.pack.packIcon),
-                  fit: BoxFit.cover,
-                  gaplessPlayback: true,
-                ),
+                child: cubit.pack.categoryPreview != null
+                    ? Image.memory(
+                        const Base64Decoder()
+                            .convert(cubit.pack.categoryPreview!),
+                        fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                      )
+                    : const LibraryBanner(),
               ),
             ),
             SizedBox(height: 20.sp),
@@ -69,13 +78,41 @@ class _VipScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      cubit.pack.packName,
+                      cubit.pack.name ?? '',
                       style: AppStyles.shared.packTitles,
                     ),
                   ),
-                  PrimaryButton(
-                    text: '\$39.9',
-                    action: () {},
+                  BlocBuilder<VipCubit, VipState>(
+                    buildWhen: (p, c) =>
+                        p.offering != c.offering ||
+                        p.isLoading != c.isLoading ||
+                        p.isAvailable != c.isAvailable,
+                    builder: (context, state) {
+                      if (state.isLoading) {
+                        return Center(
+                          child: SizedBox(
+                            width: 35.sp,
+                            height: 35.sp,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
+                                color: AppColors.shared.pink,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      final isAvailable = state.isAvailable;
+
+                      return PrimaryButton(
+                        text: isAvailable
+                            ? LocaleKeys.acquired.tr()
+                            : (state.offering?.lifetime?.storeProduct
+                                    .priceString ??
+                                LocaleKeys.oops.tr()),
+                        action: context.read<VipCubit>().buy,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -84,15 +121,31 @@ class _VipScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.sp),
               child: Text(
-                cubit.pack.packDescription,
+                cubit.pack.description ?? '',
                 style: AppStyles.shared.packDescription,
               ),
             ),
             SizedBox(height: 20.sp),
             BlocBuilder<VipCubit, VipState>(
-              buildWhen: (p, c) => p.images != c.images,
+              buildWhen: (p, c) =>
+                  p.visibleImages != c.visibleImages ||
+                  p.isLoading != c.isLoading,
               builder: (context, state) {
-                return ImagesGrid(state.images);
+                if (state.isLoading) {
+                  return Center(
+                    child: SizedBox(
+                      width: 24.sp,
+                      height: 24.sp,
+                      child: CircularProgressIndicator(
+                        color: AppColors.shared.pink,
+                      ),
+                    ),
+                  );
+                }
+                return ImagesGrid(
+                  state.visibleImages,
+                  heroTag: C.vip,
+                );
               },
             ),
           ],

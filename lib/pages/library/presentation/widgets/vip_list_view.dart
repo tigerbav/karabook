@@ -9,6 +9,7 @@ import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/widgets/primary_button.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/library/presentation/logic/library/library_cubit.dart';
+import 'package:karabookapp/pages/library/presentation/widgets/library_banner.dart';
 import 'package:karabookapp/services/navigation/app_router.dart';
 
 class VipListView extends StatefulWidget {
@@ -30,17 +31,17 @@ class _VipListViewState extends State<VipListView> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LibraryCubit, LibraryState>(
-      buildWhen: (p, c) => p.packs != c.packs,
+      buildWhen: (p, c) => p.vipPacks != c.vipPacks,
       builder: (context, state) {
         return ListView.separated(
-          itemCount: state.packs.length,
+          itemCount: state.vipPacks.length,
           padding: EdgeInsets.all(20.sp),
           controller: _controller,
           shrinkWrap: true,
           separatorBuilder: (_, __) => SizedBox(height: 24.sp),
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
-            final pack = state.packs[index];
+            final pack = state.vipPacks[index];
             return Column(
               children: [
                 Row(
@@ -48,7 +49,7 @@ class _VipListViewState extends State<VipListView> {
                   children: [
                     Expanded(
                       child: Text(
-                        pack.packName,
+                        pack.name ?? LocaleKeys.oops.tr(),
                         style: AppStyles.shared.packTitles,
                       ),
                     ),
@@ -65,11 +66,14 @@ class _VipListViewState extends State<VipListView> {
                   width: double.infinity,
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(16.sp)),
-                    child: Image.memory(
-                      const Base64Decoder().convert(pack.packIcon),
-                      fit: BoxFit.cover,
-                      gaplessPlayback: true,
-                    ),
+                    child: pack.categoryPreview != null
+                        ? Image.memory(
+                            const Base64Decoder()
+                                .convert(pack.categoryPreview!),
+                            fit: BoxFit.cover,
+                            gaplessPlayback: true,
+                          )
+                        : const LibraryBanner(),
                   ),
                 ),
               ],

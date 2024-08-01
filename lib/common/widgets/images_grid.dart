@@ -1,16 +1,18 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:karabookapp/common/app_colors.dart';
-import 'package:karabookapp/common/models/svg_image.dart';
+import 'package:karabookapp/common/widgets/empty_image.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
-import 'package:karabookapp/services/navigation/app_router.dart';
+import 'package:karabookapp/services/isar/models/image_model.dart';
 
 class ImagesGrid extends StatefulWidget {
-  const ImagesGrid(this.images, {super.key});
+  const ImagesGrid(
+    this.images, {
+    super.key,
+    required this.heroTag,
+  });
 
-  final List<SvgImage> images;
+  final List<ImageModel?> images;
+  final String heroTag;
 
   @override
   State<ImagesGrid> createState() => _ImagesGridState();
@@ -37,7 +39,13 @@ class _ImagesGridState extends State<ImagesGrid> {
         mainAxisSpacing: 16.sp,
         crossAxisSpacing: 16.sp,
       ),
-      itemBuilder: (_, index) => ImagesGridItem(widget.images[index]),
+      itemBuilder: (_, index) => widget.images[index] != null
+          ? ImagesGridItem(
+              widget.images[index]!,
+              key: ValueKey(widget.images[index]!.id),
+              heroTag: widget.heroTag,
+            )
+          : const EmptyImage(isInfinityW: true),
     );
   }
 }

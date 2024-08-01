@@ -14,7 +14,7 @@ class ComicsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ComicsCubit, ComicsState>(
-      buildWhen: (p, c) => p.images != c.images || p.isLoading != c.isLoading,
+      buildWhen: (p, c) => p.packs != c.packs || p.isLoading != c.isLoading,
       builder: (context, state) {
         if (state.isLoading) {
           return Center(
@@ -22,7 +22,7 @@ class ComicsWidget extends StatelessWidget {
           );
         }
 
-        if (state.images.isEmpty) return const SizedBox();
+        if (state.packs.isEmpty) return const SizedBox();
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -7,9 +7,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/pages/app_tab_bar/presentation/enums/tab_bar_type.dart';
 import 'package:karabookapp/pages/app_tab_bar/presentation/widgets/tab_bar_item.dart';
+import 'package:karabookapp/pages/events/data/datasources/events_datasource.dart';
+import 'package:karabookapp/pages/events/domain/repositories/events_repository.dart';
+import 'package:karabookapp/pages/events/presentation/logic/comics/comics_cubit.dart';
+import 'package:karabookapp/pages/events/presentation/logic/daily/daily_cubit.dart';
 import 'package:karabookapp/pages/library/data/datasources/library_datasource.dart';
 import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
 import 'package:karabookapp/pages/library/presentation/logic/library/library_cubit.dart';
+import 'package:karabookapp/pages/portfolio/data/datasources/portfolio_datasource.dart';
+import 'package:karabookapp/pages/portfolio/domain/repositories/portfolio_repository.dart';
+import 'package:karabookapp/pages/portfolio/presentation/logic/portfolio/portfolio_cubit.dart';
 import 'package:karabookapp/services/navigation/app_router.dart';
 
 @RoutePage()
@@ -19,9 +26,29 @@ class TabBarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LibraryCubit(LibraryRepository(LibraryDataSource())),
-      child: const _TabBarView(),
+    return RepositoryProvider(
+      create: (_) => EventsRepository(EventsDataSource()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => LibraryCubit(
+              LibraryRepository(LibraryDataSource()),
+            ),
+          ),
+          BlocProvider(
+            create: (_) => PortfolioCubit(
+              PortfolioRepository(PortfolioDataSources()),
+            ),
+          ),
+          BlocProvider(
+            create: (ctx) => DailyCubit(ctx.read<EventsRepository>()),
+          ),
+          BlocProvider(
+            create: (ctx) => ComicsCubit(ctx.read<EventsRepository>()),
+          ),
+        ],
+        child: const _TabBarView(),
+      ),
     );
   }
 }
