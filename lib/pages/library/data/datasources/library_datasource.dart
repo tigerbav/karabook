@@ -87,9 +87,8 @@ class LibraryDataSource extends ILibraryDataSource {
 
     // compare local and global DB. Differences are in [ids]
     final ids = <int>[];
-    for (final image in isarImages) {
-      final imageModel =
-          modifiedDates.firstWhereOrNull((e) => e.id == image.id);
+    for (final image in modifiedDates) {
+      final imageModel = isarImages.firstWhereOrNull((e) => e.id == image.id);
       if (imageModel == null) {
         ids.add(image.id);
         continue;
@@ -113,14 +112,14 @@ class LibraryDataSource extends ILibraryDataSource {
         .toList();
 
     // some ids which were deleted from server can be in [ids]
-    final requiredIds = <int>[];
+    var requiredIds = <int>[];
     for (final id in ids) {
       if (deletedIds.contains(id) == false) requiredIds.add(id);
     }
     if (isarImages.isEmpty) {
       requiredIds.addAll(modifiedDates.map((e) => e.id).toList());
     }
-
+    requiredIds = requiredIds.toSet().toList();
     if (requiredIds.isEmpty) return isarImages;
 
     // get updated images
@@ -171,9 +170,8 @@ class LibraryDataSource extends ILibraryDataSource {
 
     // compare local and global DB. Differences are in [ids]
     final ids = <int>[];
-    for (final image in isarImages) {
-      final imageModel =
-          modifiedDates.firstWhereOrNull((e) => e.id == image.id);
+    for (final image in modifiedDates) {
+      final imageModel = isarImages.firstWhereOrNull((e) => e.id == image.id);
       if (imageModel == null) {
         ids.add(image.id);
         continue;
@@ -197,7 +195,7 @@ class LibraryDataSource extends ILibraryDataSource {
         .toList();
 
     // some ids which were deleted from server can be in [ids]
-    final requiredIds = <int>[];
+    var requiredIds = <int>[];
     for (final id in ids) {
       if (deletedIds.contains(id) == false) requiredIds.add(id);
     }
@@ -213,7 +211,7 @@ class LibraryDataSource extends ILibraryDataSource {
       final newIds = modifiedDataSet.difference(isarImgSet);
       if (newIds.isNotEmpty) requiredIds.addAll(newIds);
     }
-
+    requiredIds = requiredIds.toSet().toList();
     if (requiredIds.isEmpty) return isarImages;
 
     // get updated images

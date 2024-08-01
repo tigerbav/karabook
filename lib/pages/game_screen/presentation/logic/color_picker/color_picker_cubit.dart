@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/pages/game_screen/presentation/models/color_item_model.dart';
 import 'package:karabookapp/pages/game_screen/presentation/widgets/color_picker.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
-import 'package:karabookapp/services/game_core/painter_tools.dart';
 
 part 'color_picker_state.dart';
 
@@ -13,7 +12,7 @@ class ColorPickerCubit extends Cubit<ColorPickerState> {
   ColorPickerCubit({
     required Map<Color, List<SvgShapeModel>> sortedShapes,
   }) : super(const ColorPickerState()) {
-    _calcPaintedColors(PainterTools.sortBlackFirst(sortedShapes));
+    _calcPaintedColors(sortedShapes);
   }
 
   void _calcPaintedColors(Map<Color, List<SvgShapeModel>> sortedShapes) {

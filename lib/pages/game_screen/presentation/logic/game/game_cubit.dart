@@ -31,7 +31,16 @@ class GameCubit extends Cubit<GameState> {
     required List<int> completedIds,
   }) : super(
           GameState(
-            allShapes: allShapes,
+            allShapes: sortedShapes.values.expand((l) {
+              final updList = List<SvgShapeModel>.from(l);
+              final newList = <SvgShapeModel>[];
+              for (final shape in updList) {
+                final findObj =
+                    allShapes.firstWhereOrNull((e) => e.id == shape.id);
+                newList.add(findObj ?? shape);
+              }
+              return newList;
+            }).toList(),
             painterProgress: painterProgress,
             completedIds: completedIds,
           ),

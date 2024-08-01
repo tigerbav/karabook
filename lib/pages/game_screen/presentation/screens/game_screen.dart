@@ -27,6 +27,7 @@ import 'package:karabookapp/pages/game_screen/presentation/widgets/zoom_out_butt
 import 'package:karabookapp/pages/portfolio/presentation/logic/portfolio/portfolio_cubit.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_line_model.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
+import 'package:karabookapp/services/game_core/painter_tools.dart';
 import 'package:karabookapp/services/isar/models/painter_progress.dart';
 
 @RoutePage()
@@ -52,12 +53,13 @@ class GameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sort = PainterTools.sortBlackFirst(sortedShapes);
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (_) => GameCubit(
             repository: GameRepository(GameDataSource()),
-            sortedShapes: sortedShapes,
+            sortedShapes: sort,
             allShapes: allShapes,
             svgLines: svgLines,
             painterProgress: painterProgress,
@@ -69,7 +71,7 @@ class GameScreen extends StatelessWidget {
         BlocProvider(create: (_) => RewardsCubit()),
         BlocProvider(
           create: (_) => ColorPickerCubit(
-            sortedShapes: sortedShapes,
+            sortedShapes: sort,
           ),
         ),
       ],
@@ -196,6 +198,10 @@ class _GameViewState extends State<_GameView>
                                 child: CustomPaint(
                                   painter: NumberPainter(
                                     shapes: gameCubit.state.allShapes,
+                                    colors: context
+                                        .read<ColorPickerCubit>()
+                                        .state
+                                        .items,
                                     scale: scale,
                                     completedIds: state.completedIds,
                                   ),

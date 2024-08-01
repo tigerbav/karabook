@@ -20,7 +20,7 @@ class C {
   static const vipID = 1000;
 
   static const support = 'KaraBook support';
-  static const email = 'aburavikov@gmail.com';
+  static const email = 'zakra409@gmail.com';
 
   // hero tags
   static const daily = 'daily';

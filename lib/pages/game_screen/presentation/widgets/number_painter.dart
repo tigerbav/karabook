@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:karabookapp/common/app_colors.dart';
+import 'package:karabookapp/common/utils/extensions/iterable.dart';
+import 'package:karabookapp/pages/game_screen/presentation/models/color_item_model.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
 
 class NumberPainter extends CustomPainter {
@@ -7,11 +9,13 @@ class NumberPainter extends CustomPainter {
     required this.shapes,
     required this.scale,
     required this.completedIds,
+    required this.colors,
   });
 
   final List<SvgShapeModel> shapes;
   final double scale;
   final List<int> completedIds;
+  final List<ColorItemModel> colors;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -21,12 +25,15 @@ class NumberPainter extends CustomPainter {
     );
 
     for (final shape in shapes) {
+      final colorItem = colors.firstWhereOrNull((e) => e.color == shape.fill);
+      final number = colorItem?.number ?? shape.number;
+
       final textStyle = TextStyle(
         color: AppColors.shared.darkBlue,
         fontSize: shape.number.size,
       );
       final textSpan = TextSpan(
-        text: '${shape.number.number}',
+        text: number.toString(),
         style: textStyle,
       );
       textPainter
