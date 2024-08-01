@@ -20,7 +20,7 @@ void main() async {
   await IsarService.shared.setup();
   MobileAds.instance.initialize();
   AuthService().init();
-  PurchasesManager.shared.initPlatformState();
+  await PurchasesManager.shared.initPlatformState();
 
   runApp(
     RestartWidget(
