@@ -97,7 +97,7 @@ class RewardsCubit extends Cubit<RewardsState> {
   void _createRewardedAd() {
     RewardedAd.load(
       adUnitId: Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/5224354917'
+          ? 'ca-app-pub-3407714794829576/2946358113'
           : 'ca-app-pub-3407714794829576/9887170987',
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
