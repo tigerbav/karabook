@@ -3,16 +3,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/utils/utils.dart';
 import 'package:karabookapp/common/widgets/images_grid.dart';
+import 'package:karabookapp/common/widgets/loading_widget.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/library/presentation/logic/library/library_cubit.dart';
 import 'package:karabookapp/pages/library/presentation/widgets/library_banner.dart';
 import 'package:karabookapp/pages/library/presentation/widgets/library_categories.dart';
 import 'package:karabookapp/pages/library/presentation/widgets/vip_list_view.dart';
+import 'package:karabookapp/services/game_core/enums/image_type.dart';
 
 @RoutePage()
 class LibraryScreen extends StatefulWidget {
@@ -24,6 +25,11 @@ class LibraryScreen extends StatefulWidget {
 
 class _LibraryScreenState extends State<LibraryScreen> {
   final _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -51,6 +57,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 p.imagesByCategory != c.imagesByCategory ||
                 p.currCategory != c.currCategory ||
                 p.isLoadingImages != c.isLoadingImages ||
+                p.isPagination != c.isPagination ||
                 p.mapImages != c.mapImages,
             builder: (context, state) {
               if (state.currCategory?.id == C.vipID) {
@@ -74,7 +81,12 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 );
               }
 
-              return ImagesGrid(images, heroTag: C.library);
+              return ImagesGrid(
+                images,
+                heroTag: C.library,
+                imageType: ImageType.byCategory,
+                isLoading: state.isPagination,
+              );
             },
           ),
           BlocBuilder<LibraryCubit, LibraryState>(
@@ -82,15 +94,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
             builder: (context, state) {
               if (state.isLoadingImages == false) return const SizedBox();
 
-              return Center(
-                child: SizedBox(
-                  width: 24.sp,
-                  height: 24.sp,
-                  child: CircularProgressIndicator(
-                    color: AppColors.shared.pink,
-                  ),
-                ),
-              );
+              return const LoadingWidget();
             },
           ),
           SizedBox(height: 20.sp),

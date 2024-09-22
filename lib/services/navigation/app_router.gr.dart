@@ -45,13 +45,7 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: GameScreen(
           key: args.key,
-          sortedShapes: args.sortedShapes,
-          allShapes: args.allShapes,
-          svgLines: args.svgLines,
-          painterProgress: args.painterProgress,
-          completedIds: args.completedIds,
-          painterProgressCubit: args.painterProgressCubit,
-          portfolioCubit: args.portfolioCubit,
+          imageModel: args.imageModel,
         ),
       );
     },
@@ -70,19 +64,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const LibraryScreen(),
-      );
-    },
-    LoadingGameRoute.name: (routeData) {
-      final args = routeData.argsAs<LoadingGameRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: LoadingGameScreen(
-          key: args.key,
-          svgString: args.svgString,
-          id: args.id,
-          painterProgressCubit: args.painterProgressCubit,
-          portfolioCubit: args.portfolioCubit,
-        ),
       );
     },
     PortfolioRoute.name: (routeData) {
@@ -177,25 +158,13 @@ class EventsRoute extends PageRouteInfo<void> {
 class GameRoute extends PageRouteInfo<GameRouteArgs> {
   GameRoute({
     Key? key,
-    required Map<Color, List<SvgShapeModel>> sortedShapes,
-    required List<SvgShapeModel> allShapes,
-    required List<SvgLineModel> svgLines,
-    required PainterProgress painterProgress,
-    required List<int> completedIds,
-    required PainterProgressCubit painterProgressCubit,
-    required PortfolioCubit portfolioCubit,
+    required ImageModel imageModel,
     List<PageRouteInfo>? children,
   }) : super(
           GameRoute.name,
           args: GameRouteArgs(
             key: key,
-            sortedShapes: sortedShapes,
-            allShapes: allShapes,
-            svgLines: svgLines,
-            painterProgress: painterProgress,
-            completedIds: completedIds,
-            painterProgressCubit: painterProgressCubit,
-            portfolioCubit: portfolioCubit,
+            imageModel: imageModel,
           ),
           initialChildren: children,
         );
@@ -208,34 +177,16 @@ class GameRoute extends PageRouteInfo<GameRouteArgs> {
 class GameRouteArgs {
   const GameRouteArgs({
     this.key,
-    required this.sortedShapes,
-    required this.allShapes,
-    required this.svgLines,
-    required this.painterProgress,
-    required this.completedIds,
-    required this.painterProgressCubit,
-    required this.portfolioCubit,
+    required this.imageModel,
   });
 
   final Key? key;
 
-  final Map<Color, List<SvgShapeModel>> sortedShapes;
-
-  final List<SvgShapeModel> allShapes;
-
-  final List<SvgLineModel> svgLines;
-
-  final PainterProgress painterProgress;
-
-  final List<int> completedIds;
-
-  final PainterProgressCubit painterProgressCubit;
-
-  final PortfolioCubit portfolioCubit;
+  final ImageModel imageModel;
 
   @override
   String toString() {
-    return 'GameRouteArgs{key: $key, sortedShapes: $sortedShapes, allShapes: $allShapes, svgLines: $svgLines, painterProgress: $painterProgress, completedIds: $completedIds, painterProgressCubit: $painterProgressCubit, portfolioCubit: $portfolioCubit}';
+    return 'GameRouteArgs{key: $key, imageModel: $imageModel}';
   }
 }
 
@@ -294,59 +245,6 @@ class LibraryRoute extends PageRouteInfo<void> {
   static const String name = 'LibraryRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [LoadingGameScreen]
-class LoadingGameRoute extends PageRouteInfo<LoadingGameRouteArgs> {
-  LoadingGameRoute({
-    Key? key,
-    required String svgString,
-    required int id,
-    required PainterProgressCubit painterProgressCubit,
-    required PortfolioCubit portfolioCubit,
-    List<PageRouteInfo>? children,
-  }) : super(
-          LoadingGameRoute.name,
-          args: LoadingGameRouteArgs(
-            key: key,
-            svgString: svgString,
-            id: id,
-            painterProgressCubit: painterProgressCubit,
-            portfolioCubit: portfolioCubit,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'LoadingGameRoute';
-
-  static const PageInfo<LoadingGameRouteArgs> page =
-      PageInfo<LoadingGameRouteArgs>(name);
-}
-
-class LoadingGameRouteArgs {
-  const LoadingGameRouteArgs({
-    this.key,
-    required this.svgString,
-    required this.id,
-    required this.painterProgressCubit,
-    required this.portfolioCubit,
-  });
-
-  final Key? key;
-
-  final String svgString;
-
-  final int id;
-
-  final PainterProgressCubit painterProgressCubit;
-
-  final PortfolioCubit portfolioCubit;
-
-  @override
-  String toString() {
-    return 'LoadingGameRouteArgs{key: $key, svgString: $svgString, id: $id, painterProgressCubit: $painterProgressCubit, portfolioCubit: $portfolioCubit}';
-  }
 }
 
 /// generated route for

@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/app/presentation/enums/settings_type.dart';
 import 'package:karabookapp/app/presentation/logic/settings/settings_cubit.dart';
-import 'package:karabookapp/app/presentation/widgets/google_sign_in_btn.dart';
 import 'package:karabookapp/app/presentation/widgets/settings_options_widget.dart';
+import 'package:karabookapp/app/presentation/widgets/sign_in_widget.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/common/app_styles.dart';
@@ -38,7 +38,7 @@ class SettingsPopup extends StatelessWidget {
                 style: AppStyles.shared.h1,
               ),
               GestureDetector(
-                onTap: context.router.pop,
+                onTap: context.router.maybePop,
                 child: SvgPicture.asset(AppResources.close),
               ),
             ],
@@ -55,7 +55,7 @@ class SettingsPopup extends StatelessWidget {
             },
           ),
           SizedBox(height: 20.sp),
-          const GoogleSignInButton(),
+          const SignInWidget(),
           SizedBox(height: 20.sp),
           GestureDetector(
             onTap: () => Utils.launchURL(Links.privacy),

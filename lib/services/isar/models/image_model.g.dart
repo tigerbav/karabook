@@ -22,28 +22,43 @@ const ImageModelSchema = CollectionSchema(
       name: r'categoryId',
       type: IsarType.long,
     ),
-    r'enabled': PropertySchema(
+    r'completedIds': PropertySchema(
       id: 1,
+      name: r'completedIds',
+      type: IsarType.longList,
+    ),
+    r'enabled': PropertySchema(
+      id: 2,
       name: r'enabled',
       type: IsarType.bool,
     ),
     r'imageRawData': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'imageRawData',
       type: IsarType.string,
     ),
+    r'isCompleted': PropertySchema(
+      id: 4,
+      name: r'isCompleted',
+      type: IsarType.bool,
+    ),
     r'isDaily': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'isDaily',
       type: IsarType.bool,
     ),
     r'modifiedDate': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'modifiedDate',
       type: IsarType.long,
     ),
+    r'screenProgress': PropertySchema(
+      id: 7,
+      name: r'screenProgress',
+      type: IsarType.longList,
+    ),
     r'sort': PropertySchema(
-      id: 5,
+      id: 8,
       name: r'sort',
       type: IsarType.long,
     )
@@ -69,9 +84,21 @@ int _imageModelEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
+    final value = object.completedIds;
+    if (value != null) {
+      bytesCount += 3 + value.length * 8;
+    }
+  }
+  {
     final value = object.imageRawData;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.screenProgress;
+    if (value != null) {
+      bytesCount += 3 + value.length * 8;
     }
   }
   return bytesCount;
@@ -84,11 +111,14 @@ void _imageModelSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.categoryId);
-  writer.writeBool(offsets[1], object.enabled);
-  writer.writeString(offsets[2], object.imageRawData);
-  writer.writeBool(offsets[3], object.isDaily);
-  writer.writeLong(offsets[4], object.modifiedDate);
-  writer.writeLong(offsets[5], object.sort);
+  writer.writeLongList(offsets[1], object.completedIds);
+  writer.writeBool(offsets[2], object.enabled);
+  writer.writeString(offsets[3], object.imageRawData);
+  writer.writeBool(offsets[4], object.isCompleted);
+  writer.writeBool(offsets[5], object.isDaily);
+  writer.writeLong(offsets[6], object.modifiedDate);
+  writer.writeLongList(offsets[7], object.screenProgress);
+  writer.writeLong(offsets[8], object.sort);
 }
 
 ImageModel _imageModelDeserialize(
@@ -99,12 +129,15 @@ ImageModel _imageModelDeserialize(
 ) {
   final object = ImageModel(
     categoryId: reader.readLongOrNull(offsets[0]),
-    enabled: reader.readBoolOrNull(offsets[1]) ?? false,
+    completedIds: reader.readLongList(offsets[1]),
+    enabled: reader.readBoolOrNull(offsets[2]) ?? false,
     id: id,
-    imageRawData: reader.readStringOrNull(offsets[2]),
-    isDaily: reader.readBoolOrNull(offsets[3]) ?? false,
-    modifiedDate: reader.readLongOrNull(offsets[4]),
-    sort: reader.readLongOrNull(offsets[5]) ?? 0,
+    imageRawData: reader.readStringOrNull(offsets[3]),
+    isCompleted: reader.readBoolOrNull(offsets[4]),
+    isDaily: reader.readBoolOrNull(offsets[5]) ?? false,
+    modifiedDate: reader.readLongOrNull(offsets[6]),
+    screenProgress: reader.readLongList(offsets[7]),
+    sort: reader.readLongOrNull(offsets[8]) ?? 0,
   );
   return object;
 }
@@ -119,14 +152,20 @@ P _imageModelDeserializeProp<P>(
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
+      return (reader.readLongList(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset)) as P;
-    case 3:
       return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 3:
+      return (reader.readStringOrNull(offset)) as P;
     case 4:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 5:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 6:
+      return (reader.readLongOrNull(offset)) as P;
+    case 7:
+      return (reader.readLongList(offset)) as P;
+    case 8:
       return (reader.readLongOrNull(offset) ?? 0) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -294,6 +333,169 @@ extension ImageModelQueryFilter
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'completedIds',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'completedIds',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsElementEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'completedIds',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'completedIds',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'completedIds',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'completedIds',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'completedIds',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'completedIds',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'completedIds',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'completedIds',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'completedIds',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      completedIdsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'completedIds',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -514,6 +716,34 @@ extension ImageModelQueryFilter
     });
   }
 
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      isCompletedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isCompleted',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      isCompletedIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isCompleted',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      isCompletedEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isCompleted',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> isDailyEqualTo(
       bool value) {
     return QueryBuilder.apply(this, (query) {
@@ -595,6 +825,169 @@ extension ImageModelQueryFilter
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'screenProgress',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'screenProgress',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressElementEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'screenProgress',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressElementGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'screenProgress',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressElementLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'screenProgress',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressElementBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'screenProgress',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'screenProgress',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'screenProgress',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'screenProgress',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'screenProgress',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'screenProgress',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition>
+      screenProgressLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'screenProgress',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -696,6 +1089,18 @@ extension ImageModelQuerySortBy
     });
   }
 
+  QueryBuilder<ImageModel, ImageModel, QAfterSortBy> sortByIsCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterSortBy> sortByIsCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCompleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<ImageModel, ImageModel, QAfterSortBy> sortByIsDaily() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDaily', Sort.asc);
@@ -783,6 +1188,18 @@ extension ImageModelQuerySortThenBy
     });
   }
 
+  QueryBuilder<ImageModel, ImageModel, QAfterSortBy> thenByIsCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCompleted', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterSortBy> thenByIsCompletedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isCompleted', Sort.desc);
+    });
+  }
+
   QueryBuilder<ImageModel, ImageModel, QAfterSortBy> thenByIsDaily() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDaily', Sort.asc);
@@ -828,6 +1245,12 @@ extension ImageModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ImageModel, ImageModel, QDistinct> distinctByCompletedIds() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'completedIds');
+    });
+  }
+
   QueryBuilder<ImageModel, ImageModel, QDistinct> distinctByEnabled() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'enabled');
@@ -841,6 +1264,12 @@ extension ImageModelQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ImageModel, ImageModel, QDistinct> distinctByIsCompleted() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isCompleted');
+    });
+  }
+
   QueryBuilder<ImageModel, ImageModel, QDistinct> distinctByIsDaily() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isDaily');
@@ -850,6 +1279,12 @@ extension ImageModelQueryWhereDistinct
   QueryBuilder<ImageModel, ImageModel, QDistinct> distinctByModifiedDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'modifiedDate');
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QDistinct> distinctByScreenProgress() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'screenProgress');
     });
   }
 
@@ -874,6 +1309,13 @@ extension ImageModelQueryProperty
     });
   }
 
+  QueryBuilder<ImageModel, List<int>?, QQueryOperations>
+      completedIdsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'completedIds');
+    });
+  }
+
   QueryBuilder<ImageModel, bool, QQueryOperations> enabledProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'enabled');
@@ -886,6 +1328,12 @@ extension ImageModelQueryProperty
     });
   }
 
+  QueryBuilder<ImageModel, bool?, QQueryOperations> isCompletedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isCompleted');
+    });
+  }
+
   QueryBuilder<ImageModel, bool, QQueryOperations> isDailyProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isDaily');
@@ -895,6 +1343,13 @@ extension ImageModelQueryProperty
   QueryBuilder<ImageModel, int?, QQueryOperations> modifiedDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'modifiedDate');
+    });
+  }
+
+  QueryBuilder<ImageModel, List<int>?, QQueryOperations>
+      screenProgressProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'screenProgress');
     });
   }
 

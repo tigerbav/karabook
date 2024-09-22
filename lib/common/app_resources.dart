@@ -56,6 +56,7 @@ class AppResources {
   //settings icons
   static const vibration = '$_pathToSettings/vibro.svg';
   static const fill = '$_pathToSettings/fill.svg';
+  static const fillHint = '$_pathToSettings/fill_hint.svg';
   static const contactUs = '$_pathToSettings/contact.svg';
   static const deleteAds = '$_pathToSettings/no_ads.svg';
   static const restore = '$_pathToSettings/restore.svg';

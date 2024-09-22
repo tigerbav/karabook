@@ -15,8 +15,8 @@ import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/library/data/datasources/library_datasource.dart';
 import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
 import 'package:karabookapp/pages/library/presentation/logic/vip/vip_cubit.dart';
-import 'package:karabookapp/pages/library/presentation/widgets/library_banner.dart';
-import 'package:karabookapp/services/in_app_purchases/purchases_manager.dart';
+import 'package:karabookapp/pages/library/presentation/widgets/empty_banner.dart';
+import 'package:karabookapp/services/game_core/enums/image_type.dart';
 import 'package:karabookapp/services/isar/models/category_model.dart';
 
 @RoutePage()
@@ -40,8 +40,26 @@ class VipScreen extends StatelessWidget {
   }
 }
 
-class _VipScreen extends StatelessWidget {
+class _VipScreen extends StatefulWidget {
   const _VipScreen();
+
+  @override
+  State<_VipScreen> createState() => _VipScreenState();
+}
+
+class _VipScreenState extends State<_VipScreen> {
+  final _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +72,7 @@ class _VipScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView(
+          controller: _controller,
           children: [
             Container(
               width: double.infinity,
@@ -67,7 +86,7 @@ class _VipScreen extends StatelessWidget {
                         fit: BoxFit.cover,
                         gaplessPlayback: true,
                       )
-                    : const LibraryBanner(),
+                    : const EmptyBanner(),
               ),
             ),
             SizedBox(height: 20.sp),
@@ -145,6 +164,7 @@ class _VipScreen extends StatelessWidget {
                 return ImagesGrid(
                   state.visibleImages,
                   heroTag: C.vip,
+                  imageType: ImageType.paidComics,
                 );
               },
             ),

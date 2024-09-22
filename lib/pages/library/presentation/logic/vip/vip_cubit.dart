@@ -7,7 +7,7 @@ import 'package:karabookapp/services/in_app_purchases/purchases_manager.dart';
 import 'package:karabookapp/services/isar/isar_service.dart';
 import 'package:karabookapp/services/isar/models/category_model.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
-import 'package:karabookapp/services/isar/models/painter_progress.dart';
+import 'package:karabookapp/services/managers/image_manager.dart';
 import 'package:purchases_flutter/models/offering_wrapper.dart';
 
 part 'vip_state.dart';
@@ -38,25 +38,29 @@ class VipCubit extends Cubit<VipState> {
       isAvailable: isAvailable,
     ));
 
-    await _loadImages();
+    loadImages();
   }
 
-  Future<void> _loadImages() async {
-    final result = await repository.getAllImagesFromPack(pack.id);
+  Future<void> loadImages() async {
+    final result = await repository.getAllImagesFromPack(
+      packId: pack.id,
+      displayIds: state.images.map((e) => e.id).toList(),
+    );
     result.fold(
       (l) => emit(state.copyWith(
         status: VipStatus.failure,
         messageError: l.errorMessage,
       )),
       (r) {
+        final images = List<ImageModel>.from(state.images);
+        images.addAll(r);
         emit(state.copyWith(
           status: VipStatus.success,
-          images: r.toSet().toList(),
+          images: images,
         ));
       },
     );
-    final query =
-        isar.painterProgress.filter().isCompletedEqualTo(true).build();
+    final query = isar.imageModels.filter().isCompletedEqualTo(true).build();
     final stream = query.watch(fireImmediately: true);
 
     stream.listen((event) {
@@ -84,5 +88,17 @@ class VipCubit extends Cubit<VipState> {
       status: VipStatus.idle,
       isAvailable: true,
     ));
+  }
+
+  Future<void> updImage(ImageModel oldImage) async {
+    final newImage = await ImageManager.shared.getImageById(oldImage.id);
+    if (oldImage.completedIds == newImage?.completedIds || newImage == null) {
+      return;
+    }
+
+    var list = List<ImageModel>.from(state.images);
+    list = list.map((e) => e.id == newImage.id ? newImage : e).toList();
+
+    emit(state.copyWith(status: VipStatus.idle, images: list));
   }
 }

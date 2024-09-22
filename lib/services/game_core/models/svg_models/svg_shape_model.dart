@@ -12,7 +12,6 @@ class SvgShapeModel {
     required this.fill,
     this.number = const PainterNumber(dx: 0, dy: 0, number: -1, size: 0),
     this.isPainted = false,
-    this.isPicked = false,
     required this.transformedPath,
   }) : path = parseSvgPathData(d);
 
@@ -22,18 +21,23 @@ class SvgShapeModel {
   final Path path;
   final PainterNumber number;
   final bool isPainted;
-  final bool isPicked;
   final Path transformedPath;
 
-  factory SvgShapeModel.fromElement(XmlElement svgElement, Matrix4 matrix) {
+  factory SvgShapeModel.fromElement({
+    required XmlElement svgElement,
+    required Matrix4 matrix,
+    required List<int> completedIds,
+  }) {
+    final id = int.tryParse(svgElement.getAttribute('id') ?? '-1') ?? -1;
     final d = svgElement.getAttribute('d').toString();
     final transformPath = parseSvgPathData(d).transform(matrix.storage);
 
     return SvgShapeModel(
-      id: int.tryParse(svgElement.getAttribute('id') ?? '-1') ?? -1,
+      id: id,
       d: svgElement.getAttribute('d').toString(),
       fill: HexColor(getHexColorFromAttrs(svgElement)),
-      isPainted: getHexColorFromAttrs(svgElement) == '#000000',
+      isPainted: getHexColorFromAttrs(svgElement) == '#000000' ||
+          completedIds.contains(id),
       transformedPath: transformPath,
       number: _defineNumber(
         transformPath,
@@ -41,9 +45,6 @@ class SvgShapeModel {
       ),
     );
   }
-
-  @override
-  String toString() => 'SvgShapeModel(id: $id, fill: $fill, number: $number, isPainted: $isPainted, isPicked: $isPicked';
 
   static String getHexColorFromAttrs(XmlElement svgElement) {
     final getHexColorFromStyle =
@@ -137,7 +138,6 @@ class SvgShapeModel {
     Color? fill,
     PainterNumber? number,
     bool? isPainted,
-    bool? isPicked,
     Path? transformedPath,
   }) {
     return SvgShapeModel(
@@ -146,7 +146,6 @@ class SvgShapeModel {
       fill: fill ?? this.fill,
       number: number ?? this.number,
       isPainted: isPainted ?? this.isPainted,
-      isPicked: isPicked ?? this.isPicked,
       transformedPath: transformedPath ?? this.transformedPath,
     );
   }

@@ -13,6 +13,7 @@ import 'package:karabookapp/pages/events/presentation/logic/comics/comics_cubit.
 import 'package:karabookapp/pages/events/presentation/logic/daily/daily_cubit.dart';
 import 'package:karabookapp/pages/library/data/datasources/library_datasource.dart';
 import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
+import 'package:karabookapp/pages/library/presentation/logic/banner/banner_cubit.dart';
 import 'package:karabookapp/pages/library/presentation/logic/library/library_cubit.dart';
 import 'package:karabookapp/pages/portfolio/data/datasources/portfolio_datasource.dart';
 import 'package:karabookapp/pages/portfolio/domain/repositories/portfolio_repository.dart';
@@ -26,14 +27,22 @@ class TabBarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (_) => EventsRepository(EventsDataSource()),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (_) => EventsRepository(EventsDataSource()),
+        ),
+        RepositoryProvider(
+          create: (_) => LibraryRepository(LibraryDataSource()),
+        ),
+      ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => LibraryCubit(
-              LibraryRepository(LibraryDataSource()),
-            ),
+            create: (ctx) => BannerCubit(ctx.read<LibraryRepository>()),
+          ),
+          BlocProvider(
+            create: (ctx) => LibraryCubit(ctx.read<LibraryRepository>()),
           ),
           BlocProvider(
             create: (_) => PortfolioCubit(

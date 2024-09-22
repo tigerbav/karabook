@@ -27,6 +27,14 @@ abstract class  LocaleKeys {
   static const email_sent = 'email_sent';
   static const oops = 'oops';
   static const sign_in_with_google = 'sign_in_with_google';
+  static const sign_in_with_apple = 'sign_in_with_apple';
   static const acquired = 'acquired';
+  static const delete_account = 'delete_account';
+  static const yes = 'yes';
+  static const no = 'no';
+  static const autofill_after_hint = 'autofill_after_hint';
+  static const saving_progress = 'saving_progress';
+  static const exit_description = 'exit_description';
+  static const delete_description = 'delete_description';
 
 }

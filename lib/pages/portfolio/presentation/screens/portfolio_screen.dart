@@ -12,6 +12,7 @@ import 'package:karabookapp/pages/portfolio/presentation/enums/status_type.dart'
 import 'package:karabookapp/pages/portfolio/presentation/logic/portfolio/portfolio_cubit.dart';
 import 'package:karabookapp/pages/portfolio/presentation/widgets/portfolio_app_bar.dart';
 import 'package:karabookapp/pages/portfolio/presentation/widgets/work_status.dart';
+import 'package:karabookapp/services/game_core/enums/image_type.dart';
 
 @RoutePage()
 class PortfolioScreen extends StatelessWidget {
@@ -26,13 +27,12 @@ class PortfolioScreen extends StatelessWidget {
           const WorkStatus(),
           SizedBox(height: 20.sp),
           Expanded(
-            child: BlocConsumer<PortfolioCubit, PortfolioState>(
-              listenWhen: (p, c) => p.completedLength != c.completedLength,
-              listener: (context, state) {
-                context.read<PortfolioCubit>().loadImages();
-              },
+            child: BlocBuilder<PortfolioCubit, PortfolioState>(
               buildWhen: (p, c) =>
-                  p.statusType != c.statusType || p.isLoading != c.isLoading,
+                  p.statusType != c.statusType ||
+                  p.isLoading != c.isLoading ||
+                  p.progressImages != c.progressImages ||
+                  p.completedImages != c.completedImages,
               builder: (context, state) {
                 if (state.isLoading) {
                   return Center(
@@ -52,8 +52,11 @@ class PortfolioScreen extends StatelessWidget {
                     : LocaleKeys.any_finished_paintings.tr();
 
                 if (images.isNotEmpty) {
-                  // return ListView(children: [ImagesGrid(images)]);
-                  return ImagesGrid(images, heroTag: C.portfolio);
+                  return ImagesGrid(
+                    images,
+                    heroTag: C.portfolio,
+                    imageType: ImageType.portfolio,
+                  );
                 }
 
                 return Center(

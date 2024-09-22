@@ -10,6 +10,7 @@ import 'package:karabookapp/common/widgets/images_grid_item.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/events/presentation/logic/daily/daily_cubit.dart';
 import 'package:karabookapp/pages/events/presentation/widgets/daily_grid.dart';
+import 'package:karabookapp/services/game_core/enums/image_type.dart';
 
 class DailyWidget extends StatefulWidget {
   const DailyWidget({super.key});
@@ -84,6 +85,10 @@ class _DailyWidgetState extends State<DailyWidget>
                             image,
                             heroTag: C.daily,
                             size: 152.sp,
+                            updImage: () => ImageType.daily.updImage(
+                              context,
+                              image,
+                            ),
                           )
                         : Image.asset(
                             AppResources.dailyGift,

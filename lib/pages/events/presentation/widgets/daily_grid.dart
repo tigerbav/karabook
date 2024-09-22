@@ -7,6 +7,7 @@ import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
 import 'package:karabookapp/pages/events/presentation/logic/daily/daily_cubit.dart';
+import 'package:karabookapp/services/game_core/enums/image_type.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
 
 class DailyGrid extends StatefulWidget {
@@ -69,6 +70,10 @@ class _Item extends StatelessWidget {
           child: ImagesGridItem(
             image,
             heroTag: C.daily,
+            updImage: () => ImageType.daily.updImage(
+              context,
+              image,
+            ),
           ),
         ),
         Align(

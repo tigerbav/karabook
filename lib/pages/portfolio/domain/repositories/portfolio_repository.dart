@@ -1,11 +1,9 @@
-import 'package:either_dart/either.dart';
 import 'package:karabookapp/pages/portfolio/data/datasources/portfolio_datasource.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
-import 'package:karabookapp/services/network/failures/failure.dart';
 
 abstract class IPortfolioRepository {
-  Future<Either<Failure, List<ImageModel>>> getCurrentImages();
-  Future<Either<Failure, List<ImageModel>>> getCompletedImages();
+  Stream<List<ImageModel>>? getCurrentImages();
+  Stream<List<ImageModel>>? getCompletedImages();
 }
 
 class PortfolioRepository extends IPortfolioRepository {
@@ -13,22 +11,20 @@ class PortfolioRepository extends IPortfolioRepository {
   final IPortfolioDataSources _dataSources;
 
   @override
-  Future<Either<Failure, List<ImageModel>>> getCompletedImages() async {
+  Stream<List<ImageModel>>? getCompletedImages() {
     try {
-      final result = await _dataSources.getImages(true);
-      return Right(result);
-    } catch (e, trace) {
-      return Left(Failure.from(e, trace));
+      return _dataSources.getImages(true);
+    } catch (_) {
+      return null;
     }
   }
 
   @override
-  Future<Either<Failure, List<ImageModel>>> getCurrentImages() async {
+  Stream<List<ImageModel>>? getCurrentImages() {
     try {
-      final result = await _dataSources.getImages(false);
-      return Right(result);
-    } catch (e, trace) {
-      return Left(Failure.from(e, trace));
+      return _dataSources.getImages(false);
+    } catch (_) {
+      return null;
     }
   }
 }

@@ -1,17 +1,15 @@
-import 'package:flutter/foundation.dart';
 import 'package:karabookapp/app/data/models/progress.dart';
-import 'package:karabookapp/app/presentation/screens/app.dart';
+import 'package:karabookapp/app/data/models/user_model.dart';
 import 'package:karabookapp/common/utils/extensions/iterable.dart';
-import 'package:karabookapp/common/widgets/restart_widget.dart';
 import 'package:karabookapp/services/isar/isar_service.dart';
-import 'package:karabookapp/services/isar/models/painter_progress.dart';
-import 'package:karabookapp/services/isar/models/user_model.dart';
+import 'package:karabookapp/services/isar/models/image_model.dart';
 import 'package:karabookapp/services/network/api_provider.dart';
 import 'package:karabookapp/services/network/links.dart';
 
 abstract class ISettingDataSource {
-  static int userId = 0;
-  Future<void> getUser(String email);
+  Future<int?> getUser(String email);
+  Future<void> deleteAccount(int userId);
+  Future<void> updateProgress(int userId);
 }
 
 class SettingDataSource extends ISettingDataSource {
@@ -19,82 +17,171 @@ class SettingDataSource extends ISettingDataSource {
   final ApiProvider _apiProvider;
 
   @override
-  Future<void> getUser(String email) async {
+  Future<int?> getUser(String email) async {
     var response = await _apiProvider.get('${Links.userByEmail}?value=$email');
     if (response.data != null && response.data?.isNotEmpty) {
       final data = UserModel.fromJson(response.data);
-      _updateProgress(data.id);
-      return;
+      updateProgress(data.id);
+      return data.id;
     }
     response = await _apiProvider.post(Links.userAdd, {'userEmail': email});
     if (response.data != null) {
       final data = UserModel.fromJson(response.data);
-      _updateProgress(data.id);
+      updateProgress(data.id);
+      return data.id;
     }
+    return null;
   }
 
-  Future<void> _updateProgress(int userId) async {
-    ISettingDataSource.userId = userId;
+  @override
+  Future<void> deleteAccount(int userId) async {
+    var response = await _apiProvider.delete(
+      '${Links.userDelete}?value=$userId',
+    );
+    if (response.statusCode == 200) return;
+
+    throw Exception('Error while delete user!!!');
+  }
+
+  @override
+  Future<void> updateProgress(int userId) async {
     final response =
         await _apiProvider.get('${Links.progressByUser}?value=$userId');
 
     final data =
         (response.data as List).map((e) => Progress.fromJson(e)).toList();
 
-    final localData =
-        await IsarService.shared.getObjects(from: isar.painterProgress);
+    final localImages =
+        await IsarService.shared.getObjects(from: isar.imageModels);
 
-    bool shouldRestart = false;
-    // compare local progress data with server
+    /// compare local progress data with server
     for (final serverProgress in data) {
-      final localProgress =
-          localData.firstWhereOrNull((lp) => lp.id == serverProgress.imageId);
-      if (localProgress == null) {
-        final completedIds = serverProgress.completedParts
-            ?.replaceAll(' ', '')
-            .split(',')
-            .map((e) => int.tryParse(e))
-            .toList();
+      var localImage =
+          localImages.firstWhereOrNull((li) => li.id == serverProgress.imageId);
 
-        final painterProgress = PainterProgress()
-          ..id = serverProgress.imageId
-          ..isCompleted = serverProgress.isCompleted
-          ..completedIds = completedIds?.whereType<int>().toList();
+      late final completedIds = serverProgress.completedParts
+          ?.replaceAll(' ', '')
+          .split(',')
+          .map((e) => int.tryParse(e))
+          .toList();
+      late final sCompletedIds = completedIds?.whereType<int>().toList() ?? [];
 
-        IsarService.shared.writeSync(
-          object: painterProgress,
-          to: isar.painterProgress,
+      /// if local progress is blank, it should be saved on phone
+      if (localImage == null) {
+        localImage = await _downloadImage(serverProgress.imageId);
+        if (localImage == null) break;
+
+        _updateIsarImage(
+          imageModel: localImage,
+          sCompletedIds: sCompletedIds,
+          isCompleted: serverProgress.isCompleted,
         );
-        shouldRestart = true;
+      } else {
+        if (localImage.modifiedDate == serverProgress.modifiedDate) break;
+
+        final lCompletedIds = localImage.completedIds ?? [];
+        if (localImage.isCompleted == true &&
+                serverProgress.isCompleted == false ||
+            sCompletedIds.length < lCompletedIds.length) {
+          _updateServerProgress(
+            isCompleted: localImage.isCompleted == true,
+            lCompletedIds: lCompletedIds,
+            sProgress: serverProgress,
+            isPut: true,
+            imageId: localImage.id,
+            userId: userId,
+          );
+        } //
+        else if (serverProgress.isCompleted == true &&
+                localImage.isCompleted == false ||
+            sCompletedIds.length > lCompletedIds.length) {
+          _updateIsarImage(
+            imageModel: localImage,
+            sCompletedIds: serverProgress.isCompleted ? [] : sCompletedIds,
+            isCompleted: serverProgress.isCompleted,
+          );
+        }
       }
     }
 
     //  compare server progress data with local
-    for (final localProgress in localData) {
+    for (final localImage in localImages) {
       final serverProgress =
-          data.firstWhereOrNull((lp) => lp.imageId == localProgress.id);
-      if (serverProgress == null) {
-        final completedParts = localProgress.isCompleted
-            ? null
-            : localProgress.completedIds?.map((e) => e.toString()).join(',');
-
-        final painterProgress = Progress(
-          id: 0,
-          imageId: localProgress.id,
+          data.firstWhereOrNull((sp) => sp.imageId == localImage.id);
+      if (serverProgress == null &&
+          (localImage.completedIds?.isNotEmpty ?? false)) {
+        _updateServerProgress(
+          isCompleted: localImage.isCompleted == true,
+          lCompletedIds: localImage.completedIds ?? [],
+          sProgress: null,
+          isPut: false,
           userId: userId,
-          isCompleted: localProgress.isCompleted,
-          completedParts: completedParts,
+          imageId: localImage.id,
         );
-
-        try {
-          await _apiProvider.post(Links.progressAdd, painterProgress.toJson());
-        } catch (_) {
-          debugPrint('Can\'t update progress on server');
-        }
       }
     }
-    if (shouldRestart) {
-      RestartWidget.restartApp(App.navigatorKey.currentContext!);
+  }
+
+  Future<ImageModel?> _downloadImage(int id) async {
+    final response = await ApiProvider.shared.get(
+      '${Links.imageByIds}?value=$id',
+    );
+
+    final parseUpdImages =
+        (response.data as List).map((e) => ImageModel.fromJson(e)).toList();
+
+    // update ISAR
+    for (final image in parseUpdImages) {
+      IsarService.shared.writeSync(
+        object: image,
+        to: isar.imageModels,
+      );
+    }
+
+    return parseUpdImages.firstOrNull;
+  }
+
+  Future<void> _updateIsarImage({
+    required ImageModel imageModel,
+    required bool isCompleted,
+    required List<int> sCompletedIds,
+  }) async {
+    final imageProgress = imageModel.copyWith(
+      isCompleted: isCompleted,
+      completedIds: sCompletedIds,
+    );
+
+    await IsarService.shared.writeSync(
+      object: imageProgress,
+      to: isar.imageModels,
+    );
+  }
+
+  Future<void> _updateServerProgress({
+    required bool isCompleted,
+    required Progress? sProgress,
+    required List<int> lCompletedIds,
+    required bool isPut,
+    required int userId,
+    required int imageId,
+  }) async {
+    final progress = sProgress != null
+        ? sProgress.copyWith(
+            isCompleted: isCompleted,
+            completedParts: isCompleted ? null : lCompletedIds.join(','),
+            modifiedDate: DateTime.now().toUtc().microsecondsSinceEpoch,
+          )
+        : Progress(
+            imageId: imageId,
+            userId: userId,
+            isCompleted: isCompleted,
+            completedParts: lCompletedIds.join(','),
+          );
+
+    if (isPut) {
+      await _apiProvider.put(Links.progressUpdate, progress.toJsonPut());
+    } else {
+      await _apiProvider.post(Links.progressAdd, progress.toJson());
     }
   }
 }

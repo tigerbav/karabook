@@ -7,6 +7,7 @@ enum LibraryStatus {
   failure,
   loadingCategories,
   loadingImages,
+  pagination
 }
 
 class LibraryState extends Equatable {
@@ -28,6 +29,7 @@ class LibraryState extends Equatable {
 
   bool get isLoadingCategories => status == LibraryStatus.loadingCategories;
   bool get isLoadingImages => status == LibraryStatus.loadingImages;
+  bool get isPagination => status == LibraryStatus.pagination;
   bool get isFailure => status == LibraryStatus.failure;
 
   List<ImageModel> get imagesByCategory {

@@ -18,11 +18,13 @@ class AuthService {
   }
 
   Future<String?> loginWithGoogle() async {
-    if (googleSignIn.currentUser != null) {
-      await googleSignIn.signOut();
-      return null;
-    }
+    if (googleSignIn.currentUser != null) return null;
+
     final account = await googleSignIn.signIn();
     return account?.email;
+  }
+
+  Future<void> logoutWithGoogle() async {
+    await googleSignIn.signOut();
   }
 }

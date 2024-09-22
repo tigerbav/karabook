@@ -1,5 +1,11 @@
+import 'dart:async';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:karabookapp/app/presentation/screens/app.dart';
+import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/portfolio/domain/repositories/portfolio_repository.dart';
 import 'package:karabookapp/pages/portfolio/presentation/enums/status_type.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
@@ -17,41 +23,57 @@ class PortfolioCubit extends Cubit<PortfolioState> {
   }
 
   final IPortfolioRepository _repository;
+  StreamSubscription? _currentImages;
+  StreamSubscription? _completedImages;
 
   Future<void> loadImages() async {
-    await _loadCurrImages();
-    await _loadCompletedImages();
+    final context = App.navigatorKey.currentContext;
+    if (context == null) return;
+
+    _loadCurrImages(context);
+    _loadCompletedImages(context);
   }
 
-  Future<void> _loadCurrImages() async {
+  void _loadCurrImages(BuildContext context) {
     emit(state.copyWith(status: PortfolioStatus.loading));
 
-    final result = await _repository.getCurrentImages();
-    result.fold(
-      (l) => emit(state.copyWith(
+    final stream = _repository.getCurrentImages();
+    if (stream == null) {
+      emit(state.copyWith(
         status: PortfolioStatus.failure,
-        errorMessage: l.errorMessage,
-      )),
-      (r) => emit(state.copyWith(
+        errorMessage: LocaleKeys.something_went_wrong.tr(),
+      ));
+      return;
+    }
+
+    _currentImages?.cancel();
+    _currentImages = stream.listen((data) {
+      emit(state.copyWith(
         status: PortfolioStatus.success,
-        progressImages: r,
-      )),
-    );
+        progressImages: data,
+      ));
+    });
   }
 
-  Future<void> _loadCompletedImages() async {
+  void _loadCompletedImages(BuildContext context) {
     emit(state.copyWith(status: PortfolioStatus.loading));
-    final result = await _repository.getCompletedImages();
-    result.fold(
-      (l) => emit(state.copyWith(
+
+    final stream = _repository.getCompletedImages();
+    if (stream == null) {
+      emit(state.copyWith(
         status: PortfolioStatus.failure,
-        errorMessage: l.errorMessage,
-      )),
-      (r) => emit(state.copyWith(
+        errorMessage: LocaleKeys.something_went_wrong.tr(),
+      ));
+      return;
+    }
+
+    _completedImages?.cancel();
+    _completedImages = stream.listen((data) {
+      emit(state.copyWith(
         status: PortfolioStatus.success,
-        completedImages: r,
-      )),
-    );
+        completedImages: data,
+      ));
+    });
   }
 
   void setStatusType(StatusType statusType) {
@@ -59,5 +81,12 @@ class PortfolioCubit extends Cubit<PortfolioState> {
       status: PortfolioStatus.idle,
       statusType: statusType,
     ));
+  }
+
+  @override
+  Future<void> close() {
+    _currentImages?.cancel();
+    _completedImages?.cancel();
+    return super.close();
   }
 }

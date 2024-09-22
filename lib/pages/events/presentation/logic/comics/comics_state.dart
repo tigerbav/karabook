@@ -1,6 +1,6 @@
 part of 'comics_cubit.dart';
 
-enum ComicsStatus { initial, loading, failure, success, idle }
+enum ComicsStatus { initial, loading, pagination, failure, success, idle }
 
 class ComicsState extends Equatable {
   const ComicsState({
@@ -16,6 +16,7 @@ class ComicsState extends Equatable {
   final Map<CategoryModel, int> completeMap;
 
   bool get isLoading => status == ComicsStatus.loading;
+  bool get isPagination => status == ComicsStatus.pagination;
   bool get isFailure => status == ComicsStatus.failure;
 
   ComicsState copyWith({

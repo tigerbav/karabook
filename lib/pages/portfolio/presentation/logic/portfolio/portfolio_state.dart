@@ -7,7 +7,6 @@ class PortfolioState extends Equatable {
     required this.status,
     this.errorMessage,
     this.statusType = StatusType.inProgress,
-    this.completedLength = 0,
     required List<ImageModel> completedImages,
     required List<ImageModel> progressImages,
   })  : _completedImages = completedImages,
@@ -16,7 +15,6 @@ class PortfolioState extends Equatable {
   final PortfolioStatus status;
   final String? errorMessage;
   final StatusType statusType;
-  final int completedLength;
   final List<ImageModel> _completedImages;
   final List<ImageModel> _progressImages;
 
@@ -37,7 +35,6 @@ class PortfolioState extends Equatable {
       status: status,
       errorMessage: errorMessage ?? this.errorMessage,
       statusType: statusType ?? this.statusType,
-      completedLength: completedLength ?? this.completedLength,
       completedImages: completedImages ?? _completedImages,
       progressImages: progressImages ?? _progressImages,
     );
@@ -48,7 +45,6 @@ class PortfolioState extends Equatable {
         status,
         errorMessage,
         statusType,
-        completedLength,
         _completedImages,
         _progressImages,
       ];

@@ -21,12 +21,14 @@ class Links {
 
   //user
   static const userAdd = '$_baseUrl/api/user/add';
+  static const userDelete = '$_baseUrl/api/user/delete/byId';
   static const userByEmail = '$_baseUrl/api/user/get/all/ByUserEmail/';
 
   // progress
   static const progressByUser =
       '$_baseUrl/api/image/progress/get/all/ByUserId/';
   static const progressAdd = '$_baseUrl/api/image/progress/add';
+  static const progressUpdate = '$_baseUrl/api/image/progress/update';
   static const deleteByUserAndImage =
       '$_baseUrl/api/image/progress/delete/ByUserIdAndImageId';
 }

@@ -10,6 +10,7 @@ import 'package:karabookapp/services/navigation/app_router.dart';
 enum SettingsType {
   vibration,
   fill,
+  autoFill,
   contactUs,
   deleteAds,
   restore,
@@ -22,6 +23,8 @@ extension SettingsTypeEx on SettingsType {
         return LocaleKeys.vibration_on_completion.tr();
       case SettingsType.fill:
         return LocaleKeys.animation_to_fill.tr();
+      case SettingsType.autoFill:
+        return LocaleKeys.autofill_after_hint.tr();
       case SettingsType.contactUs:
         return LocaleKeys.contact_us.tr();
       case SettingsType.deleteAds:
@@ -37,6 +40,8 @@ extension SettingsTypeEx on SettingsType {
         return AppResources.vibration;
       case SettingsType.fill:
         return AppResources.fill;
+      case SettingsType.autoFill:
+        return AppResources.fillHint;
       case SettingsType.contactUs:
         return AppResources.contactUs;
       case SettingsType.deleteAds:
@@ -50,6 +55,7 @@ extension SettingsTypeEx on SettingsType {
     switch (this) {
       case SettingsType.vibration:
       case SettingsType.fill:
+      case SettingsType.autoFill:
         return true;
       case SettingsType.contactUs:
       case SettingsType.deleteAds:
@@ -64,6 +70,8 @@ extension SettingsTypeEx on SettingsType {
         context.read<SettingsCubit>().switchVibration();
       case SettingsType.fill:
         context.read<SettingsCubit>().switchAnimation();
+      case SettingsType.autoFill:
+        context.read<SettingsCubit>().switchFillHint();
       case SettingsType.contactUs:
         context.router.push(const ContactUsRoute());
       case SettingsType.deleteAds:
@@ -76,6 +84,7 @@ extension SettingsTypeEx on SettingsType {
   static final optionsWithSwitcher = [
     SettingsType.vibration,
     SettingsType.fill,
+    SettingsType.autoFill,
   ];
 
   static List<SettingsType> optionsWithNoSwitcher(bool hasAds) => [

@@ -7,6 +7,10 @@ import 'package:karabookapp/services/network/failures/failure.dart';
 abstract class IEventsRepository {
   Future<Either<Failure, List<ImageModel>>> getDailyImages();
   Future<Either<Failure, Map<CategoryModel, List<ImageModel>>>> getComics();
+  Future<Either<Failure, List<ImageModel>>> getComicsList({
+    required int categoryId,
+    required List<int> displayIds,
+  });
 }
 
 class EventsRepository extends IEventsRepository {
@@ -27,7 +31,23 @@ class EventsRepository extends IEventsRepository {
   Future<Either<Failure, Map<CategoryModel, List<ImageModel>>>>
       getComics() async {
     try {
-      final result = await _dataSource.getComics();
+      final result = await _dataSource.getAllComics();
+      return Right(result);
+    } catch (e, trace) {
+      return Left(Failure.from(e, trace));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ImageModel>>> getComicsList({
+    required int categoryId,
+    required List<int> displayIds,
+  }) async {
+    try {
+      final result = await _dataSource.getComicsList(
+        categoryId: categoryId,
+        displayIds: displayIds,
+      );
       return Right(result);
     } catch (e, trace) {
       return Left(Failure.from(e, trace));

@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 class ApiProvider {
   ApiProvider._();
   static final shared = ApiProvider._();
+  static const _staticKey =
+      '0e007493fbf1ea585c558cde957f2e8b03b08bb191961cfb2d6c186855b8dab0';
 
   static final _options = Options(
     headers: {
@@ -24,6 +26,11 @@ class ApiProvider {
 
   Future<Response> post(String url, Map<String, dynamic> data) async {
     final response = await Dio().post(url, options: _options, data: data);
+    return response;
+  }
+
+  Future<Response> put(String url, Map<String, dynamic> data) async {
+    final response = await Dio().put(url, options: _options, data: data);
     return response;
   }
 }

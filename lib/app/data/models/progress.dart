@@ -1,6 +1,6 @@
 class Progress {
   const Progress({
-    required this.id,
+    this.id,
     required this.userId,
     required this.imageId,
     this.completedParts,
@@ -8,7 +8,7 @@ class Progress {
     this.modifiedDate,
   });
 
-  final int id;
+  final int? id;
   final int userId;
   final int imageId;
   final String? completedParts;
@@ -33,5 +33,32 @@ class Progress {
       'completedImageParts': completedParts,
       'isCompleted': isCompleted,
     };
+  }
+
+  Map<String, dynamic> toJsonPut() {
+    return {
+      'imageProgressId': id,
+      'completedImageParts': completedParts,
+      'isCompleted': isCompleted,
+      'modifiedDate': modifiedDate,
+    };
+  }
+
+  Progress copyWith({
+    int? id,
+    int? userId,
+    int? imageId,
+    required String? completedParts,
+    bool? isCompleted,
+    int? modifiedDate,
+  }) {
+    return Progress(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      imageId: imageId ?? this.imageId,
+      completedParts: completedParts,
+      isCompleted: isCompleted ?? this.isCompleted,
+      modifiedDate: modifiedDate ?? this.modifiedDate,
+    );
   }
 }

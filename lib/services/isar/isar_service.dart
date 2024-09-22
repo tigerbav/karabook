@@ -4,9 +4,8 @@ import 'package:isar/isar.dart';
 import 'package:karabookapp/services/isar/models/category_model.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
 import 'package:karabookapp/services/isar/models/locale_model.dart';
-import 'package:karabookapp/services/isar/models/painter_progress.dart';
+// import 'package:karabookapp/services/isar/models/painter_progress.dart';
 import 'package:karabookapp/services/isar/models/text_model.dart';
-import 'package:karabookapp/services/isar/models/user_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 late final Isar isar;
@@ -24,12 +23,11 @@ class IsarService {
     final dir = await getApplicationDocumentsDirectory();
     isar = await Isar.open(
       [
-        PainterProgressSchema,
+        // PainterProgressSchema,
         CategoryModelSchema,
         ImageModelSchema,
         LocaleModelSchema,
         TextModelSchema,
-        UserModelSchema,
       ],
       directory: dir.path,
     );

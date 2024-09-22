@@ -9,10 +9,13 @@ abstract class ILibraryRepository {
   Future<Either<Failure, List<CategoryModel>>> getVipCategories();
   Future<Either<Failure, List<ImageModel>>> getImages({
     required int categoryId,
+    required List<int> displayIds,
   });
-  Future<Either<Failure, List<ImageModel>>> getAllImagesFromPack(
-    int packId,
-  );
+  Future<Either<Failure, List<ImageModel>>> getAllImagesFromPack({
+    required int packId,
+    required List<int> displayIds,
+  });
+  Future<Either<Failure, List<CategoryModel>>> getBanners();
 }
 
 class LibraryRepository extends ILibraryRepository {
@@ -42,10 +45,12 @@ class LibraryRepository extends ILibraryRepository {
   @override
   Future<Either<Failure, List<ImageModel>>> getImages({
     required int categoryId,
+    required List<int> displayIds,
   }) async {
     try {
       final result = await _dataSource.getImagesByPage(
         categoryId: categoryId,
+        displayIds: displayIds,
       );
       return Right(result.where((e) => e.isDaily == false).toList());
     } catch (e, trace) {
@@ -54,11 +59,25 @@ class LibraryRepository extends ILibraryRepository {
   }
 
   @override
-  Future<Either<Failure, List<ImageModel>>> getAllImagesFromPack(
-    int packId,
-  ) async {
+  Future<Either<Failure, List<ImageModel>>> getAllImagesFromPack({
+    required int packId,
+    required List<int> displayIds,
+  }) async {
     try {
-      final result = await _dataSource.getAllImagesFromPack(packId);
+      final result = await _dataSource.getAllImagesFromPack(
+        packId: packId,
+        displayIds: displayIds,
+      );
+      return Right(result);
+    } catch (e, trace) {
+      return Left(Failure.from(e, trace));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CategoryModel>>> getBanners() async {
+    try {
+      final result = await _dataSource.getBanners();
       return Right(result);
     } catch (e, trace) {
       return Left(Failure.from(e, trace));

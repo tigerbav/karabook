@@ -6,6 +6,7 @@ import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/common/widgets/empty_image.dart';
 import 'package:karabookapp/common/widgets/images_grid_item.dart';
+import 'package:karabookapp/services/game_core/enums/image_type.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
 
 class ComicsListItem extends StatelessWidget {
@@ -31,6 +32,7 @@ class ComicsListItem extends StatelessWidget {
               image,
               heroTag: C.comics,
               size: 100,
+              updImage: () => ImageType.freeComics.updImage(context, image),
             ),
           )
         else

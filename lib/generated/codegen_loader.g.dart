@@ -41,7 +41,15 @@ class CodegenLoader extends AssetLoader{
   "email_sent": "Your email was successfully sent.",
   "oops": "Oops...",
   "sign_in_with_google": "Sign in with Google",
-  "acquired": "Acquired"
+  "sign_in_with_apple": "Sign in with Apple",
+  "acquired": "Acquired",
+  "delete_account": "Delete Account",
+  "yes": "Yes",
+  "no": "No",
+  "autofill_after_hint": "Autofill After Hint",
+  "saving_progress": "Saving progress...",
+  "exit_description": "Are you sure you want to exit? Progress won't be saved on the server.",
+  "delete_description": "Are you sure you want to delete your account? Image progress will be deleted from the server. You can continue drawing images, but progress will be saved only on your device."
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": en_US};
 }

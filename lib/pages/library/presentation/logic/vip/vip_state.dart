@@ -25,6 +25,7 @@ class VipState extends Equatable {
     return List.generate(
       images.length,
       (index) => index <= progressStep && isAvailable ? images[index] : null,
+      // (index) => images[index],
     );
   }
 
