@@ -87,10 +87,10 @@ class _RewardButtonState extends State<RewardButton>
                     color: Colors.white,
                     shape: BoxShape.circle,
                     border:
-                        Border.all(color: AppColors.shared.yellow, width: 2.sp),
+                        Border.all(color: AppColors.shared.yellow, width: 2),
                   ),
-                  height: 60.sp,
-                  width: 60.sp,
+                  height: 60,
+                  width: 60,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -103,17 +103,17 @@ class _RewardButtonState extends State<RewardButton>
                   ),
                 ),
                 Positioned(
-                  bottom: -5.sp,
-                  right: -10.sp,
+                  bottom: -5,
+                  right: -10,
                   child: Container(
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: AppColors.shared.white,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.yellow, width: 2.sp),
+                      border: Border.all(color: Colors.yellow, width: 2),
                     ),
-                    height: 30.sp,
-                    width: 30.sp,
+                    height: 30,
+                    width: 30,
                     child: FittedBox(
                       child: Text(
                         'AD',

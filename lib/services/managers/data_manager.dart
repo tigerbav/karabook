@@ -9,6 +9,7 @@ import 'package:karabookapp/services/network/links.dart';
 class DataManager {
   static DataManager shared = DataManager._();
   DataManager._();
+  static final List<TextModel> allTexts = [];
 
   Future<void> getAllLocales() async {
     final response = await ApiProvider.shared.get(Links.locale);
@@ -34,6 +35,7 @@ class DataManager {
       collection: isar.textModels,
       list: parsedData,
     );
+    allTexts.addAll(parsedData);
   }
 
   Future<CategoryModel?> getAllCategories() async {

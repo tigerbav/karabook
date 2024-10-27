@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/pages/game/presentation/logic/color_picker/color_picker_cubit.dart';
@@ -13,15 +12,15 @@ class ColorPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 80.sp,
+      height: 80,
       child: BlocBuilder<ColorPickerCubit, ColorPickerState>(
         buildWhen: (p, c) => p.activePickers != c.activePickers,
         builder: (context, state) {
           return ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 20.sp),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             scrollDirection: Axis.horizontal,
             itemCount: state.activePickers.length,
-            separatorBuilder: (_, __) => SizedBox(width: 11.sp),
+            separatorBuilder: (_, __) => const SizedBox(width: 11),
             itemBuilder: (context, index) => _Item(state.activePickers[index]),
           );
         },
@@ -50,8 +49,8 @@ class _Item extends StatelessWidget {
             children: [
               Container(
                 alignment: Alignment.center,
-                width: 50.sp,
-                height: 50.sp,
+                width: 50,
+                height: 50,
                 decoration: BoxDecoration(
                   color: model.color,
                   shape: BoxShape.circle,
@@ -65,9 +64,9 @@ class _Item extends StatelessWidget {
               ),
               if (isSelected)
                 Container(
-                  padding: EdgeInsets.only(top: 2.5.sp),
-                  width: 47.5.sp,
-                  height: 47.5.sp,
+                  padding: const EdgeInsets.only(top: 2.5),
+                  width: 47.5,
+                  height: 47.5,
                   child: TweenAnimationBuilder<double>(
                     tween: Tween(
                       begin: state.selected?.percent ?? 0,
@@ -77,7 +76,7 @@ class _Item extends StatelessWidget {
                     curve: Curves.easeInOut,
                     builder: (context, value, _) => CircularProgressIndicator(
                       value: value,
-                      strokeWidth: 5.sp,
+                      strokeWidth: 5,
                       color: _colorChecker,
                       backgroundColor: AppColors.shared.transparent,
                     ),

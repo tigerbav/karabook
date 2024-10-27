@@ -1,15 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/common/app_colors.dart';
-import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_resources.dart';
+import 'package:karabookapp/common/utils/utils.dart';
+import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/game/presentation/logic/color_picker/color_picker_cubit.dart';
 import 'package:karabookapp/pages/game/presentation/logic/game/game_cubit.dart';
 import 'package:karabookapp/pages/game/presentation/logic/rewards/rewards_cubit.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
-import 'package:matrix4_transform/matrix4_transform.dart';
 
 class HelpButton extends StatefulWidget {
   final TransformationController transformationController;
@@ -62,19 +63,19 @@ class _HelpButtonState extends State<HelpButton>
                 final rewardCubit = context.read<RewardsCubit>();
                 final colorPickerCubit = context.read<ColorPickerCubit>();
 
-                // if (rewardCubit.state.noAds == false) {
-                //   if (gameCubit.state.selectedShapes.isEmpty) {
-                //     Utils.showToast(
-                //       context,
-                //       LocaleKeys.please_select_a_color.tr(),
-                //       isError: false,
-                //     );
-                //   }
-                //   if (rewardCubit.state.helpCount == 0) {
-                //     rewardCubit.showRewardedAd(1);
-                //     return;
-                //   }
-                // }
+                if (rewardCubit.state.noAds == false) {
+                  if (gameCubit.state.selectedShapes.isEmpty) {
+                    Utils.showToast(
+                      context,
+                      LocaleKeys.please_select_a_color.tr(),
+                      isError: false,
+                    );
+                  }
+                  if (rewardCubit.state.helpCount == 0) {
+                    rewardCubit.showRewardedAd(1);
+                    return;
+                  }
+                }
 
                 for (final shape in gameCubit.state.selectedShapes) {
                   if (gameCubit.state.imageModel.completedIds
@@ -102,11 +103,11 @@ class _HelpButtonState extends State<HelpButton>
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: AppColors.shared.yellow,
-                        width: 2.sp,
+                        width: 2,
                       ),
                     ),
-                    height: 60.sp,
-                    width: 60.sp,
+                    height: 60,
+                    width: 60,
                     child: SvgPicture.asset(AppResources.hints),
                   ),
                   BlocBuilder<RewardsCubit, RewardsState>(
@@ -116,8 +117,8 @@ class _HelpButtonState extends State<HelpButton>
                       if (state.noAds) return const SizedBox();
 
                       return Positioned(
-                        bottom: -5.sp,
-                        left: -10.sp,
+                        bottom: -5,
+                        left: -10,
                         child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
@@ -125,11 +126,11 @@ class _HelpButtonState extends State<HelpButton>
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: AppColors.shared.yellow,
-                              width: 2.sp,
+                              width: 2,
                             ),
                           ),
-                          height: 30.sp,
-                          width: 30.sp,
+                          height: 30,
+                          width: 30,
                           child: Text(
                             state.helpCount > 0
                                 ? state.helpCount.toString()

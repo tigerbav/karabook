@@ -21,6 +21,7 @@ class CurrentEmailWidget extends StatelessWidget {
         return Stack(
           children: [
             Container(
+              width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(
                   color: AppColors.shared.black,
@@ -29,41 +30,35 @@ class CurrentEmailWidget extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(6.sp)),
               ),
               padding: EdgeInsets.symmetric(vertical: 8.5.sp, horizontal: 8.sp),
-              child: FittedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      state.email ?? '',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 19,
-                        color: AppColors.shared.black,
-                        fontFamily: '.SF Pro Text',
-                        letterSpacing: -0.41,
-                        inherit: false,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    state.email ?? '',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 19,
+                      color: AppColors.shared.black,
+                      fontFamily: '.SF Pro Text',
+                      letterSpacing: -0.41,
+                      inherit: false,
+                    ),
+                  ),
+                  SizedBox(width: 4.sp),
+                  GestureDetector(
+                    onTap: () => Utils.showPopUp(
+                      context,
+                      AppPopup(
+                        description: LocaleKeys.exit_description.tr(),
+                        onTapYes: context.read<SettingsCubit>().logout,
                       ),
                     ),
-                    SizedBox(width: 4.sp),
-                    GestureDetector(
-                      onTap: () => Utils.showPopUp(
-                        context,
-                        AppPopup(
-                          description: LocaleKeys.exit_description.tr(),
-                          onTapYes: context.read<SettingsCubit>().logout,
-                        ),
-                      ),
-                      child: SvgPicture.asset(
-                        AppResources.close,
-                        width: 20.sp,
-                        height: 20.sp,
-                      ),
-                    ),
-                  ],
-                ),
+                    child: SvgPicture.asset(AppResources.close),
+                  ),
+                ],
               ),
             ),
           ],
