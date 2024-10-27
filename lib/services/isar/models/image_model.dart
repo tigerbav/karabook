@@ -1,5 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
+import 'package:karabookapp/common/utils/extensions/iterable.dart';
+import 'package:karabookapp/services/isar/isar_service.dart';
+import 'package:karabookapp/services/isar/models/text_model.dart';
 
 part 'image_model.g.dart';
 
@@ -12,11 +15,14 @@ class ImageModel {
     this.enabled = false,
     this.isDaily = false,
     this.sort = 0,
+    this.tag = '',
     this.modifiedDate,
     this.isCompleted,
     this.completedIds,
     this.screenProgress,
-  });
+  }) {
+    _getNameAndDescription();
+  }
 
   late Id id;
   String? imageRawData;
@@ -24,6 +30,7 @@ class ImageModel {
   bool enabled = false;
   bool isDaily = false;
   int sort = 0;
+  String? tag = '';
   int? modifiedDate;
 
   // local data
@@ -31,9 +38,13 @@ class ImageModel {
   List<int>? completedIds;
   List<int>? screenProgress;
 
-  // @ignore
-  // Future<PainterProgress?> get progress async =>
-  //     await isar.painterProgress.get(id);
+  @ignore
+  String? tagName;
+
+  Future<void> _getNameAndDescription() async {
+    final texts = await IsarService.shared.getObjects(from: isar.textModels);
+    tagName ??= texts.firstWhereOrNull((e) => e.textKey == tag)?.textValue;
+  }
 
   @ignore
   Uint8List get toUint8List => Uint8List.fromList(screenProgress ?? []);
@@ -53,6 +64,7 @@ class ImageModel {
       enabled: json['enabled'] ?? false,
       isDaily: json['isDaily'] ?? false,
       sort: json['sort'] ?? 0,
+      tag: json['tag'] ?? '',
       modifiedDate: modifiedDate,
     );
   }
@@ -65,6 +77,7 @@ class ImageModel {
       enabled: model.enabled,
       isDaily: model.isDaily,
       sort: model.sort,
+      tag: model.tag,
       modifiedDate: model.modifiedDate,
       isCompleted: true,
     );
@@ -77,6 +90,7 @@ class ImageModel {
     bool? enabled,
     bool? isDaily,
     int? sort,
+    String? tag,
     int? modifiedDate,
     bool? isCompleted,
     List<int>? completedIds,
@@ -89,6 +103,7 @@ class ImageModel {
       enabled: enabled ?? this.enabled,
       isDaily: isDaily ?? this.isDaily,
       sort: sort ?? this.sort,
+      tag: tag ?? this.tag,
       modifiedDate: modifiedDate ?? this.modifiedDate,
       isCompleted: isCompleted ?? this.isCompleted,
       completedIds: completedIds ?? this.completedIds,

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/app/presentation/logic/app/app_cubit.dart';
+import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/services/navigation/app_router.dart';
 
 class App extends StatefulWidget {
@@ -52,9 +53,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       },
       child: MaterialApp.router(
         theme: ThemeData(
-            // scaffoldBackgroundColor: AppColors.shared.mainBlueColor1,
-            // unselectedWidgetColor: AppColors.shared.whiteColor,
-            ),
+          appBarTheme: AppBarTheme(
+            backgroundColor: AppColors.shared.transparent,
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [
           ...context.localizationDelegates,

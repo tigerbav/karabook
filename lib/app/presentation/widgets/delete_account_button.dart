@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:karabookapp/app/presentation/widgets/delete_popup.dart';
+import 'package:karabookapp/app/presentation/logic/settings/settings_cubit.dart';
 import 'package:karabookapp/common/app_colors.dart';
-import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/utils/utils.dart';
+import 'package:karabookapp/common/widgets/app_popup.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 
 class DeleteAccountButton extends StatelessWidget {
@@ -13,7 +14,13 @@ class DeleteAccountButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Utils.showPopUp(context, const DeletePopup()),
+      onTap: () => Utils.showPopUp(
+        context,
+        AppPopup(
+          description: LocaleKeys.delete_description.tr(),
+          onTapYes: context.read<SettingsCubit>().deleteAccount,
+        ),
+      ),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(

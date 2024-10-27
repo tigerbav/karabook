@@ -49,9 +49,8 @@ class ImageManager {
 
     try {
       modifiedDates = (await _getModifiedDates).where((e) {
-        if (ImageType.daily == imageType) {
-          return e.isDaily;
-        }
+        if (ImageType.daily == imageType) return e.isDaily;
+
         return e.categoryId == categoryId && e.isDaily == false;
       }).toList();
     } catch (_) {
@@ -103,9 +102,18 @@ class ImageManager {
       '${Links.imageByIds}?value=${requiredIds.join(',')}',
     );
 
-    final parseUpdImages = (responseForUpd.data as List)
-        .map((e) => ImageModel.fromJson(e))
-        .toList();
+    final parseUpdImages = (responseForUpd.data as List).map((e) {
+      final parsed = ImageModel.fromJson(e);
+      final image = isarImages.firstWhereOrNull((e) => e.id == parsed.id);
+      if (image == null) return parsed;
+
+      isarImages.remove(image);
+      return parsed.copyWith(
+        isCompleted: image.isCompleted,
+        completedIds: image.completedIds,
+        screenProgress: image.screenProgress,
+      );
+    }).toList();
 
     // update ISAR
     for (final image in parseUpdImages) {

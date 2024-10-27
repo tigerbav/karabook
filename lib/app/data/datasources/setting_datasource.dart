@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:karabookapp/app/data/models/progress.dart';
 import 'package:karabookapp/app/data/models/user_model.dart';
 import 'package:karabookapp/common/utils/extensions/iterable.dart';
@@ -24,7 +25,13 @@ class SettingDataSource extends ISettingDataSource {
       updateProgress(data.id);
       return data.id;
     }
-    response = await _apiProvider.post(Links.userAdd, {'userEmail': email});
+    response = await _apiProvider.post(
+      Links.userAdd,
+      {
+        'userEmail': email,
+        'hintsAmount': 5,
+      },
+    );
     if (response.data != null) {
       final data = UserModel.fromJson(response.data);
       updateProgress(data.id);
@@ -93,7 +100,7 @@ class SettingDataSource extends ISettingDataSource {
           );
         } //
         else if (serverProgress.isCompleted == true &&
-                localImage.isCompleted == false ||
+                localImage.isCompleted != true ||
             sCompletedIds.length > lCompletedIds.length) {
           _updateIsarImage(
             imageModel: localImage,
@@ -178,10 +185,14 @@ class SettingDataSource extends ISettingDataSource {
             completedParts: lCompletedIds.join(','),
           );
 
-    if (isPut) {
-      await _apiProvider.put(Links.progressUpdate, progress.toJsonPut());
-    } else {
-      await _apiProvider.post(Links.progressAdd, progress.toJson());
+    try {
+      if (isPut) {
+        await _apiProvider.put(Links.progressUpdate, progress.toJsonPut());
+      } else {
+        await _apiProvider.post(Links.progressAdd, progress.toJson());
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

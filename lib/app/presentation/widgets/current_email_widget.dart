@@ -1,12 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/app/presentation/logic/settings/settings_cubit.dart';
-import 'package:karabookapp/app/presentation/widgets/logout_popup.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/common/utils/utils.dart';
+import 'package:karabookapp/common/widgets/app_popup.dart';
+import 'package:karabookapp/generated/locale_keys.g.dart';
 
 class CurrentEmailWidget extends StatelessWidget {
   const CurrentEmailWidget({super.key});
@@ -47,8 +49,13 @@ class CurrentEmailWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 4.sp),
                     GestureDetector(
-                      onTap: () =>
-                          Utils.showPopUp(context, const LogoutPopup()),
+                      onTap: () => Utils.showPopUp(
+                        context,
+                        AppPopup(
+                          description: LocaleKeys.exit_description.tr(),
+                          onTapYes: context.read<SettingsCubit>().logout,
+                        ),
+                      ),
                       child: SvgPicture.asset(
                         AppResources.close,
                         width: 20.sp,

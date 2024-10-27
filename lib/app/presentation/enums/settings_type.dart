@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/app/presentation/logic/settings/settings_cubit.dart';
 import 'package:karabookapp/common/app_resources.dart';
+import 'package:karabookapp/common/utils/utils.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/services/navigation/app_router.dart';
+import 'package:karabookapp/services/network/links.dart';
 
 enum SettingsType {
   vibration,
-  fill,
-  autoFill,
+  // fill,
   contactUs,
   deleteAds,
   restore,
@@ -21,10 +22,8 @@ extension SettingsTypeEx on SettingsType {
     switch (this) {
       case SettingsType.vibration:
         return LocaleKeys.vibration_on_completion.tr();
-      case SettingsType.fill:
-        return LocaleKeys.animation_to_fill.tr();
-      case SettingsType.autoFill:
-        return LocaleKeys.autofill_after_hint.tr();
+      // case SettingsType.fill:
+      //   return LocaleKeys.animation_to_fill.tr();
       case SettingsType.contactUs:
         return LocaleKeys.contact_us.tr();
       case SettingsType.deleteAds:
@@ -38,10 +37,8 @@ extension SettingsTypeEx on SettingsType {
     switch (this) {
       case SettingsType.vibration:
         return AppResources.vibration;
-      case SettingsType.fill:
-        return AppResources.fill;
-      case SettingsType.autoFill:
-        return AppResources.fillHint;
+      // case SettingsType.fill:
+      //   return AppResources.fill;
       case SettingsType.contactUs:
         return AppResources.contactUs;
       case SettingsType.deleteAds:
@@ -54,8 +51,7 @@ extension SettingsTypeEx on SettingsType {
   bool get hasSwitch {
     switch (this) {
       case SettingsType.vibration:
-      case SettingsType.fill:
-      case SettingsType.autoFill:
+        // case SettingsType.fill:
         return true;
       case SettingsType.contactUs:
       case SettingsType.deleteAds:
@@ -68,12 +64,11 @@ extension SettingsTypeEx on SettingsType {
     switch (this) {
       case SettingsType.vibration:
         context.read<SettingsCubit>().switchVibration();
-      case SettingsType.fill:
-        context.read<SettingsCubit>().switchAnimation();
-      case SettingsType.autoFill:
-        context.read<SettingsCubit>().switchFillHint();
+      // case SettingsType.fill:
+      //   context.read<SettingsCubit>().switchAnimation();
       case SettingsType.contactUs:
-        context.router.push(const ContactUsRoute());
+        Utils.launchURL(Links.instagram);
+      // context.router.push(const ContactUsRoute());
       case SettingsType.deleteAds:
         context.read<SettingsCubit>().deleteAds();
       case SettingsType.restore:
@@ -83,8 +78,7 @@ extension SettingsTypeEx on SettingsType {
 
   static final optionsWithSwitcher = [
     SettingsType.vibration,
-    SettingsType.fill,
-    SettingsType.autoFill,
+    // SettingsType.fill,
   ];
 
   static List<SettingsType> optionsWithNoSwitcher(bool hasAds) => [

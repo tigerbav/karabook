@@ -6,15 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:karabookapp/common/app_constants.dart';
+import 'package:karabookapp/pages/game/domain/repositories/game_repository.dart';
 import 'package:karabookapp/services/in_app_purchases/purchases_manager.dart';
 import 'package:karabookapp/services/managers/shared_pref_manager.dart';
 
 part 'rewards_state.dart';
 
 class RewardsCubit extends Cubit<RewardsState> {
-  RewardsCubit() : super(const RewardsState()) {
+  RewardsCubit(this._repository) : super(const RewardsState()) {
     _init();
   }
+  final IGameRepository _repository;
 
   var _numRewardedLoadAttempts = 0;
   var _numBannerLoadAttempts = 0;
@@ -31,14 +33,26 @@ class RewardsCubit extends Cubit<RewardsState> {
     }
   }
 
-  Future<void> increaseHelpCount() async {
-    await SharedPrefManager.shared.write(C.helpCounter, state.helpCount - 1);
-    emit(state.copyWith(helpCount: max(0, state.helpCount - 1)));
+  Future<void> decreaseHelpCount() async {
+    final helps = max(0, state.helpCount - 1);
+    final allowRequest = state.helpCount - 1 >= 0;
+
+    await SharedPrefManager.shared.write(C.helpCounter, helps);
+    emit(state.copyWith(helpCount: helps));
+
+    if (allowRequest) setHelps(helps);
   }
 
   Future<void> _getHelpPoints() async {
-    final counter = await SharedPrefManager.shared.get(C.helpCounter);
+    dynamic counter;
 
+    final id = await SharedPrefManager.shared.get(C.lastUserId);
+    if (id is int && id != 0) {
+      final result = await _repository.getHints();
+      counter = result.isRight ? result.right : 2;
+    } else {
+      counter = await SharedPrefManager.shared.get(C.helpCounter);
+    }
     emit(state.copyWith(
       helpCount: (counter != null && counter is int) ? counter : 2,
     ));
@@ -153,17 +167,14 @@ class RewardsCubit extends Cubit<RewardsState> {
       debugPrint(
         '$ad with reward $RewardItem(${reward.amount}, ${reward.type})',
       );
-
-      await SharedPrefManager.shared.write(
-        C.helpCounter,
-        state.helpCount + count,
-      );
+      final helps = state.helpCount + count;
+      await SharedPrefManager.shared.write(C.helpCounter, helps);
       emit(RewardsState(
         bannerAd: state.bannerAd,
         rewardedAd: state.rewardedAd,
-        helpCount: state.helpCount + count,
+        helpCount: helps,
       ));
-
+      setHelps(helps);
       return;
     });
 
@@ -172,5 +183,13 @@ class RewardsCubit extends Cubit<RewardsState> {
       rewardedAd: null,
       helpCount: state.helpCount,
     ));
+  }
+
+  Future<void> setHelps(int helps) async {
+    final userId = await SharedPrefManager.shared.get(C.lastUserId);
+    if (userId is! int? || userId == null || userId == 0) return;
+
+    if (userId == 0) return;
+    _repository.setHints(helps);
   }
 }

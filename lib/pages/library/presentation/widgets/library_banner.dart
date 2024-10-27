@@ -48,7 +48,19 @@ class _BannerPageViewState extends State<_BannerPageView> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 1.sh * 0.21,
-      child: BlocBuilder<BannerCubit, BannerState>(
+      child: BlocConsumer<BannerCubit, BannerState>(
+        listenWhen: (p, c) => c.isTick,
+        listener: (context, state) {
+          if (state.page == 0) {
+            _pageController.jumpToPage(state.page);
+          } else {
+            _pageController.animateToPage(
+              state.page,
+              duration: const Duration(seconds: 1),
+              curve: Curves.linearToEaseOut,
+            );
+          }
+        },
         buildWhen: (p, c) => p.categories != c.categories,
         builder: (context, state) {
           return PageView.builder(

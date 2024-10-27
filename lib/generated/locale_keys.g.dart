@@ -2,6 +2,7 @@
 
 abstract class  LocaleKeys {
   static const something_went_wrong = 'something_went_wrong';
+  static const connection_issue = 'connection_issue';
   static const please_select_a_color = 'please_select_a_color';
   static const congratulations_mission_completed = 'congratulations_mission_completed';
   static const no_categories = 'no_categories';
@@ -32,9 +33,15 @@ abstract class  LocaleKeys {
   static const delete_account = 'delete_account';
   static const yes = 'yes';
   static const no = 'no';
+  static const ok = 'ok';
   static const autofill_after_hint = 'autofill_after_hint';
   static const saving_progress = 'saving_progress';
   static const exit_description = 'exit_description';
   static const delete_description = 'delete_description';
+  static const please_complete_the_last_picture = 'please_complete_the_last_picture';
+  static const some_tiny_parts_of_image_have_painted = 'some_tiny_parts_of_image_have_painted';
+  static const do_not_show_again = 'do_not_show_again';
+  static const new_releases = 'new_releases';
+  static const please_sing_in_to_see_your_progress = 'please_sing_in_to_see_your_progress';
 
 }

@@ -83,12 +83,13 @@ class _Item extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(horizontal: 16.sp),
-        decoration: isSelected
-            ? BoxDecoration(
-                color: AppColors.shared.purple,
-                borderRadius: BorderRadius.all(Radius.circular(10.sp)),
-              )
-            : null,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.shared.purple
+              : AppColors.shared.transparent,
+          border: Border.all(color: AppColors.shared.purple, width: 1.sp),
+          borderRadius: BorderRadius.all(Radius.circular(10.sp)),
+        ),
         child: Text(
           category.name ?? LocaleKeys.oops.tr(),
           style: isSelected ? AppStyles.shared.segment : AppStyles.shared.toast,

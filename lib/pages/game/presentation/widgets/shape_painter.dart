@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:karabookapp/services/game_core/models/svg_models/svg_shape_model.dart';
 
 class ShapePainter extends CustomPainter {
-  ShapePainter({required this.shapes}) : super(repaint: null);
+  ShapePainter({required this.shapes});
 
   final List<SvgShapeModel> shapes;
 
@@ -23,5 +23,8 @@ class ShapePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(ShapePainter oldDelegate) {
+    return oldDelegate.shapes.where((e) => e.isPainted).length !=
+        shapes.where((e) => e.isPainted).length;
+  }
 }

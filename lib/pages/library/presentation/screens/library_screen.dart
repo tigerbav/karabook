@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/utils/utils.dart';
@@ -14,6 +15,7 @@ import 'package:karabookapp/pages/library/presentation/widgets/library_banner.da
 import 'package:karabookapp/pages/library/presentation/widgets/library_categories.dart';
 import 'package:karabookapp/pages/library/presentation/widgets/vip_list_view.dart';
 import 'package:karabookapp/services/game_core/enums/image_type.dart';
+import 'package:karabookapp/services/internet_cubit.dart';
 
 @RoutePage()
 class LibraryScreen extends StatefulWidget {
@@ -39,10 +41,23 @@ class _LibraryScreenState extends State<LibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LibraryCubit, LibraryState>(
-      listener: (context, state) {
-        if (state.isFailure) Utils.showToast(context, state.errorMessage);
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LibraryCubit, LibraryState>(
+          listener: (context, state) {
+            if (state.isFailure) Utils.showToast(context, state.errorMessage);
+          },
+        ),
+        BlocListener<InternetCubit, InternetConnectionStatus?>(
+          listenWhen: (_, c) => c == InternetConnectionStatus.disconnected,
+          listener: (context, state) {
+            Utils.showToast(
+              context,
+              LocaleKeys.connection_issue.tr(),
+            );
+          },
+        ),
+      ],
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
         controller: _controller,

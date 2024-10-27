@@ -1,5 +1,6 @@
 {
   "something_went_wrong":"Something went wrong.",
+  "connection_issue":"Connection issue! Some functions are unavailable.",
   "please_select_a_color":"Please, select a color from the panel below.",
   "congratulations_mission_completed":"Congratulations! Mission completed!",
   "no_categories":"No categories.",
@@ -30,8 +31,14 @@
   "delete_account":"Delete Account",
   "yes":"Yes",
   "no":"No",
+  "ok":"Ok",
   "autofill_after_hint":"Autofill After Hint",
   "saving_progress":"Saving progress...",
   "exit_description":"Are you sure you want to exit? Progress won't be saved on the server.",
-  "delete_description":"Are you sure you want to delete your account? Image progress will be deleted from the server. You can continue drawing images, but progress will be saved only on your device."
+  "delete_description":"Are you sure you want to delete your account? Image progress will be deleted from the server. You can continue drawing images, but progress will be saved only on your device.",
+  "please_complete_the_last_picture":"Please complete the previous picture of the comic to unlock the next one.",
+  "some_tiny_parts_of_image_have_painted":"Some tiny parts of the image have been colored already. When you use hints, the game  auto fills one part of the image. Good luck!",
+  "do_not_show_again": "Don't show again",
+  "new_releases":"New Releases",
+  "please_sing_in_to_see_your_progress":"Please sign in to see your progress."
 }

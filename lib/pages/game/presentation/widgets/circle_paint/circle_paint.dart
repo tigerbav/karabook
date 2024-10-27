@@ -14,7 +14,9 @@ class ManyCirclesPaint extends StatelessWidget {
     final settingCubit = context.read<SettingsCubit>();
 
     return BlocBuilder<GameCubit, GameState>(
-      buildWhen: (p, c) => p.painted != c.painted,
+      buildWhen: (p, c) =>
+          p.painted != c.painted &&
+          (p.zoomScale != c.zoomScale || p.zoomScale == c.zoomScale),
       builder: (context, state) {
         final painted = state.painted;
         return Stack(
@@ -22,10 +24,10 @@ class ManyCirclesPaint extends StatelessWidget {
             for (final shape in painted)
               SingleCirclePaint(
                 shape: shape,
-                onEndCircle: () {},
                 millisecondsAnimation: settingCubit.state.isAnimation
                     ? ColorPicker.duration.inMilliseconds
                     : 0,
+                isLast: (painted.lastOrNull?.id ?? false) == shape.id,
               ),
           ],
         );
@@ -37,14 +39,14 @@ class ManyCirclesPaint extends StatelessWidget {
 class SingleCirclePaint extends StatefulWidget {
   const SingleCirclePaint({
     required this.shape,
-    required this.onEndCircle,
     required this.millisecondsAnimation,
+    required this.isLast,
     Key? key,
   }) : super(key: key);
 
   final SvgShapeModel shape;
-  final VoidCallback onEndCircle;
   final int millisecondsAnimation;
+  final bool isLast;
 
   @override
   State<SingleCirclePaint> createState() => _SingleCirclePaintState();
@@ -62,7 +64,7 @@ class _SingleCirclePaintState extends State<SingleCirclePaint>
       vsync: this,
     )
       ..addListener(_listener)
-      ..forward().then((_) => widget.onEndCircle());
+      ..forward();
   }
 
   @override
@@ -79,6 +81,7 @@ class _SingleCirclePaintState extends State<SingleCirclePaint>
           radius: _animationController.value *
               (widget.shape.transformedPath.getBounds().longestSide + 100),
           selectedShape: widget.shape,
+          isLast: widget.isLast,
         ),
       ),
     );

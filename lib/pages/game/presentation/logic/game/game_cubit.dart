@@ -38,6 +38,8 @@ class GameCubit extends Cubit<GameState> {
   Timer? _timer;
   Timer? _timerServer;
 
+  bool showPopup = true;
+
   Future<void> _init() async {
     final svgString = state.imageModel.imageRawData;
     if (svgString == null) {
@@ -46,24 +48,28 @@ class GameCubit extends Cubit<GameState> {
     }
 
     emit(state.copyWith(status: GameStatus.loading));
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 1500));
+
+    final doNotShowAgain = await SharedPrefManager.shared.get(C.doNotShowAgain);
+    if (doNotShowAgain is bool) showPopup = doNotShowAgain == false;
+
+    final completeIds = state.imageModel.completedIds ?? [];
+
     try {
       PainterTools.shared.setLinesAndShapes(
         svgString: svgString,
         shapes: _svgShapes,
         lines: _svgLines,
-        completedIds: state.imageModel.completedIds ?? [],
+        completedIds: completeIds,
       );
 
       _sortedShapes.addAll(PainterTools.shared.setSortedShapes(_svgShapes));
 
-      final helps = await _getHelpPoints();
-
       emit(state.copyWith(
         status: GameStatus.completeInit,
-        helps: helps,
         svgLines: _svgLines,
         sortedShapes: _sortedShapes,
+        imageModel: state.imageModel.copyWith(completedIds: completeIds),
       ));
     } catch (e) {
       debugPrint(e.toString());
@@ -76,12 +82,6 @@ class GameCubit extends Cubit<GameState> {
       status: GameStatus.failure,
       errorMessage: LocaleKeys.something_went_wrong.tr(),
     ));
-  }
-
-  Future<int> _getHelpPoints() async {
-    final counter = await SharedPrefManager.shared.get(C.helpCounter);
-
-    return (counter != null && counter is int) ? counter : 2;
   }
 
   Future<bool> paintTappedShape(TapUpDetails details) async {
@@ -124,13 +124,33 @@ class GameCubit extends Cubit<GameState> {
     return isPainted;
   }
 
+  void setScale(double scale) {
+    final int tempScale;
+    if (scale > 0 && scale < 1) {
+      tempScale = 1;
+    } else if (scale > 1 && scale < 2) {
+      tempScale = 2;
+    } else if (scale > 2 && scale < 3) {
+      tempScale = 3;
+    } else if (scale > 3 && scale < 4) {
+      tempScale = 4;
+    } else if (scale > 4 && scale < 5) {
+      tempScale = 5;
+    } else if (scale > 5 && scale < 7) {
+      tempScale = 7;
+    } else {
+      tempScale = 10;
+    }
+
+    if (tempScale == state.zoomScale) return;
+
+    emit(state.copyWith(status: GameStatus.idle, zoomScale: tempScale));
+  }
+
   void autoFill({
     required SvgShapeModel shape,
-    required bool autoFill,
     required ColorPickerCubit pickerCubit,
   }) {
-    if (autoFill == false) return;
-
     final updSelectedShapes = state.selectedShapes.map((e) {
       if (e.id == shape.id) {
         return e.copyWith(isPainted: true);
@@ -155,29 +175,21 @@ class GameCubit extends Cubit<GameState> {
 
   void _saveProgress() {
     _timer?.cancel();
-    _timer = Timer(const Duration(seconds: 2), () => _saveGame());
+    _timer = Timer(const Duration(seconds: 1), () => _saveGame());
   }
 
-  Future<void> _saveGame({bool isExit = false}) async {
+  Future<void> _saveGame() async {
     var image = state.isCompleted
         ? ImageModel.completed(state.imageModel)
         : state.imageModel;
 
-    if (isExit) {
-      final screenProgress = await screenshotController.capture();
+    final screenProgress = await screenshotController.capture();
 
-      image = state.imageModel.copyWith(
-        isCompleted: state.isCompleted,
-        screenProgress: screenProgress,
-      );
-    }
-
-    try {
-      if (isExit) await _saveOnServer();
-      await repository.updateImage(image);
-    } catch (_) {
-      debugPrint('Error updating image in local base!!!');
-    }
+    image = state.imageModel.copyWith(
+      isCompleted: state.isCompleted,
+      screenProgress: screenProgress,
+    );
+    await repository.updateImage(image);
   }
 
   Future<void> _vibrationEndColor() async {
@@ -193,10 +205,10 @@ class GameCubit extends Cubit<GameState> {
     emit(GameState(
       status: GameStatus.idle,
       imageModel: state.imageModel,
-      helps: state.helps,
       sortedShapes: state.sortedShapes,
       svgLines: state.svgLines,
       selectedShapes: state.sortedShapes[color] ?? [],
+      zoomScale: state.zoomScale,
     ));
   }
 
@@ -212,7 +224,11 @@ class GameCubit extends Cubit<GameState> {
     }
   }
 
-  void finishGame() => emit(state.copyWith(status: GameStatus.completed));
+  void finishGame() {
+    emit(state.copyWith(status: GameStatus.completed, isCompleted: true));
+
+    _saveGame();
+  }
 
   Future<void> exit() async {
     if (state.isCompleted == false) {
@@ -221,14 +237,19 @@ class GameCubit extends Cubit<GameState> {
 
     _timer?.cancel();
     _timerServer?.cancel();
-    _updateShapes();
-    await _saveGame(isExit: true);
+    // _updateShapes();
+    try {
+      await _saveGame();
+      await _saveOnServer();
+    } catch (_) {
+      debugPrint('Error updating image in local base!!!');
+    }
     emit(state.copyWith(status: GameStatus.exit));
   }
 
   void _tickerForServerRequest() {
-    _timer?.cancel();
-    _timer = Timer(const Duration(minutes: 1), () => _saveOnServer());
+    _timerServer?.cancel();
+    _timerServer = Timer(const Duration(minutes: 1), () => _saveOnServer());
   }
 
   Future<void> _saveOnServer() async {
@@ -245,7 +266,7 @@ class GameCubit extends Cubit<GameState> {
       isCompleted: state.isCompleted,
       modifiedDate: DateTime.now().toUtc().millisecondsSinceEpoch,
     );
-    await repository.updateServer(progress);
+    repository.updateServer(progress);
   }
 
   @override

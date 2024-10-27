@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/pages/app_tab_bar/presentation/enums/tab_bar_type.dart';
-import 'package:karabookapp/pages/app_tab_bar/presentation/screens/tab_bar_screen.dart';
 import 'package:karabookapp/pages/library/domain/repositories/library_repository.dart';
 import 'package:karabookapp/services/isar/models/category_model.dart';
 import 'package:karabookapp/services/navigation/app_router.dart';
@@ -18,6 +17,7 @@ class BannerCubit extends Cubit<BannerState> {
   }
 
   final ILibraryRepository _repository;
+  Timer? _timer;
 
   Future<void> _init() async {
     emit(state.copyWith(status: BannerStatus.loading));
@@ -35,13 +35,25 @@ class BannerCubit extends Cubit<BannerState> {
         ));
       },
     );
+
+    _initTimer();
+  }
+
+  _initTimer() {
+    _timer?.cancel();
+    _timer = Timer(
+      const Duration(seconds: C.bannerSecTick),
+      () {
+        setPage((state.page + 1) % state.categories.length, isTimer: true);
+      },
+    );
   }
 
   void setPage(int page, {bool isTimer = false}) {
-    if (isTimer) return;
+    _initTimer();
 
     emit(state.copyWith(
-      status: BannerStatus.idle,
+      status: isTimer ? BannerStatus.tick : BannerStatus.idle,
       page: page,
     ));
   }
@@ -53,5 +65,11 @@ class BannerCubit extends Cubit<BannerState> {
     } else {
       context.pushRoute(VipRoute(pack: category));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _timer?.cancel();
+    return super.close();
   }
 }

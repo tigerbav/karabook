@@ -54,9 +54,7 @@ class _ImagesGridState extends State<ImagesGrid> {
             crossAxisSpacing: 16.sp,
           ),
           itemBuilder: (_, index) {
-            if (widget.images[index] == null) {
-              return const EmptyImage(isInfinityW: true);
-            }
+            if (widget.images[index] == null) return const EmptyImage();
 
             return ImagesGridItem(
               widget.images[index]!,
@@ -66,6 +64,8 @@ class _ImagesGridState extends State<ImagesGrid> {
                 context,
                 widget.images[index]!,
               ),
+              hasTag: widget.imageType == ImageType.byCategory ||
+                  widget.imageType == ImageType.portfolio,
             );
           },
         ),

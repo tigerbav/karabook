@@ -61,6 +61,11 @@ const ImageModelSchema = CollectionSchema(
       id: 8,
       name: r'sort',
       type: IsarType.long,
+    ),
+    r'tag': PropertySchema(
+      id: 9,
+      name: r'tag',
+      type: IsarType.string,
     )
   },
   estimateSize: _imageModelEstimateSize,
@@ -101,6 +106,12 @@ int _imageModelEstimateSize(
       bytesCount += 3 + value.length * 8;
     }
   }
+  {
+    final value = object.tag;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -119,6 +130,7 @@ void _imageModelSerialize(
   writer.writeLong(offsets[6], object.modifiedDate);
   writer.writeLongList(offsets[7], object.screenProgress);
   writer.writeLong(offsets[8], object.sort);
+  writer.writeString(offsets[9], object.tag);
 }
 
 ImageModel _imageModelDeserialize(
@@ -138,6 +150,7 @@ ImageModel _imageModelDeserialize(
     modifiedDate: reader.readLongOrNull(offsets[6]),
     screenProgress: reader.readLongList(offsets[7]),
     sort: reader.readLongOrNull(offsets[8]) ?? 0,
+    tag: reader.readStringOrNull(offsets[9]),
   );
   return object;
 }
@@ -167,6 +180,8 @@ P _imageModelDeserializeProp<P>(
       return (reader.readLongList(offset)) as P;
     case 8:
       return (reader.readLongOrNull(offset) ?? 0) as P;
+    case 9:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1043,6 +1058,152 @@ extension ImageModelQueryFilter
       ));
     });
   }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'tag',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'tag',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tag',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'tag',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'tag',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'tag',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'tag',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'tag',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'tag',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'tag',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tag',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterFilterCondition> tagIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'tag',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension ImageModelQueryObject
@@ -1134,6 +1295,18 @@ extension ImageModelQuerySortBy
   QueryBuilder<ImageModel, ImageModel, QAfterSortBy> sortBySortDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'sort', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterSortBy> sortByTag() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tag', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterSortBy> sortByTagDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tag', Sort.desc);
     });
   }
 }
@@ -1235,6 +1408,18 @@ extension ImageModelQuerySortThenBy
       return query.addSortBy(r'sort', Sort.desc);
     });
   }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterSortBy> thenByTag() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tag', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QAfterSortBy> thenByTagDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tag', Sort.desc);
+    });
+  }
 }
 
 extension ImageModelQueryWhereDistinct
@@ -1291,6 +1476,13 @@ extension ImageModelQueryWhereDistinct
   QueryBuilder<ImageModel, ImageModel, QDistinct> distinctBySort() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'sort');
+    });
+  }
+
+  QueryBuilder<ImageModel, ImageModel, QDistinct> distinctByTag(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'tag', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1356,6 +1548,12 @@ extension ImageModelQueryProperty
   QueryBuilder<ImageModel, int, QQueryOperations> sortProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'sort');
+    });
+  }
+
+  QueryBuilder<ImageModel, String?, QQueryOperations> tagProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'tag');
     });
   }
 }

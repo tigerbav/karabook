@@ -1,5 +1,8 @@
 class Links {
   static const _baseUrl = 'http://185.65.244.209:1974';
+
+  static const instagram = 'https://www.instagram.com/karabookcolor/';
+
   static const privacy =
       'https://www.privacypolicies.com/live/e6ecf303-92af-4de5-9b66-c1b7b4d9a9ab';
 
@@ -23,6 +26,7 @@ class Links {
   static const userAdd = '$_baseUrl/api/user/add';
   static const userDelete = '$_baseUrl/api/user/delete/byId';
   static const userByEmail = '$_baseUrl/api/user/get/all/ByUserEmail/';
+  static const userPatch = '$_baseUrl/api/user/update/hintsAmount/';
 
   // progress
   static const progressByUser =
@@ -31,4 +35,9 @@ class Links {
   static const progressUpdate = '$_baseUrl/api/image/progress/update';
   static const deleteByUserAndImage =
       '$_baseUrl/api/image/progress/delete/ByUserIdAndImageId';
+
+  // achievements
+  static const achievementAll = '$_baseUrl/api/achivement/get/all';
+  static const achievementProgressAll =
+      '$_baseUrl/api/achivements-progress/get/byUserId';
 }

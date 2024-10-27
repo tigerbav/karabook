@@ -25,7 +25,6 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> _init() async {
     final vibration = await SharedPrefManager.shared.get(C.vibration);
     final fillAnimation = await SharedPrefManager.shared.get(C.fillAnimation);
-    final autoFill = await SharedPrefManager.shared.get(C.fillHint);
 
     String? email;
 
@@ -49,7 +48,6 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(SettingsState(
       isVibration: vibration is bool ? vibration : false,
       isAnimation: fillAnimation is bool ? fillAnimation : false,
-      isFillHint: autoFill is bool ? autoFill : false,
       email: email != null && email.isNotEmpty ? email : null,
       isAds: isAdsAvailable == false,
       userId: userId,
@@ -64,11 +62,6 @@ class SettingsCubit extends Cubit<SettingsState> {
   void switchAnimation() {
     SharedPrefManager.shared.write(C.fillAnimation, !state.isAnimation);
     emit(state.copyWith(isAnimation: !state.isAnimation));
-  }
-
-  void switchFillHint() {
-    SharedPrefManager.shared.write(C.fillHint, !state.isFillHint);
-    emit(state.copyWith(isFillHint: !state.isFillHint));
   }
 
   Future<void> googleSignIn() async {
@@ -107,7 +100,6 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(SettingsState(
       isAnimation: state.isAnimation,
       isVibration: state.isVibration,
-      isFillHint: state.isFillHint,
       isAds: state.isAds,
       email: null,
       userId: null,

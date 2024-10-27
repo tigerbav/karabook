@@ -8,13 +8,11 @@ class NumberPainter extends CustomPainter {
   NumberPainter({
     required this.shapes,
     required this.scale,
-    required this.completedIds,
     required this.colors,
   });
 
   final List<SvgShapeModel> shapes;
   final double scale;
-  final List<int> completedIds;
   final List<ColorItemModel> colors;
 
   @override
@@ -42,9 +40,7 @@ class NumberPainter extends CustomPainter {
           minWidth: 0.5,
           maxWidth: 100,
         );
-      if (completedIds.contains(shape.id) == false &&
-          canShowByScale(shape) &&
-          isShapeNotBlack(shape)) {
+      if (canShowByScale(shape) && isShapeNotBlack(shape)) {
         textPainter.paint(
           canvas,
           Offset(
@@ -57,17 +53,20 @@ class NumberPainter extends CustomPainter {
   }
 
   bool canShowByScale(SvgShapeModel shape) {
-    return scale > 0 && shape.number.size >= 16 && shape.number.size <= 25 ||
-        scale > 1 && shape.number.size >= 10 && shape.number.size <= 16 ||
-        scale > 2 && shape.number.size >= 8 && shape.number.size < 10 ||
-        scale > 3 && shape.number.size >= 6 && shape.number.size < 8 ||
-        scale > 4 && shape.number.size >= 5 && shape.number.size < 6 ||
-        scale > 5 && shape.number.size >= 4 && shape.number.size < 5 ||
-        scale > 7 && shape.number.size >= 1 && shape.number.size < 4;
+    return scale >= 0 && shape.number.size >= 16 && shape.number.size <= 25 ||
+        scale >= 1 && shape.number.size >= 10 && shape.number.size <= 16 ||
+        scale >= 2 && shape.number.size >= 8 && shape.number.size < 10 ||
+        scale >= 3 && shape.number.size >= 6 && shape.number.size < 8 ||
+        scale >= 4 && shape.number.size >= 5 && shape.number.size < 6 ||
+        scale >= 5 && shape.number.size >= 4 && shape.number.size < 5 ||
+        scale >= 7 && shape.number.size >= 1 && shape.number.size < 4;
   }
 
   bool isShapeNotBlack(SvgShapeModel shape) => shape.fill.value != 0xff000000;
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant NumberPainter oldDelegate) {
+    return oldDelegate.scale != scale ||
+        oldDelegate.shapes.length != shapes.length;
+  }
 }

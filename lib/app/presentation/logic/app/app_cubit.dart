@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:karabookapp/app/presentation/screens/app.dart';
 import 'package:karabookapp/services/managers/data_manager.dart';
+import 'package:karabookapp/services/managers/one_signal_manager.dart';
 
 part 'app_state.dart';
 
@@ -17,6 +18,7 @@ class AppCubit extends Cubit<AppState> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    OneSignalManager.shared.init();
   }
 
   Future<void> goToApp() async {

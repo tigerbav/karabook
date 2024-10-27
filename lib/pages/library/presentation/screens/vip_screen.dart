@@ -121,10 +121,9 @@ class _VipScreenState extends State<_VipScreen> {
                           ),
                         );
                       }
-                      final isAvailable = state.isAvailable;
 
                       return PrimaryButton(
-                        text: isAvailable
+                        text: state.isAvailable
                             ? LocaleKeys.acquired.tr()
                             : (state.offering?.lifetime?.storeProduct
                                     .priceString ??

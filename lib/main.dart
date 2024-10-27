@@ -12,6 +12,7 @@ import 'package:karabookapp/common/widgets/restart_widget.dart';
 import 'package:karabookapp/generated/codegen_loader.g.dart';
 import 'package:karabookapp/services/auth_service.dart';
 import 'package:karabookapp/services/in_app_purchases/purchases_manager.dart';
+import 'package:karabookapp/services/internet_cubit.dart';
 import 'package:karabookapp/services/isar/isar_service.dart';
 
 void main() async {
@@ -36,6 +37,7 @@ void main() async {
           builder: (context, child) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => AppCubit()),
+              BlocProvider(create: (_) => InternetCubit()),
               BlocProvider(
                 create: (_) => SettingsCubit(
                   SettingRepository(SettingDataSource()),

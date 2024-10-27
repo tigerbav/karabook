@@ -33,4 +33,9 @@ class ApiProvider {
     final response = await Dio().put(url, options: _options, data: data);
     return response;
   }
+
+  Future<Response> patch(String url, Map<String, dynamic> data) async {
+    final response = await Dio().patch(url, options: _options, data: data);
+    return response;
+  }
 }

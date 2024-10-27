@@ -5,10 +5,12 @@ class CirclePainter extends CustomPainter {
   const CirclePainter({
     required this.radius,
     required this.selectedShape,
+    required this.isLast,
   });
 
   final SvgShapeModel selectedShape;
   final double radius;
+  final bool isLast;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -24,7 +26,7 @@ class CirclePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(CirclePainter oldDelegate) {
+    return isLast;
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:karabookapp/app/presentation/logic/settings/settings_cubit.dart';
 import 'package:karabookapp/common/app_colors.dart';
 import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_resources.dart';
@@ -61,7 +60,6 @@ class _HelpButtonState extends State<HelpButton>
               onTap: () {
                 final gameCubit = context.read<GameCubit>();
                 final rewardCubit = context.read<RewardsCubit>();
-                final settingCubit = context.read<SettingsCubit>();
                 final colorPickerCubit = context.read<ColorPickerCubit>();
 
                 // if (rewardCubit.state.noAds == false) {
@@ -82,14 +80,13 @@ class _HelpButtonState extends State<HelpButton>
                   if (gameCubit.state.imageModel.completedIds
                           ?.contains(shape.id) ==
                       false) {
+                    _animateHelpInitialize(shape);
                     gameCubit.autoFill(
                       shape: shape,
-                      autoFill: settingCubit.state.isFillHint,
                       pickerCubit: colorPickerCubit,
                     );
-                    _animateHelpInitialize(shape);
                     if (rewardCubit.state.noAds == false) {
-                      rewardCubit.increaseHelpCount();
+                      rewardCubit.decreaseHelpCount();
                     }
                     break;
                   }
@@ -156,9 +153,10 @@ class _HelpButtonState extends State<HelpButton>
     _controllerReset?.reset();
     _animationReset = Matrix4Tween(
       begin: widget.transformationController.value,
-      end: Matrix4Transform()
-          .scale(C.maxZoom, origin: Offset(shape.number.dx, shape.number.dy))
-          .matrix4,
+      end: Matrix4.identity(),
+      // Matrix4Transform()
+      //     .scale(C.maxZoom, origin: Offset(shape.number.dx, shape.number.dy))
+      //     .matrix4,
     ).animate(_controllerReset!);
     _animationReset!.addListener(_onAnimateReset);
     _controllerReset?.forward();

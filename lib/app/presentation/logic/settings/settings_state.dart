@@ -4,7 +4,6 @@ class SettingsState extends Equatable {
   const SettingsState({
     this.isVibration = false,
     this.isAnimation = false,
-    this.isFillHint = false,
     this.isAds = true,
     this.email,
     this.userId,
@@ -12,7 +11,6 @@ class SettingsState extends Equatable {
 
   final bool isVibration;
   final bool isAnimation;
-  final bool isFillHint;
   final bool isAds;
   final String? email;
   final int? userId;
@@ -23,10 +21,8 @@ class SettingsState extends Equatable {
     switch (type) {
       case SettingsType.vibration:
         return isVibration;
-      case SettingsType.fill:
-        return isAnimation;
-      case SettingsType.autoFill:
-        return isFillHint;
+      // case SettingsType.fill:
+      //   return isAnimation;
       default:
         return null;
     }
@@ -35,7 +31,6 @@ class SettingsState extends Equatable {
   SettingsState copyWith({
     bool? isVibration,
     bool? isAnimation,
-    bool? isFillHint,
     bool? isAds,
     String? email,
     int? userId,
@@ -43,7 +38,6 @@ class SettingsState extends Equatable {
     return SettingsState(
       isVibration: isVibration ?? this.isVibration,
       isAnimation: isAnimation ?? this.isAnimation,
-      isFillHint: isFillHint ?? this.isFillHint,
       isAds: isAds ?? this.isAds,
       email: email ?? this.email,
       userId: userId ?? this.userId,
@@ -54,7 +48,6 @@ class SettingsState extends Equatable {
   List<Object?> get props => [
         isVibration,
         isAnimation,
-        isFillHint,
         isAds,
         email,
         userId,

@@ -76,23 +76,23 @@ class _Item extends StatelessWidget {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            width: 24.sp,
-            padding: EdgeInsets.symmetric(vertical: 2.sp, horizontal: 4.sp),
-            decoration: BoxDecoration(
-              color: AppColors.shared.darkPurple,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10.sp)),
-              border: Border.all(color: AppColors.shared.purple),
-            ),
-            child: Text(
-              day.toString(),
-              textAlign: TextAlign.center,
-              style: AppStyles.shared.segment,
-            ),
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment.bottomCenter,
+        //   child: Container(
+        //     width: 24.sp,
+        //     padding: EdgeInsets.symmetric(vertical: 2.sp, horizontal: 4.sp),
+        //     decoration: BoxDecoration(
+        //       color: AppColors.shared.darkPurple,
+        //       borderRadius: BorderRadius.vertical(top: Radius.circular(10.sp)),
+        //       border: Border.all(color: AppColors.shared.purple),
+        //     ),
+        //     child: Text(
+        //       day.toString(),
+        //       textAlign: TextAlign.center,
+        //       style: AppStyles.shared.segment,
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

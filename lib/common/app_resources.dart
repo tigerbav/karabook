@@ -2,7 +2,6 @@ class AppResources {
   static const _pathToIcons = 'assets/icons';
   static const _pathToImages = 'assets/images';
   static const _pathToLottie = 'assets/lottie';
-  static const _pathToAchievement = 'assets/icons/achievements';
   static const _pathToSettings = 'assets/icons/settings';
 
   // tabs
@@ -18,6 +17,7 @@ class AppResources {
 
   //library page
   static const bannerImage = '$_pathToImages/banner.png';
+  static const octopus = '$_pathToImages/octopus.png';
 
   //events page
   static const dailyGift = '$_pathToImages/daily_gift.png';
@@ -34,24 +34,6 @@ class AppResources {
   static const attach = '$_pathToIcons/attach.svg';
   static const fullImage = '$_pathToIcons/full_image.svg';
   static const hints = '$_pathToIcons/hints.svg';
-
-  //achievement
-  static const butterfly = '$_pathToAchievement/butterfly.svg';
-  static const cities = '$_pathToAchievement/cities.svg';
-  static const design = '$_pathToAchievement/design.svg';
-  static const diamond = '$_pathToAchievement/diamond.svg';
-  static const fantasy = '$_pathToAchievement/fantasy.svg';
-  static const fauna = '$_pathToAchievement/fauna.svg';
-  static const flowers = '$_pathToAchievement/flowers.svg';
-  static const food = '$_pathToAchievement/food.svg';
-  static const gold = '$_pathToAchievement/gold.svg';
-  static const mandala = '$_pathToAchievement/mandala.svg';
-  static const nature = '$_pathToAchievement/nature.svg';
-  static const people = '$_pathToAchievement/people.svg';
-  static const platinum = '$_pathToAchievement/platinum.svg';
-  static const silver = '$_pathToAchievement/silver.svg';
-  static const transport = '$_pathToAchievement/transport.svg';
-  static const vip = '$_pathToAchievement/vip.svg';
 
   //settings icons
   static const vibration = '$_pathToSettings/vibro.svg';

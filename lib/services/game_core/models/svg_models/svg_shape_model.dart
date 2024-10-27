@@ -30,14 +30,20 @@ class SvgShapeModel {
   }) {
     final id = int.tryParse(svgElement.getAttribute('id') ?? '-1') ?? -1;
     final d = svgElement.getAttribute('d').toString();
+
     final transformPath = parseSvgPathData(d).transform(matrix.storage);
+    final hexColor = getHexColorFromAttrs(svgElement);
+    var isPainted = hexColor == '#000000' || completedIds.contains(id);
+
+    if (isPainted == false) {
+      isPainted = autoFillSmallShapes(transformPath, completedIds);
+    }
 
     return SvgShapeModel(
       id: id,
       d: svgElement.getAttribute('d').toString(),
-      fill: HexColor(getHexColorFromAttrs(svgElement)),
-      isPainted: getHexColorFromAttrs(svgElement) == '#000000' ||
-          completedIds.contains(id),
+      fill: HexColor(hexColor),
+      isPainted: isPainted,
       transformedPath: transformPath,
       number: _defineNumber(
         transformPath,
@@ -47,10 +53,10 @@ class SvgShapeModel {
   }
 
   static String getHexColorFromAttrs(XmlElement svgElement) {
-    final getHexColorFromStyle =
-        svgElement.getAttribute('fill')?.hexFromColorName ??
-            svgElement.getAttribute('fill') ??
-            _getHexColorFromStyle(svgElement.getAttribute('style').toString());
+    final attributeFill = svgElement.getAttribute('fill');
+    final getHexColorFromStyle = attributeFill?.hexFromColorName ??
+        attributeFill ??
+        _getHexColorFromStyle(svgElement.getAttribute('style').toString());
     return getHexColorFromStyle;
   }
 
@@ -60,6 +66,28 @@ class SvgShapeModel {
     final colorValue = fillStyle.replaceAll('fill:', '');
 
     return colorValue.hexFromColorName ?? colorValue;
+  }
+
+  /// auto fill a little parts of images
+  static bool autoFillSmallShapes(
+    Path transformedPath,
+    List<int> completedIds,
+  ) {
+    final bounds = transformedPath.getBounds();
+
+    final topLeftOffset = bounds.topLeft;
+    final bottomRightOffset = bounds.bottomRight;
+    int allPixels = 0;
+    int allFilledPixels = 0;
+
+    for (var x = topLeftOffset.dx; x <= bottomRightOffset.dx; x++) {
+      for (var y = topLeftOffset.dy; y <= bottomRightOffset.dy; y++) {
+        allPixels++;
+        if (transformedPath.contains(Offset(x, y))) allFilledPixels++;
+      }
+    }
+    if (allPixels <= 20) return true;
+    return false;
   }
 
   static PainterNumber _defineNumber(Path transformedPath, int id) {

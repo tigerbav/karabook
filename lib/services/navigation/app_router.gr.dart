@@ -21,12 +21,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AchievementScreen(),
       );
     },
-    ContactUsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ContactUsScreen(),
-      );
-    },
     EmptyRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -64,6 +58,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const LibraryScreen(),
+      );
+    },
+    PortfolioWrappedRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(child: const PortfolioProvider()),
       );
     },
     PortfolioRoute.name: (routeData) {
@@ -107,20 +107,6 @@ class AchievementRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'AchievementRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ContactUsScreen]
-class ContactUsRoute extends PageRouteInfo<void> {
-  const ContactUsRoute({List<PageRouteInfo>? children})
-      : super(
-          ContactUsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ContactUsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
@@ -243,6 +229,20 @@ class LibraryRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'LibraryRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [PortfolioProvider]
+class PortfolioWrappedRoute extends PageRouteInfo<void> {
+  const PortfolioWrappedRoute({List<PageRouteInfo>? children})
+      : super(
+          PortfolioWrappedRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PortfolioWrappedRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

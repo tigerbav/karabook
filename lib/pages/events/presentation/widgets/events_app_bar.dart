@@ -16,10 +16,9 @@ class EventsAppBar extends AppBar {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  LocaleKeys.daily.tr(),
+                  LocaleKeys.new_releases.tr(),
                   style: AppStyles.shared.h1,
                 ),
-                // SvgPicture.asset(AppResources.notification),
               ],
             ),
           ),

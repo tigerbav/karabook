@@ -25,7 +25,7 @@ class FadePainter extends CustomPainter {
       canvas.drawPath(
         shape.transformedPath,
         Paint()
-          ..color = _color.value!
+          ..color = shape.isPainted ? shape.fill : _color.value!
           ..blendMode = BlendMode.src
           ..style = PaintingStyle.fill,
       );

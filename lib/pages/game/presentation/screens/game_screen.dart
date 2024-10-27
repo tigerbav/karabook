@@ -9,6 +9,9 @@ import 'package:karabookapp/common/app_constants.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/common/app_styles.dart';
 import 'package:karabookapp/common/utils/utils.dart';
+import 'package:karabookapp/common/widgets/app_popup.dart';
+import 'package:karabookapp/common/widgets/checkbox/app_checkbox.dart';
+import 'package:karabookapp/common/widgets/checkbox/checkbox_cubit.dart';
 import 'package:karabookapp/generated/locale_keys.g.dart';
 import 'package:karabookapp/pages/game/data/datasources/game_datasource.dart';
 import 'package:karabookapp/pages/game/domain/repositories/game_repository.dart';
@@ -17,7 +20,6 @@ import 'package:karabookapp/pages/game/presentation/logic/game/game_cubit.dart';
 import 'package:karabookapp/pages/game/presentation/logic/rewards/rewards_cubit.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/banner_widget.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/checkers_paint/checkers_paint.dart';
-import 'package:karabookapp/pages/game/presentation/widgets/circle_paint/circle_paint.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/color_picker.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/fade_paint/fade_paint.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/help_button.dart';
@@ -26,6 +28,7 @@ import 'package:karabookapp/pages/game/presentation/widgets/reward_button.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/screenshot_widget.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/zoom_out_button.dart';
 import 'package:karabookapp/services/isar/models/image_model.dart';
+import 'package:karabookapp/services/managers/shared_pref_manager.dart';
 
 @RoutePage()
 class GameScreen extends StatelessWidget {
@@ -38,16 +41,19 @@ class GameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final repo = GameRepository(GameDataSource());
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (_) => GameCubit(
-            repository: GameRepository(GameDataSource()),
+            repository: repo,
             imageModel: imageModel,
           ),
         ),
         BlocProvider(create: (_) => ColorPickerCubit()),
-        BlocProvider(create: (_) => RewardsCubit()),
+        BlocProvider(create: (_) => RewardsCubit(repo)),
+        BlocProvider(create: (_) => CheckBoxCubit()),
       ],
       child: const _GameView(),
     );
@@ -65,7 +71,6 @@ class _GameViewState extends State<_GameView>
     with SingleTickerProviderStateMixin {
   final _transformationController = TransformationController();
   late final AnimationController _fadeController;
-  final _scaleNotifier = ValueNotifier(1.0);
 
   @override
   void initState() {
@@ -77,15 +82,14 @@ class _GameViewState extends State<_GameView>
     );
 
     _transformationController.addListener(() {
-      _scaleNotifier.value =
-          _transformationController.value.getMaxScaleOnAxis();
+      final scale = _transformationController.value.getMaxScaleOnAxis();
+      context.read<GameCubit>().setScale(scale);
     });
   }
 
   @override
   void dispose() {
     _transformationController.dispose();
-    _scaleNotifier.dispose();
     super.dispose();
   }
 
@@ -98,8 +102,7 @@ class _GameViewState extends State<_GameView>
       listeners: [
         BlocListener<ColorPickerCubit, ColorPickerState>(
           listenWhen: (p, c) =>
-              p.selected?.color != c.selected?.color ||
-              p.activePickers.isEmpty != c.activePickers.isEmpty,
+              p.selected?.color != c.selected?.color || c.activePickers.isEmpty,
           listener: (context, state) {
             gameCubit.setSelectedShapes(state.selected?.color);
             _fadeController.forward(from: 0.0);
@@ -117,8 +120,37 @@ class _GameViewState extends State<_GameView>
                   LocaleKeys.congratulations_mission_completed.tr(),
                   isError: false,
                 );
+              //
               case GameStatus.exit:
                 Navigator.pop(context);
+              //
+              case GameStatus.completeInit:
+                if (gameCubit.showPopup == false) return;
+                Utils.showPopUp(
+                  context,
+                  BlocProvider.value(
+                    value: context.read<CheckBoxCubit>(),
+                    child: AppPopup(
+                      description:
+                          LocaleKeys.some_tiny_parts_of_image_have_painted.tr(),
+                      justDescription: true,
+                      extraWidget: AppCheckbox(
+                        title: LocaleKeys.do_not_show_again.tr(),
+                        onTap: context.read<CheckBoxCubit>().toggle,
+                      ),
+                      onTapYes: () {
+                        if (context.read<CheckBoxCubit>().state) {
+                          SharedPrefManager.shared.write(
+                            C.doNotShowAgain,
+                            true,
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                );
+
+              //
               default:
                 break;
             }
@@ -164,11 +196,11 @@ class _GameViewState extends State<_GameView>
                           height: 1.sh,
                           child: const CheckersPaint(),
                         ),
-                        SizedBox(
-                          width: 1.sw,
-                          height: 1.sh,
-                          child: const ManyCirclesPaint(),
-                        ),
+                        // SizedBox(
+                        //   width: 1.sw,
+                        //   height: 1.sh,
+                        //   child: const ManyCirclesPaint(),
+                        // ),
                         SizedBox(
                           width: 1.sw,
                           height: 1.sh,
@@ -179,27 +211,21 @@ class _GameViewState extends State<_GameView>
                           child: SizedBox(
                             width: 1.sw,
                             height: 1.sh,
-                            child: ValueListenableBuilder(
-                              valueListenable: _scaleNotifier,
-                              builder: (_, scale, __) =>
-                                  BlocBuilder<GameCubit, GameState>(
-                                buildWhen: (p, c) =>
-                                    p.imageModel.completedIds !=
-                                    c.imageModel.completedIds,
-                                builder: (_, state) {
-                                  return RepaintBoundary(
-                                    child: CustomPaint(
-                                      painter: NumberPainter(
-                                        shapes: gameCubit.state.allShapes,
-                                        colors: colorPickerCubit.state.items,
-                                        scale: scale,
-                                        completedIds:
-                                            state.imageModel.completedIds ?? [],
-                                      ),
+                            child: BlocBuilder<GameCubit, GameState>(
+                              buildWhen: (p, c) =>
+                                  p.unPainted != c.unPainted ||
+                                  p.zoomScale != c.zoomScale,
+                              builder: (_, state) {
+                                return RepaintBoundary(
+                                  child: CustomPaint(
+                                    painter: NumberPainter(
+                                      shapes: state.unPainted,
+                                      colors: colorPickerCubit.state.items,
+                                      scale: state.zoomScale.toDouble(),
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),

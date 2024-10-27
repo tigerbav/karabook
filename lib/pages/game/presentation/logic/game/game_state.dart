@@ -19,7 +19,8 @@ class GameState extends Equatable {
     this.sortedShapes = const {},
     this.svgLines = const [],
     this.selectedShapes = const [],
-    this.helps = 0,
+    this.zoomScale = 1,
+    this.isCompleted = false,
     this.errorMessage,
   });
 
@@ -28,13 +29,12 @@ class GameState extends Equatable {
   final Map<Color, List<SvgShapeModel>> sortedShapes;
   final List<SvgLineModel> svgLines;
   final List<SvgShapeModel> selectedShapes;
-  final int helps;
+  final int zoomScale;
+  final bool isCompleted;
   final String? errorMessage;
 
-  bool get isExit => status == GameStatus.exit;
   bool get isSaving => status == GameStatus.save;
   bool get isLoading => status == GameStatus.loading;
-  bool get isCompleted => status == GameStatus.completed;
   bool get isCompleteInit => status == GameStatus.completeInit;
 
   List<SvgShapeModel> get allShapes =>
@@ -55,13 +55,23 @@ class GameState extends Equatable {
     return sortedList;
   }
 
+  List<SvgShapeModel> get unPainted {
+    final list = <SvgShapeModel>[];
+    for (final shape in allShapes) {
+      if (imageModel.completedIds?.contains(shape.id) == false) list.add(shape);
+    }
+
+    return list;
+  }
+
   GameState copyWith({
     required GameStatus status,
     ImageModel? imageModel,
     Map<Color, List<SvgShapeModel>>? sortedShapes,
     List<SvgLineModel>? svgLines,
     List<SvgShapeModel>? selectedShapes,
-    int? helps,
+    int? zoomScale,
+    bool? isCompleted,
     String? errorMessage,
   }) {
     return GameState(
@@ -70,7 +80,8 @@ class GameState extends Equatable {
       sortedShapes: sortedShapes ?? this.sortedShapes,
       svgLines: svgLines ?? this.svgLines,
       selectedShapes: selectedShapes ?? this.selectedShapes,
-      helps: helps ?? this.helps,
+      zoomScale: zoomScale ?? this.zoomScale,
+      isCompleted: isCompleted ?? this.isCompleted,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
@@ -83,6 +94,7 @@ class GameState extends Equatable {
         sortedShapes,
         svgLines,
         selectedShapes,
-        helps,
+        isCompleted,
+        zoomScale,
       ];
 }

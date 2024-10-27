@@ -19,6 +19,7 @@ class Utils {
       ..init(context)
       ..showToast(
         gravity: redBg ? ToastGravity.BOTTOM : ToastGravity.TOP,
+        toastDuration: const Duration(seconds: 5),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           decoration: BoxDecoration(
@@ -32,7 +33,8 @@ class Utils {
               const SizedBox(width: 12),
               Text(
                 text ?? LocaleKeys.something_went_wrong.tr(),
-                style: AppStyles.shared.toast,
+                style:
+                    isError ? AppStyles.shared.segment : AppStyles.shared.toast,
               ),
             ],
           ),
