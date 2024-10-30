@@ -64,9 +64,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
         primary: false,
         children: [
           const LibraryBanner(),
-          SizedBox(height: 20.sp),
+          const SizedBox(height: 20),
           const LibraryCategories(),
-          SizedBox(height: 20.sp),
+          const SizedBox(height: 20),
           BlocBuilder<LibraryCubit, LibraryState>(
             buildWhen: (p, c) =>
                 p.imagesByCategory != c.imagesByCategory ||

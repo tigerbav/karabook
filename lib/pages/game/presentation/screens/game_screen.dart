@@ -159,137 +159,147 @@ class _GameViewState extends State<_GameView>
       ],
       child: PopScope(
         canPop: false,
-        child: Scaffold(
-          backgroundColor: AppColors.shared.white,
-          body: BlocConsumer<GameCubit, GameState>(
-            listenWhen: (_, c) => c.isCompleteInit,
-            listener: (context, state) {
-              colorPickerCubit.initColorPicker(state.sortedShapes);
-            },
-            buildWhen: (p, c) =>
-                p.isLoading != c.isLoading || p.isSaving != c.isSaving,
-            builder: (context, state) {
-              if (state.isLoading || state.isSaving) {
-                return Center(
-                  child: Text(
-                    state.isSaving
-                        ? LocaleKeys.saving_progress.tr()
-                        : LocaleKeys.loading.tr(),
-                    style: AppStyles.shared.h1Pink,
-                  ),
-                );
-              }
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  InteractiveViewer(
-                    transformationController: _transformationController,
-                    boundaryMargin: EdgeInsets.all(100.sp),
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            return Scaffold(
+              backgroundColor: AppColors.shared.white,
+              body: BlocConsumer<GameCubit, GameState>(
+                listenWhen: (_, c) => c.isCompleteInit,
+                listener: (context, state) {
+                  colorPickerCubit.initColorPicker(state.sortedShapes);
+                },
+                buildWhen: (p, c) =>
+                    p.isLoading != c.isLoading || p.isSaving != c.isSaving,
+                builder: (context, state) {
+                  if (state.isLoading || state.isSaving) {
+                    return Center(
+                      child: Text(
+                        state.isSaving
+                            ? LocaleKeys.saving_progress.tr()
+                            : LocaleKeys.loading.tr(),
+                        style: AppStyles.shared.h1Pink,
+                      ),
+                    );
+                  }
+                  final width = 1.sw;
+                  final height = 1.sh;
 
-                    /// BIG ZOOM CAN BREAK THE APP!!! BE CAREFULLY!!!
-                    maxScale: C.maxZoom,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: 1.sw,
-                          height: 1.sh,
-                          child: const CheckersPaint(),
-                        ),
-                        // SizedBox(
-                        //   width: 1.sw,
-                        //   height: 1.sh,
-                        //   child: const ManyCirclesPaint(),
-                        // ),
-                        SizedBox(
-                          width: 1.sw,
-                          height: 1.sh,
-                          child: FadePaint(_fadeController),
-                        ),
-                        const ScreenshotWidget(),
-                        IgnorePointer(
-                          child: SizedBox(
-                            width: 1.sw,
-                            height: 1.sh,
-                            child: BlocBuilder<GameCubit, GameState>(
-                              buildWhen: (p, c) =>
-                                  p.unPainted != c.unPainted ||
-                                  p.zoomScale != c.zoomScale,
-                              builder: (_, state) {
-                                return RepaintBoundary(
-                                  child: CustomPaint(
-                                    painter: NumberPainter(
-                                      shapes: state.unPainted,
-                                      colors: colorPickerCubit.state.items,
-                                      scale: state.zoomScale.toDouble(),
-                                    ),
-                                  ),
-                                );
-                              },
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      InteractiveViewer(
+                        transformationController: _transformationController,
+                        boundaryMargin: EdgeInsets.all(100.sp),
+
+                        /// BIG ZOOM CAN BREAK THE APP!!! BE CAREFULLY!!!
+                        maxScale: C.maxZoom,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SizedBox(
+                              width: width,
+                              height: height,
+                              child: const CheckersPaint(),
                             ),
-                          ),
+                            // SizedBox(
+                            //   width: 1.sw,
+                            //   height: 1.sh,
+                            //   child: const ManyCirclesPaint(),
+                            // ),
+                            SizedBox(
+                              width: width,
+                              height: height,
+                              child: FadePaint(_fadeController),
+                            ),
+                            ScreenshotWidget(width: width, height: height),
+                            IgnorePointer(
+                              child: SizedBox(
+                                width: width,
+                                height: height,
+                                child: BlocBuilder<GameCubit, GameState>(
+                                  buildWhen: (p, c) =>
+                                      p.unPainted != c.unPainted ||
+                                      p.zoomScale != c.zoomScale,
+                                  builder: (_, state) {
+                                    return RepaintBoundary(
+                                      child: CustomPaint(
+                                        painter: NumberPainter(
+                                          shapes: state.unPainted,
+                                          colors: colorPickerCubit.state.items,
+                                          scale: state.zoomScale.toDouble(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top + 10,
-                    left: 10,
-                    child: IconButton(
-                      onPressed: () {
-                        colorPickerCubit.resetColor();
-                        gameCubit.exit();
-                      },
-                      icon: SvgPicture.asset(AppResources.back),
-                    ),
-                  ),
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top + 10.sp,
-                    right: 10.sp,
-                    child: HelpButton(
-                      transformationController: _transformationController,
-                    ),
-                  ),
-                  BlocBuilder<RewardsCubit, RewardsState>(
-                    buildWhen: (p, c) => p.noAds != c.noAds,
-                    builder: (context, state) {
-                      if (state.noAds == true) return const SizedBox();
-                      return const RewardButton();
-                    },
-                  ),
-                  Positioned(
-                    bottom: 160.sp,
-                    right: 10.sp,
-                    child: ZoomOutButton(
-                      transformController: _transformationController,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
-                    child: BlocBuilder<GameCubit, GameState>(
-                      buildWhen: (p, c) => p.isCompleted != c.isCompleted,
-                      builder: (context, state) {
-                        if (state.isCompleted) return const SizedBox();
-                        return ColoredBox(
-                          color: AppColors.shared.colorPickerBg,
-                          child: Column(
-                            children: [
-                              SizedBox(height: 10.sp),
-                              const ColorPicker(),
-                              SizedBox(height: 10.sp),
-                              const BannerWidget(),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                ],
-              );
-            },
-          ),
+                      ),
+                      Positioned(
+                        top: MediaQuery.of(context).padding.top + 10,
+                        left: 10,
+                        child: IconButton(
+                          onPressed: () {
+                            colorPickerCubit.resetColor();
+                            gameCubit.exit();
+                          },
+                          icon: SvgPicture.asset(AppResources.back),
+                        ),
+                      ),
+                      Positioned(
+                        top: MediaQuery.of(context).padding.top + 10.sp,
+                        right: 10.sp,
+                        child: HelpButton(
+                          transformationController: _transformationController,
+                        ),
+                      ),
+                      BlocBuilder<RewardsCubit, RewardsState>(
+                        buildWhen: (p, c) => p.noAds != c.noAds,
+                        builder: (context, state) {
+                          if (state.noAds == true) return const SizedBox();
+                          return const RewardButton();
+                        },
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        left: 0,
+                        child: BlocBuilder<GameCubit, GameState>(
+                          buildWhen: (p, c) => p.isCompleted != c.isCompleted,
+                          builder: (context, state) {
+                            if (state.isCompleted) return const SizedBox();
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ZoomOutButton(
+                                  transformController:
+                                      _transformationController,
+                                ),
+                                ColoredBox(
+                                  color: AppColors.shared.colorPickerBg,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 10.sp),
+                                      const ColorPicker(),
+                                      SizedBox(height: 10.sp),
+                                      const BannerWidget(),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  );
+                },
+              ),
+            );
+          },
         ),
       ),
     );

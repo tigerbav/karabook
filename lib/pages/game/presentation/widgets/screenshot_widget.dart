@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:karabookapp/pages/game/presentation/logic/color_picker/color_picker_cubit.dart';
 import 'package:karabookapp/pages/game/presentation/logic/game/game_cubit.dart';
 import 'package:karabookapp/pages/game/presentation/widgets/line_paint/line_paint.dart';
@@ -8,7 +7,13 @@ import 'package:karabookapp/pages/game/presentation/widgets/shape_painter.dart';
 import 'package:screenshot/screenshot.dart';
 
 class ScreenshotWidget extends StatelessWidget {
-  const ScreenshotWidget({super.key});
+  const ScreenshotWidget({
+    super.key,
+    required this.width,
+    required this.height,
+  });
+  final double width;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +25,8 @@ class ScreenshotWidget extends StatelessWidget {
       child: Stack(
         children: [
           SizedBox(
-            width: 1.sw,
-            height: 1.sh,
+            width: width,
+            height: height,
             child: GestureDetector(
               onTapUp: (details) async {
                 final result = await gameCubit.paintTappedShape(
@@ -46,8 +51,8 @@ class ScreenshotWidget extends StatelessWidget {
           ),
           IgnorePointer(
             child: SizedBox(
-              width: 1.sw,
-              height: 1.sh,
+              width: width,
+              height: height,
               child: const LinePaint(),
             ),
           ),

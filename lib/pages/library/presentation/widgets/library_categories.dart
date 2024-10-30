@@ -27,7 +27,7 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 24.sp,
+      height: 35,
       child: BlocBuilder<LibraryCubit, LibraryState>(
         buildWhen: (p, c) =>
             p.isLoadingCategories != c.isLoadingCategories ||
@@ -56,7 +56,7 @@ class _LibraryCategoriesState extends State<LibraryCategories> {
             controller: _controller,
             shrinkWrap: true,
             itemCount: state.categories.length,
-            separatorBuilder: (_, __) => SizedBox(width: 8.sp),
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (context, index) => _Item(
               category: state.categories[index],
               isSelected: state.categories[index].id == state.currCategory?.id,
@@ -82,13 +82,13 @@ class _Item extends StatelessWidget {
       onTap: () => context.read<LibraryCubit>().setCurrentCategory(category.id),
       child: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 16.sp),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.shared.purple
               : AppColors.shared.transparent,
-          border: Border.all(color: AppColors.shared.purple, width: 1.sp),
-          borderRadius: BorderRadius.all(Radius.circular(10.sp)),
+          border: Border.all(color: AppColors.shared.purple, width: 1),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         child: Text(
           category.name ?? LocaleKeys.oops.tr(),

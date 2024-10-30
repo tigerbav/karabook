@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/common/widgets/loading_widget.dart';
 import 'package:karabookapp/pages/library/presentation/logic/banner/banner_cubit.dart';
 import 'package:karabookapp/pages/library/presentation/widgets/empty_banner.dart';
@@ -46,34 +47,47 @@ class _BannerPageViewState extends State<_BannerPageView> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 1.sh * 0.21,
-      child: BlocConsumer<BannerCubit, BannerState>(
-        listenWhen: (p, c) => c.isTick,
-        listener: (context, state) {
-          if (state.page == 0) {
-            _pageController.jumpToPage(state.page);
-          } else {
-            _pageController.animateToPage(
-              state.page,
-              duration: const Duration(seconds: 1),
-              curve: Curves.linearToEaseOut,
-            );
-          }
-        },
-        buildWhen: (p, c) => p.categories != c.categories,
-        builder: (context, state) {
-          return PageView.builder(
-            controller: _pageController,
-            scrollDirection: Axis.horizontal,
-            itemCount: state.categories.length,
-            onPageChanged: context.read<BannerCubit>().setPage,
-            itemBuilder: (context, index) {
-              return _Item(state.categories[index]);
-            },
-          );
-        },
-      ),
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        return SizedBox(
+          height: (orientation == Orientation.portrait ? 1.sw : 1.sh) * 0.3,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                AppResources.bannerImage,
+                fit: BoxFit.cover,
+              ),
+              BlocConsumer<BannerCubit, BannerState>(
+                listenWhen: (p, c) => c.isTick,
+                listener: (context, state) {
+                  if (state.page == 0) {
+                    _pageController.jumpToPage(state.page);
+                  } else {
+                    _pageController.animateToPage(
+                      state.page,
+                      duration: const Duration(seconds: 1),
+                      curve: Curves.linearToEaseOut,
+                    );
+                  }
+                },
+                buildWhen: (p, c) => p.categories != c.categories,
+                builder: (context, state) {
+                  return PageView.builder(
+                    controller: _pageController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.categories.length,
+                    onPageChanged: context.read<BannerCubit>().setPage,
+                    itemBuilder: (context, index) {
+                      return _Item(state.categories[index]);
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -90,15 +104,16 @@ class _Item extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => context.read<BannerCubit>().onTap(categoryModel, context),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 20.sp),
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(16.sp)),
-          child: Image.memory(
-            const Base64Decoder().convert(preview),
-            fit: BoxFit.cover,
-            gaplessPlayback: true,
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 5.sp),
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(16.sp)),
+            child: Image.memory(
+              const Base64Decoder().convert(preview),
+              fit: BoxFit.contain,
+              gaplessPlayback: true,
+            ),
           ),
         ),
       ),

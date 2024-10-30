@@ -14,10 +14,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<void> _setup() async {
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     OneSignalManager.shared.init();
   }
 

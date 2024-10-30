@@ -13,7 +13,7 @@ class PageViewSelector extends StatelessWidget {
       buildWhen: (p, c) => p.page != c.page || p.categories != c.categories,
       builder: (context, state) {
         return Container(
-          padding: EdgeInsets.only(bottom: 10.sp),
+          padding: EdgeInsets.only(bottom: 12.sp),
           height: _size,
           child: ListView.separated(
             shrinkWrap: true,

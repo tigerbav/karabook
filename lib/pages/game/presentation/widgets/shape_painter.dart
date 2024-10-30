@@ -8,7 +8,7 @@ class ShapePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.clipRect(Offset.zero & size);
+    // canvas.clipRect(Offset.zero & size);
     final paint = Paint();
 
     for (final shape in shapes) {

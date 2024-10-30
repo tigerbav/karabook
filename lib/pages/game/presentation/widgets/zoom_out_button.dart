@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:karabookapp/common/app_resources.dart';
 import 'package:karabookapp/pages/game/presentation/logic/game/game_cubit.dart';
@@ -43,9 +44,12 @@ class ZoomOutButtonState extends State<ZoomOutButton>
       builder: (context, state) {
         if (state.isCompleted) return const SizedBox();
 
-        return IconButton(
-          onPressed: animateResetInitialize,
-          icon: SvgPicture.asset(AppResources.fullImage),
+        return Padding(
+          padding: EdgeInsets.all(4.sp),
+          child: IconButton(
+            onPressed: animateResetInitialize,
+            icon: SvgPicture.asset(AppResources.fullImage),
+          ),
         );
       },
     );

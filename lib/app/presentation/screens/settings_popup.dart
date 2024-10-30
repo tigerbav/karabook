@@ -20,51 +20,54 @@ class SettingsPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32.sp),
-        color: AppColors.shared.white,
-      ),
-      padding: EdgeInsets.all(20.sp),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                LocaleKeys.settings.tr(),
-                style: AppStyles.shared.h1,
-              ),
-              GestureDetector(
-                onTap: context.router.maybePop,
-                child: SvgPicture.asset(AppResources.close),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.sp),
-          SettingsOptionsWidget(types: SettingsTypeEx.optionsWithSwitcher),
-          SizedBox(height: 12.sp),
-          BlocBuilder<SettingsCubit, SettingsState>(
-            buildWhen: (p, c) => p.isAds != c.isAds,
-            builder: (context, state) {
-              return SettingsOptionsWidget(
-                types: SettingsTypeEx.optionsWithNoSwitcher(state.isAds),
-              );
-            },
-          ),
-          SizedBox(height: 20.sp),
-          const SignInWidget(),
-          SizedBox(height: 20.sp),
-          GestureDetector(
-            onTap: () => Utils.launchURL(Links.privacy),
-            child: Text(
-              LocaleKeys.privacy_policy.tr(),
-              style: AppStyles.shared.politic,
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32.sp),
+          color: AppColors.shared.white,
+        ),
+        padding: EdgeInsets.all(20.sp),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  LocaleKeys.settings.tr(),
+                  style: AppStyles.shared.h1,
+                ),
+                GestureDetector(
+                  onTap: context.router.maybePop,
+                  child: SvgPicture.asset(AppResources.close),
+                ),
+              ],
             ),
-          ),
-        ],
+            SizedBox(height: 12.sp),
+            SettingsOptionsWidget(types: SettingsTypeEx.optionsWithSwitcher),
+            SizedBox(height: 12.sp),
+            BlocBuilder<SettingsCubit, SettingsState>(
+              buildWhen: (p, c) => p.isAds != c.isAds,
+              builder: (context, state) {
+                return SettingsOptionsWidget(
+                  types: SettingsTypeEx.optionsWithNoSwitcher(state.isAds),
+                );
+              },
+            ),
+            SizedBox(height: 20.sp),
+            const SignInWidget(),
+            SizedBox(height: 20.sp),
+            GestureDetector(
+              onTap: () => Utils.launchURL(Links.privacy),
+              child: Text(
+                LocaleKeys.privacy_policy.tr(),
+                style: AppStyles.shared.politic,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

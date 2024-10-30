@@ -10,7 +10,7 @@ class ArrowBack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: context.router.pop,
+      onTap: context.router.maybePop,
       child: Padding(
         padding: EdgeInsets.only(left: 20.sp),
         child: SvgPicture.asset(AppResources.back),
